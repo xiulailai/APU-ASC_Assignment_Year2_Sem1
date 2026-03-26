@@ -1,0 +1,6 @@
+# commentId,appointmentId,customerId,targetUserId,commentText
+CM001,A001,C001,T001,Very professional technician, great service!
+CM002,A001,C001,CS001,Counter staff was friendly and helpful.
+CM003,A002,C002,T002,Good job fixing the brakes, highly recommended.
+CM004,A002,C002,CS001,Quick processing at counter, no long wait.
+CM005,A003,C003,T003,Satisfied with the service, car runs smoothly now.

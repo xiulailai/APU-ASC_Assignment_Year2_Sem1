@@ -1,0 +1,5 @@
+# technicianId,name,gender,age,phone,email,address,nationality
+T001,Ahmad Faiz,Male,31,0145678901,ahmadfaiz@email.com,No. 9 Jalan Dahlia Ampang,Malaysian
+T002,Rajan Kumar,Male,36,0156789012,rajankumar@email.com,No. 22 Jalan Teratai Selayang,Malaysian
+T003,Chong Wei,Male,28,0178901234,chongwei@email.com,No. 4 Jalan Cempaka Cheras,Malaysian
+T004,Hafiz Aziz,Male,30,0189012345,hafizaziz@email.com,No. 15 Jalan Melati Rawang,Malaysian

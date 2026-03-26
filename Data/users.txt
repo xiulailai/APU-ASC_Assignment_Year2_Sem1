@@ -1,0 +1,15 @@
+# userId,username,password,role,roleRefId
+U001,manager1,pass123,manager,M001
+U002,manager2,mgr456,manager,M002
+U003,counter1,abc123,counterstaff,CS001
+U004,counter2,xyz456,counterstaff,CS002
+U005,counter3,pry789,counterstaff,CS003
+U006,tech1,techpass,technician,T001
+U007,tech2,raj456,technician,T002
+U008,tech3,chong789,technician,T003
+U009,tech4,hfz321,technician,T004
+U010,ali123,pass123,customer,C001
+U011,siti22,abc123,customer,C002
+U012,tbh88,boon456,customer,C003
+U013,kavi01,kav789,customer,C004
+U014,zul55,zul321,customer,C005
