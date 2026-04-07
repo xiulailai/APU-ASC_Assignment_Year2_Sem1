@@ -25,82 +25,114 @@ public class LoginFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         btnLogin = new javax.swing.JButton();
-        lblError = new javax.swing.JLabel();
         lblPass = new javax.swing.JLabel();
         lblSub = new javax.swing.JLabel();
         lblTitle = new javax.swing.JLabel();
         lblUser = new javax.swing.JLabel();
         tfUsername = new javax.swing.JTextField();
         pfPassword = new javax.swing.JPasswordField();
+        lblError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(300, 270));
+        setMinimumSize(new java.awt.Dimension(300, 270));
+        setPreferredSize(new java.awt.Dimension(300, 270));
+        setResizable(false);
+        setSize(new java.awt.Dimension(300, 270));
 
         btnLogin.setText("Login");
+        btnLogin.setMaximumSize(new java.awt.Dimension(100, 26));
+        btnLogin.setMinimumSize(new java.awt.Dimension(100, 26));
+        btnLogin.setPreferredSize(new java.awt.Dimension(100, 26));
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
             }
         });
 
-        lblError.setText(" ");
-
+        lblPass.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblPass.setText("Password:");
+        lblPass.setMaximumSize(new java.awt.Dimension(100, 26));
+        lblPass.setMinimumSize(new java.awt.Dimension(100, 26));
+        lblPass.setPreferredSize(new java.awt.Dimension(100, 26));
 
-        lblSub.setText("Technician Login");
+        lblSub.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblSub.setText("Technician Login (Temporary)");
+        lblSub.setMaximumSize(new java.awt.Dimension(200, 26));
+        lblSub.setMinimumSize(new java.awt.Dimension(200, 26));
+        lblSub.setPreferredSize(new java.awt.Dimension(200, 26));
 
+        lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         lblTitle.setText("APU – ASC");
+        lblTitle.setMaximumSize(new java.awt.Dimension(200, 26));
+        lblTitle.setMinimumSize(new java.awt.Dimension(200, 26));
+        lblTitle.setPreferredSize(new java.awt.Dimension(200, 26));
 
+        lblUser.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblUser.setText("Username:");
+        lblUser.setMaximumSize(new java.awt.Dimension(100, 26));
+        lblUser.setMinimumSize(new java.awt.Dimension(100, 26));
+        lblUser.setPreferredSize(new java.awt.Dimension(100, 26));
 
         tfUsername.setText("tech1");
+        tfUsername.setMaximumSize(new java.awt.Dimension(130, 26));
+        tfUsername.setMinimumSize(new java.awt.Dimension(130, 26));
+        tfUsername.setPreferredSize(new java.awt.Dimension(130, 26));
 
         pfPassword.setText("techpass");
+        pfPassword.setMaximumSize(new java.awt.Dimension(130, 26));
+        pfPassword.setMinimumSize(new java.awt.Dimension(130, 26));
+        pfPassword.setPreferredSize(new java.awt.Dimension(130, 26));
+
+        lblError.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        lblError.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(62, 62, 62)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSub, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPass, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnLogin)
-                                    .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSub))
-                .addContainerGap(121, Short.MAX_VALUE))
+                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(lblTitle)
-                .addGap(16, 16, 16)
-                .addComponent(lblSub)
-                .addGap(45, 45, 45)
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSub, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUser)
+                    .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPass)
+                    .addComponent(lblPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(53, 53, 53)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLogin))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(lblError)))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
 
         pack();
