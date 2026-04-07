@@ -5,12 +5,12 @@ import java.util.*;
 import java.util.stream.*;
 
 public class TechnicianService {
-    private static final String FILE_TECHNICIANS = "technicians.txt";
-    private static final String FILE_APPOINTMENTS = "appointments.txt";
-    private static final String FILE_COMMENTS = "comments.txt";
-    private static final String FILE_FEEDBACKS = "feedback.txt";
-    private static final String FILE_SERVICES = "services.txt";
-    private static final String FILE_USERS = "users.txt";
+private static final String FILE_TECHNICIANS = "Data/technicians.txt";
+private static final String FILE_APPOINTMENTS = "Data/appointments.txt";
+private static final String FILE_COMMENTS = "Data/comments.txt";
+private static final String FILE_FEEDBACKS = "Data/feedback.txt";
+private static final String FILE_SERVICES = "Data/services.txt";
+private static final String FILE_USERS = "Data/users.txt";
     private static final String COMMENT_CHAR = "#";
     private final String technicianId;
 
