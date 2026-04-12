@@ -67,7 +67,7 @@
                   <Component id="lblEditTitle" min="-2" pref="180" max="-2" attributes="0"/>
                   <Component id="pnlEdit" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,8 +81,8 @@
               </Group>
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="pnlView" min="-2" max="-2" attributes="0"/>
                   <Component id="pnlEdit" min="-2" max="-2" attributes="0"/>
+                  <Component id="pnlView" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="102" max="32767" attributes="0"/>
           </Group>
@@ -91,6 +91,13 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="pnlView">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
+          </Border>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -191,7 +198,7 @@
                       <Component id="lblNatKey" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                       <Component id="lblNatVal" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="41" max="32767" attributes="0"/>
+                  <EmptySpace pref="17" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -352,6 +359,13 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="pnlEdit">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
+          </Border>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -400,7 +414,7 @@
                       </Group>
                       <Component id="lblProfileMsg" alignment="0" min="-2" pref="270" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="106" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

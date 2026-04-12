@@ -1,4 +1,4 @@
-package apu.asc.technician;
+package apu.asc.staff;
 
 public class Technician {
     private String technicianId;

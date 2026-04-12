@@ -1,16 +1,19 @@
 package apu.asc.technician;
+import apu.asc.staff.Technician;
 import apu.asc.staff.*;
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
 public class TechnicianService {
-private static final String FILE_TECHNICIANS = "Data/technicians.txt";
-private static final String FILE_APPOINTMENTS = "Data/appointments.txt";
-private static final String FILE_COMMENTS = "Data/comments.txt";
-private static final String FILE_FEEDBACKS = "Data/feedback.txt";
-private static final String FILE_SERVICES = "Data/services.txt";
-private static final String FILE_USERS = "Data/users.txt";
+    private static final String FILE_TECHNICIANS = "Data/technicians.txt";
+    private static final String FILE_APPOINTMENTS = "Data/appointments.txt";
+    private static final String FILE_COMMENTS = "Data/comments.txt";
+    private static final String FILE_FEEDBACKS = "Data/feedback.txt";
+    private static final String FILE_SERVICES = "Data/services.txt";
+    private static final String FILE_USERS = "Data/users.txt";
+    private static final String FILE_CUSTOMERS = "Data/customers.txt";
+
     private static final String COMMENT_CHAR = "#";
     private final String technicianId;
 
@@ -223,7 +226,52 @@ private static final String FILE_USERS = "Data/users.txt";
         return String.format("F%03d", max + 1);
     }
 
-    //9. File input and output
+    //9. Look Customer Info
+    //Returns Customer info by looking CustomerID, if not found return null.
+    public Customer getCustomerById(String customerId) {
+        for (Customer c : loadAllCustomers()) {
+            if (c.getCustomerId().equalsIgnoreCase(customerId)) return c;
+        }
+        return null;
+    }
+    
+    public List<Customer> loadAllCustomers() {
+        List<Customer> list = new ArrayList<>();
+        for (String line : readDataLines(FILE_CUSTOMERS)) {
+            try { list.add(Customer.fromFileString(line)); }
+            catch (Exception ignored) {}
+        }
+        return list;
+    }
+    
+    //10. Upcoming Schedule
+    //Return Technician Appointment by Date Sorting (Early first)
+    public List<Appointment> getUpcomingSchedule() {
+        return getMyAppointments().stream()
+                .filter(a -> !a.getStatus().equalsIgnoreCase("Completed"))
+                .sorted((a, b) -> {
+                    // Compare date first, then time
+                    int dateCmp = a.getAppointmentDate().compareTo(b.getAppointmentDate());
+                    if (dateCmp != 0) return dateCmp;
+                    return a.getAppointmentTime().compareTo(b.getAppointmentTime());
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
+    
+    //Calculates Total working hours of upcoming tasks
+    public int getTotalHoursForDate(String date) {
+        Map<String, String> svcMap = buildServiceNameMap();
+        int total = 0;
+        for (Appointment a : getUpcomingSchedule()) {
+            if (a.getAppointmentDate().equals(date)) {
+                Service s = getServiceInfo(a.getServiceId());
+                if (s != null) total += s.getDurationHours();
+            }
+        }
+        return total;
+    } 
+    
+    //11. File input and output
     //Read all non-comment, non-blank lines as Technician objects.
     public List<Technician> loadAllTechnicians() {
         List<Technician> list = new ArrayList<>();

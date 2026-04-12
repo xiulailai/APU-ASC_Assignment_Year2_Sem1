@@ -3,6 +3,7 @@ import apu.asc.staff.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
 public class tchnTasks extends javax.swing.JFrame {
     private TechnicianService svc;
     private tchnDashboard dashboard;
@@ -84,14 +85,15 @@ public class tchnTasks extends javax.swing.JFrame {
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbStatus.setPreferredSize(new java.awt.Dimension(120, 26));
 
+        lblSearch.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblSearch.setText("Search: ");
         lblSearch.setPreferredSize(new java.awt.Dimension(50, 26));
 
+        lblStatus.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblStatus.setText("Status: ");
         lblStatus.setPreferredSize(new java.awt.Dimension(45, 26));
 
         lblTaskMsg.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        lblTaskMsg.setText("Tasks Message");
         lblTaskMsg.setPreferredSize(new java.awt.Dimension(280, 26));
 
         tblTasks.setGridColor(new java.awt.Color(220, 225, 235));
@@ -274,41 +276,120 @@ public class tchnTasks extends javax.swing.JFrame {
     private void showDetailDialog(String apptId) {
         Appointment task = svc.getTaskDetail(apptId);
         if (task == null) return;
- 
-        Service svcInfo = svc.getServiceInfo(task.getServiceId());
+
+        Service  svcInfo  = svc.getServiceInfo(task.getServiceId());
+        Customer customer = svc.getCustomerById(task.getCustomerId());
         Map<String, String> names = svc.buildServiceNameMap();
- 
+
         javax.swing.JPanel p = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        p.setPreferredSize(new java.awt.Dimension(420, 340));
         java.awt.GridBagConstraints gc = new java.awt.GridBagConstraints();
         gc.insets  = new java.awt.Insets(4, 8, 4, 8);
         gc.anchor  = java.awt.GridBagConstraints.WEST;
- 
-        Object[][] rows = {
+        gc.fill    = java.awt.GridBagConstraints.HORIZONTAL;
+
+        // ── Section header helper ──
+        // Appointment details section
+        addDialogSection(p, gc, 0, "-----Appointment Details-----");
+
+        Object[][] apptRows = {
             {"Appointment ID:", task.getAppointmentId()},
             {"Date:",           task.getAppointmentDate()},
+            {"Day:",            getDayName(task.getAppointmentDate())},
             {"Time:",           task.getAppointmentTime()},
-            {"Customer ID:",    task.getCustomerId()},
-            {"Counter Staff:",  task.getCounterStaffId()},
-            {"Service:",        names.getOrDefault(task.getServiceId(), task.getServiceId())},
-            {"Duration:",       svcInfo != null ? svcInfo.getDurationHours() + " hr(s)" : "-"},
-            {"Price:",          svcInfo != null ? String.format("RM %.2f", svcInfo.getPrice()) : "-"},
             {"Status:",         task.getStatus()},
         };
- 
-        for (int i = 0; i < rows.length; i++) {
-            gc.gridy = i;
-            gc.gridx = 0; gc.weightx = 0;
-            javax.swing.JLabel key = new javax.swing.JLabel(rows[i][0].toString());
-            key.setFont(key.getFont().deriveFont(java.awt.Font.BOLD));
-            p.add(key, gc);
-            gc.gridx = 1; gc.weightx = 1;
-            p.add(new javax.swing.JLabel(rows[i][1].toString()), gc);
+        int rowIdx = 1;
+        for (Object[] row : apptRows) {
+            addDialogRow(p, gc, rowIdx++, row[0].toString(), row[1].toString(), false);
         }
- 
-        javax.swing.JOptionPane.showMessageDialog(this, p,
+
+        // Service details section
+        addDialogSection(p, gc, rowIdx++, "-----Service Details-----");
+        Object[][] svcRows = {
+            {"Service:",   names.getOrDefault(task.getServiceId(), task.getServiceId())},
+            {"Duration:",  svcInfo != null ? svcInfo.getDurationHours() + " hr(s)" : "-"},
+            {"Price:",     svcInfo != null ? String.format("RM %.2f", svcInfo.getPrice()) : "-"},
+        };
+        for (Object[] row : svcRows) {
+            addDialogRow(p, gc, rowIdx++, row[0].toString(), row[1].toString(), false);
+        }
+
+        // Customer info section
+        addDialogSection(p, gc, rowIdx++, "-----Customer Info-----");
+        if (customer != null) {
+            Object[][] custRows = {
+                {"Customer ID:", customer.getCustomerId()},
+                {"Name:",        customer.getName()},
+                {"Phone:",       customer.getPhone()},
+                {"Email:",       customer.getEmail()},
+            };
+            for (Object[] row : custRows) {
+                addDialogRow(p, gc, rowIdx++, row[0].toString(), row[1].toString(), false);
+            }
+        } else {
+            addDialogRow(p, gc, rowIdx++, "Customer ID:", task.getCustomerId(), false);
+            addDialogRow(p, gc, rowIdx++, "", "Customer details not found.", false);
+        }
+
+        javax.swing.JScrollPane scroll = new javax.swing.JScrollPane(p);
+        scroll.setPreferredSize(new java.awt.Dimension(440, 360));
+        scroll.setBorder(null);
+
+        javax.swing.JOptionPane.showMessageDialog(this, scroll,
                 "Task Details – " + apptId, javax.swing.JOptionPane.PLAIN_MESSAGE);
     }
+    
+    
+    private void addDialogSection(javax.swing.JPanel p,
+                                   java.awt.GridBagConstraints gc,
+                                   int row, String title) {
+        gc.gridy    = row;
+        gc.gridx    = 0;
+        gc.gridwidth = 2;
+        gc.weightx  = 1;
+        gc.insets   = new java.awt.Insets(10, 8, 2, 8);
+        javax.swing.JLabel lbl = new javax.swing.JLabel(title);
+        lbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+        lbl.setForeground(new java.awt.Color(30, 58, 110));
+        p.add(lbl, gc);
+        gc.gridwidth = 1;
+        gc.insets    = new java.awt.Insets(3, 8, 3, 8);
+    }
 
+    private void addDialogRow(javax.swing.JPanel p,
+                               java.awt.GridBagConstraints gc,
+                               int row, String key, String value,
+                               boolean highlight) {
+        gc.gridy   = row;
+        gc.gridx   = 0;
+        gc.weightx = 0;
+        javax.swing.JLabel keyLbl = new javax.swing.JLabel(key);
+        keyLbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+        keyLbl.setForeground(new java.awt.Color(30, 50, 130));
+        p.add(keyLbl, gc);
+
+        gc.gridx   = 1;
+        gc.weightx = 1;
+        javax.swing.JLabel valLbl = new javax.swing.JLabel(value);
+        valLbl.setFont(new java.awt.Font("Segoe UI",
+                highlight ? java.awt.Font.BOLD : java.awt.Font.PLAIN, 12));
+        valLbl.setForeground(highlight
+                ? new java.awt.Color(30, 58, 110)
+                : java.awt.Color.DARK_GRAY);
+        p.add(valLbl, gc);
+    }
+
+    private String getDayName(String dateStr) {
+        try {
+            java.time.LocalDate date = java.time.LocalDate.parse(dateStr,
+                    java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String day = date.getDayOfWeek().toString();
+            return day.charAt(0) + day.substring(1).toLowerCase();
+        } catch (Exception e) {
+            return "-";
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClearSearch;
     private javax.swing.JButton btnMarkComplete;

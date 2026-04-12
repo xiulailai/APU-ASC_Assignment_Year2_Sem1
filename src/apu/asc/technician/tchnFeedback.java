@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 public class tchnFeedback extends javax.swing.JFrame {
     private TechnicianService svc;
     private javax.swing.DefaultListModel<String> listModel;
@@ -75,7 +76,6 @@ public class tchnFeedback extends javax.swing.JFrame {
         lblFeedbackLabel.setPreferredSize(new java.awt.Dimension(100, 26));
 
         lblFeedbackMsg.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        lblFeedbackMsg.setText("lblFeedbackMsg");
         lblFeedbackMsg.setMaximumSize(new java.awt.Dimension(380, 18));
         lblFeedbackMsg.setMinimumSize(new java.awt.Dimension(380, 18));
         lblFeedbackMsg.setPreferredSize(new java.awt.Dimension(380, 18));
@@ -148,13 +148,13 @@ public class tchnFeedback extends javax.swing.JFrame {
                     .addComponent(lblFeedbackMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSubmitFeedback, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(lblPastTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65))
+                .addGap(71, 71, 71))
         );
 
         pack();
