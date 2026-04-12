@@ -34,16 +34,17 @@ public class LoginFrame extends javax.swing.JFrame {
         lblError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(300, 270));
-        setMinimumSize(new java.awt.Dimension(300, 270));
-        setPreferredSize(new java.awt.Dimension(300, 270));
+        setMaximumSize(new java.awt.Dimension(270, 270));
+        setMinimumSize(new java.awt.Dimension(270, 270));
+        setPreferredSize(new java.awt.Dimension(270, 270));
         setResizable(false);
-        setSize(new java.awt.Dimension(300, 270));
+        setSize(new java.awt.Dimension(270, 270));
 
+        btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnLogin.setText("Login");
-        btnLogin.setMaximumSize(new java.awt.Dimension(100, 26));
-        btnLogin.setMinimumSize(new java.awt.Dimension(100, 26));
-        btnLogin.setPreferredSize(new java.awt.Dimension(100, 26));
+        btnLogin.setMaximumSize(new java.awt.Dimension(230, 26));
+        btnLogin.setMinimumSize(new java.awt.Dimension(230, 26));
+        btnLogin.setPreferredSize(new java.awt.Dimension(230, 26));
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
@@ -52,12 +53,12 @@ public class LoginFrame extends javax.swing.JFrame {
 
         lblPass.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblPass.setText("Password:");
-        lblPass.setMaximumSize(new java.awt.Dimension(100, 26));
-        lblPass.setMinimumSize(new java.awt.Dimension(100, 26));
-        lblPass.setPreferredSize(new java.awt.Dimension(100, 26));
+        lblPass.setMaximumSize(new java.awt.Dimension(80, 26));
+        lblPass.setMinimumSize(new java.awt.Dimension(80, 26));
+        lblPass.setPreferredSize(new java.awt.Dimension(80, 26));
 
         lblSub.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblSub.setText("Technician Login (Temporary)");
+        lblSub.setText("APU Automotive Service Centre");
         lblSub.setMaximumSize(new java.awt.Dimension(200, 26));
         lblSub.setMinimumSize(new java.awt.Dimension(200, 26));
         lblSub.setPreferredSize(new java.awt.Dimension(200, 26));
@@ -70,45 +71,47 @@ public class LoginFrame extends javax.swing.JFrame {
 
         lblUser.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblUser.setText("Username:");
-        lblUser.setMaximumSize(new java.awt.Dimension(100, 26));
-        lblUser.setMinimumSize(new java.awt.Dimension(100, 26));
-        lblUser.setPreferredSize(new java.awt.Dimension(100, 26));
+        lblUser.setMaximumSize(new java.awt.Dimension(80, 26));
+        lblUser.setMinimumSize(new java.awt.Dimension(80, 26));
+        lblUser.setPreferredSize(new java.awt.Dimension(80, 26));
 
-        tfUsername.setText("tech1");
-        tfUsername.setMaximumSize(new java.awt.Dimension(130, 26));
-        tfUsername.setMinimumSize(new java.awt.Dimension(130, 26));
-        tfUsername.setPreferredSize(new java.awt.Dimension(130, 26));
+        tfUsername.setMaximumSize(new java.awt.Dimension(140, 26));
+        tfUsername.setMinimumSize(new java.awt.Dimension(140, 26));
+        tfUsername.setPreferredSize(new java.awt.Dimension(140, 26));
 
-        pfPassword.setText("techpass");
-        pfPassword.setMaximumSize(new java.awt.Dimension(130, 26));
-        pfPassword.setMinimumSize(new java.awt.Dimension(130, 26));
-        pfPassword.setPreferredSize(new java.awt.Dimension(130, 26));
+        pfPassword.setMaximumSize(new java.awt.Dimension(140, 26));
+        pfPassword.setMinimumSize(new java.awt.Dimension(140, 26));
+        pfPassword.setPreferredSize(new java.awt.Dimension(140, 26));
 
         lblError.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        lblError.setForeground(new java.awt.Color(200, 0, 0));
+        lblError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblError.setText("jLabel1");
+        lblError.setMaximumSize(new java.awt.Dimension(230, 26));
+        lblError.setMinimumSize(new java.awt.Dimension(230, 26));
+        lblError.setPreferredSize(new java.awt.Dimension(230, 26));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSub, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblSub, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
                             .addComponent(lblPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,22 +124,75 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(lblError)))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+    String username = tfUsername.getText().trim();
+    String password = new String(pfPassword.getPassword()).trim();
+
+    if (username.isEmpty() || password.isEmpty()) {
+        lblError.setText("Please enter username and password.");
+        return;
+    }
+
+    String[] result = authenticate(username, password);
+
+    if (result == null) {
+        lblError.setText("Invalid username or password.");
+        pfPassword.setText("");
+        return;
+    }
+
+    String role = result[0];  // e.g. "technician", "manager", "counterstaff", "customer"
+    String roleRefId = result[1];  // e.g. "T001", "M001", "CS001", "C001"
+
+    dispose();  // close login window
+
+    switch (role.toLowerCase()) {
+        case "technician":
+            new apu.asc.technician.tchnDashboard(roleRefId).setVisible(true);
+            break;
+        case "manager":
+            // new apu.asc.manager.mgrDashboard(roleRefId).setVisible(true);
+            javax.swing.JOptionPane.showMessageDialog(null,
+                "Manager dashboard not implemented yet.",
+                "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            new LoginFrame().setVisible(true); // reopen login
+            break;
+        case "counterstaff":
+            // new apu.asc.counterStaff.csDashboard(roleRefId).setVisible(true);
+            javax.swing.JOptionPane.showMessageDialog(null,
+                "Counter Staff dashboard not implemented yet.",
+                "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            new LoginFrame().setVisible(true);
+            break;
+        case "customer":
+            // new apu.asc.customer.custDashboard(roleRefId).setVisible(true);
+            javax.swing.JOptionPane.showMessageDialog(null,
+                "Customer dashboard not implemented yet.",
+                "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            new LoginFrame().setVisible(true);
+            break;
+        default:
+            javax.swing.JOptionPane.showMessageDialog(null,
+                "Unknown role: " + role,
+                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            new LoginFrame().setVisible(true);
+            break;
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     
     public static void main(String args[]) {
@@ -155,36 +211,19 @@ public class LoginFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new LoginFrame().setVisible(true));
     }
         
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String username = tfUsername.getText().trim();
-        String password = new String(pfPassword.getPassword()).trim();
- 
-        if (username.isEmpty() || password.isEmpty()) {
-            lblError.setText("Please enter username and password.");
-            return;
-        }
- 
-        String techId = authenticate(username, password);
-        if (techId != null) {
-            dispose();
-            new tchnDashboard(techId).setVisible(true);
-        } else {
-            lblError.setText("Invalid credentials or not a technician account.");
-            pfPassword.setText("");
-        }    }//GEN-LAST:event_btnLoginActionPerformed
-
     
-    private String authenticate(String username, String password) {
-        try (BufferedReader br = new BufferedReader(new FileReader("Data/users.txt"))) {
+    private String[] authenticate(String username, String password) {
+        try (java.io.BufferedReader br = new java.io.BufferedReader(
+                new java.io.FileReader("Data/users.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#") || line.isBlank()) continue;
+                // userId, username, password, role, roleRefId
                 String[] p = line.split(",", 5);
                 if (p.length == 5
                         && p[1].trim().equals(username)
-                        && p[2].trim().equals(password)
-                        && p[3].trim().equalsIgnoreCase("technician")) {
-                    return p[4].trim();
+                        && p[2].trim().equals(password)) {
+                    return new String[]{ p[3].trim(), p[4].trim() };
                 }
             }
         } catch (Exception ignored) {}
