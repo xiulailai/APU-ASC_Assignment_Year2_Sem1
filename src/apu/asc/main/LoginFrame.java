@@ -139,58 +139,58 @@ public class LoginFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-    String username = tfUsername.getText().trim();
-    String password = new String(pfPassword.getPassword()).trim();
+        String username = tfUsername.getText().trim();
+        String password = new String(pfPassword.getPassword()).trim();
 
-    if (username.isEmpty() || password.isEmpty()) {
-        lblError.setText("Please enter username and password.");
-        return;
-    }
+        if (username.isEmpty() || password.isEmpty()) {
+            lblError.setText("Please enter username and password.");
+            return;
+        }
 
-    String[] result = authenticate(username, password);
+        String[] result = authenticate(username, password);
 
-    if (result == null) {
-        lblError.setText("Invalid username or password.");
-        pfPassword.setText("");
-        return;
-    }
+        if (result == null) {
+            lblError.setText("Invalid username or password.");
+            pfPassword.setText("");
+            return;
+        }
 
-    String role = result[0];  // e.g. "technician", "manager", "counterstaff", "customer"
-    String roleRefId = result[1];  // e.g. "T001", "M001", "CS001", "C001"
+        String role = result[0];  // e.g. "technician", "manager", "counterstaff", "customer"
+        String roleRefId = result[1];  // e.g. "T001", "M001", "CS001", "C001"
 
-    dispose();  // close login window
+        dispose();  // close login window
 
-    switch (role.toLowerCase()) {
-        case "technician":
-            new apu.asc.technician.tchnDashboard(roleRefId).setVisible(true);
-            break;
-        case "manager":
-            // new apu.asc.manager.mgrDashboard(roleRefId).setVisible(true);
-            javax.swing.JOptionPane.showMessageDialog(null,
-                "Manager dashboard not implemented yet.",
-                "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            new LoginFrame().setVisible(true); // reopen login
-            break;
-        case "counterstaff":
-            // new apu.asc.counterStaff.csDashboard(roleRefId).setVisible(true);
-            javax.swing.JOptionPane.showMessageDialog(null,
-                "Counter Staff dashboard not implemented yet.",
-                "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            new LoginFrame().setVisible(true);
-            break;
-        case "customer":
-            // new apu.asc.customer.custDashboard(roleRefId).setVisible(true);
-            javax.swing.JOptionPane.showMessageDialog(null,
-                "Customer dashboard not implemented yet.",
-                "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            new LoginFrame().setVisible(true);
-            break;
-        default:
-            javax.swing.JOptionPane.showMessageDialog(null,
-                "Unknown role: " + role,
-                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            new LoginFrame().setVisible(true);
-            break;
+        switch (role.toLowerCase()) {
+            case "technician":
+                new apu.asc.technician.tchnDashboard(roleRefId).setVisible(true);
+                break;
+            case "manager":
+                // new apu.asc.manager.mgrDashboard(roleRefId).setVisible(true);
+                javax.swing.JOptionPane.showMessageDialog(null,
+                    "Manager dashboard not implemented yet.",
+                    "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                new LoginFrame().setVisible(true); // reopen login
+                break;
+            case "counterstaff":
+                // new apu.asc.counterStaff.csDashboard(roleRefId).setVisible(true);
+                javax.swing.JOptionPane.showMessageDialog(null,
+                    "Counter Staff dashboard not implemented yet.",
+                    "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                new LoginFrame().setVisible(true);
+                break;
+            case "customer":
+                // new apu.asc.customer.custDashboard(roleRefId).setVisible(true);
+                javax.swing.JOptionPane.showMessageDialog(null,
+                    "Customer dashboard not implemented yet.",
+                    "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                new LoginFrame().setVisible(true);
+                break;
+            default:
+                javax.swing.JOptionPane.showMessageDialog(null,
+                    "Unknown role: " + role,
+                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                new LoginFrame().setVisible(true);
+                break;
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

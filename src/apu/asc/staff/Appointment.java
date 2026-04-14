@@ -6,9 +6,9 @@ public class Appointment {
     private String technicianId;
     private String counterStaffId;
     private String serviceId;
-    private String appointmentDate;   // yyyy-MM-dd
-    private String appointmentTime;   // HH:mm
-    private String status;            // Pending | Assigned | Completed
+    private String appointmentDate; // yyyy-MM-dd
+    private String appointmentTime; // Hour:Minute
+    private String status; // Pending | Assigned | Completed
 
     //constructor
     public Appointment(String appointmentId, String customerId, String technicianId, String counterStaffId, String serviceId, String appointmentDate, String appointmentTime, String status) {
@@ -37,10 +37,7 @@ public class Appointment {
 
     //convert object to txt file
     public String toFileString() {
-        return String.join(",",
-                appointmentId, customerId, technicianId,
-                counterStaffId, serviceId,
-                appointmentDate, appointmentTime, status);
+        return String.join(",",appointmentId, customerId, technicianId,counterStaffId, serviceId,appointmentDate, appointmentTime, status);
     }
     
     //conver txt file to object

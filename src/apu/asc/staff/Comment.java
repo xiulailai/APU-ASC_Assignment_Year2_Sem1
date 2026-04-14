@@ -25,9 +25,7 @@ public class Comment {
     
     //convert object to txt file
     public String toFileString() {
-        return String.join(",",
-                commentId, appointmentId, customerId,
-                targetUserId, commentText);
+        return String.join(",",commentId, appointmentId, customerId,    targetUserId, commentText);
     }
 
     //let system have 5 attributes in the txt file, some comment have "," so just split it with first four ","
