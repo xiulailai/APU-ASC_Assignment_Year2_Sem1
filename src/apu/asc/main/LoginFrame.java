@@ -172,11 +172,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 new LoginFrame().setVisible(true); // reopen login
                 break;
             case "counterstaff":
-                // new apu.asc.counterStaff.csDashboard(roleRefId).setVisible(true);
-                javax.swing.JOptionPane.showMessageDialog(null,
-                    "Counter Staff dashboard not implemented yet.",
-                    "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                new LoginFrame().setVisible(true);
+                new apu.asc.counterStaff.csDashboard(roleRefId).setVisible(true);
                 break;
             case "customer":
                 // new apu.asc.customer.custDashboard(roleRefId).setVisible(true);
