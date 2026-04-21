@@ -172,7 +172,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 new LoginFrame().setVisible(true); // reopen login
                 break;
             case "counterstaff":
-                new apu.asc.counterStaff.csDashboard(roleRefId).setVisible(true);
+                new apu.asc.counterstaff.csDashboard(roleRefId).setVisible(true);
                 break;
             case "customer":
                 // new apu.asc.customer.custDashboard(roleRefId).setVisible(true);
