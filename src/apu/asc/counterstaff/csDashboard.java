@@ -5,16 +5,18 @@ import apu.asc.staff.CounterStaff;
 public class csDashboard extends javax.swing.JFrame {
     
     private String counterStaffId;
+    private csService service;
 
-    public csDashboard(String counterStaffId) {
+     public csDashboard(String counterStaffId) {
         this.counterStaffId = counterStaffId;
+        this.service = new csService();
         initComponents();
         setLocationRelativeTo(null);
         loadWelcomeMessage();
     }
-    
-     private void loadWelcomeMessage() {
-        CounterStaff cs = csService.getProfile(counterStaffId);
+     
+    private void loadWelcomeMessage() {
+        CounterStaff cs = service.getProfile(counterStaffId);
         if (cs != null) {
             lblWelcome.setText("Welcome, " + cs.getName() + " (" + counterStaffId + ")");
         } else {
@@ -31,6 +33,7 @@ public class csDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jInternalFrame1 = new javax.swing.JInternalFrame();
         pnlTopBar = new javax.swing.JPanel();
         lblAppTitle = new javax.swing.JLabel();
         lblSubTitle = new javax.swing.JLabel();
@@ -38,12 +41,26 @@ public class csDashboard extends javax.swing.JFrame {
         lblWelcome = new javax.swing.JLabel();
         pnlMenu = new javax.swing.JPanel();
         btnEditProfile = new javax.swing.JButton();
-        btnCustomers = new javax.swing.JButton();
+        btnManageCustomers = new javax.swing.JButton();
         btnAppointments = new javax.swing.JButton();
         btnPayments = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
 
+        jInternalFrame1.setVisible(true);
+
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Counter Staff Dashboard");
         setResizable(false);
 
         lblAppTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -106,10 +123,10 @@ public class csDashboard extends javax.swing.JFrame {
             }
         });
 
-        btnCustomers.setText("Manage Customers");
-        btnCustomers.addActionListener(new java.awt.event.ActionListener() {
+        btnManageCustomers.setText("Manage Customers");
+        btnManageCustomers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCustomersActionPerformed(evt);
+                btnManageCustomersActionPerformed(evt);
             }
         });
 
@@ -146,7 +163,7 @@ public class csDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnPayments, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                    .addComponent(btnCustomers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnManageCustomers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(pnlMenuLayout.createSequentialGroup()
                 .addGap(112, 112, 112)
@@ -159,7 +176,7 @@ public class csDashboard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCustomers, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnManageCustomers, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAppointments, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,7 +187,7 @@ public class csDashboard extends javax.swing.JFrame {
         );
 
         btnEditProfile.getAccessibleContext().setAccessibleName("btnEditProfile");
-        btnCustomers.getAccessibleContext().setAccessibleName("btnCustomers");
+        btnManageCustomers.getAccessibleContext().setAccessibleName("btnCustomers");
         btnAppointments.getAccessibleContext().setAccessibleName("btnAppointments");
         btnPayments.getAccessibleContext().setAccessibleName("btnPayments");
         btnLogout.getAccessibleContext().setAccessibleName("btnLogout");
@@ -209,14 +226,14 @@ public class csDashboard extends javax.swing.JFrame {
     private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        //new csEditProfile(counterStaffId, this).setVisible(true);
+        new csEditProfile(counterStaffId, this).setVisible(true);
     }//GEN-LAST:event_btnEditProfileActionPerformed
 
-    private void btnCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomersActionPerformed
+    private void btnManageCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageCustomersActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        //new csCustomers(counterStaffId, this).setVisible(true);
-    }//GEN-LAST:event_btnCustomersActionPerformed
+        new csManageCustomer(counterStaffId, this).setVisible(true);
+    }//GEN-LAST:event_btnManageCustomersActionPerformed
 
     private void btnAppointmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentsActionPerformed
         // TODO add your handling code here:
@@ -246,10 +263,11 @@ public class csDashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAppointments;
-    private javax.swing.JButton btnCustomers;
     private javax.swing.JButton btnEditProfile;
     private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnManageCustomers;
     private javax.swing.JButton btnPayments;
+    private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel lblAppTitle;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblWelcome;

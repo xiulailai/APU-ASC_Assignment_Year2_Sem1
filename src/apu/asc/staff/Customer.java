@@ -42,6 +42,13 @@ public class Customer {
                 Integer.parseInt(p[3].trim()),
                 p[4].trim(), p[5].trim(), p[6].trim(), p[7].trim());
     }
+    
+    public String toFileString() {
+    return String.join(",",
+            customerId, name, gender,
+            String.valueOf(age),
+            phone, email, address, nationality);
+}
  
     @Override
     public String toString() {
