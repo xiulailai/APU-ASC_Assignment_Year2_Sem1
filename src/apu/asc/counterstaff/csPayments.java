@@ -1,20 +1,68 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package apu.asc.counterstaff;
 
-/**
- *
- * @author aspir
- */
-public class csPayments extends javax.swing.JFrame {
+import apu.asc.staff.Appointment;
+import javax.swing.table.DefaultTableModel;
 
-    /**
-     * Creates new form csPayments
-     */
-    public csPayments() {
+public class csPayments extends javax.swing.JFrame {
+    
+    private String counterStaffId;
+    private csDashboard dashboard;
+    private csService service;
+
+    public csPayments(String counterStaffId, csDashboard dashboard) {
+        this.counterStaffId = counterStaffId;
+        this.dashboard = dashboard;
+        this.service = new csService();
         initComponents();
+        setLocationRelativeTo(null);
+        loadUnpaidTable();
+        loadHistoryTable();
+    }
+    
+    // Loads Assigned appointments with no payment into tblUnpaid
+    private void loadUnpaidTable() {
+        DefaultTableModel model = (DefaultTableModel) tblUnpaid.getModel();
+        model.setRowCount(0);
+        for (Appointment a : service.getUnpaidAppointments()) {
+            model.addRow(new Object[]{
+                a.getAppointmentId(),
+                service.lookupCustomerName(a.getCustomerId()),
+                service.lookupServiceName(a.getServiceId()),
+                service.lookupTechnicianName(a.getTechnicianId()),
+                a.getAppointmentDate(),
+                String.format("%.2f", service.lookupServicePrice(a.getServiceId()))
+            });
+        }
+    }
+ 
+    // Loads all payment records into tblHistory
+    private void loadHistoryTable() {
+        DefaultTableModel model = (DefaultTableModel) tblHistory.getModel();
+        model.setRowCount(0);
+        for (String[] p : service.getPaymentHistory()) {
+            if (p.length < 6) continue;
+            // p: paymentId, appointmentId, customerId, amount, date, receiptNo
+            model.addRow(new Object[]{
+                p[0].trim(), // Payment ID
+                p[5].trim(), // Receipt No
+                p[1].trim(), // Appt ID
+                service.lookupCustomerName(p[2].trim()), // Customer
+                p[3].trim(), // Amount (RM)
+                p[4].trim() // Date
+            });
+        }
+    }
+    
+    // Returns selected appointment ID from tblUnpaid. Shows warning if none selected.
+    private String getSelectedAppointmentId() {
+        int row = tblUnpaid.getSelectedRow();
+        if (row == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Please select an appointment from the Pending Payments table first.",
+                    "No Selection", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+        return tblUnpaid.getValueAt(row, 0).toString();
     }
 
     /**
@@ -26,57 +74,263 @@ public class csPayments extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlTopBar = new javax.swing.JPanel();
+        lblTitle = new javax.swing.JLabel();
+        pnlUnpaid = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblUnpaid = new javax.swing.JTable();
+        pnlHistory = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblHistory = new javax.swing.JTable();
+        pnlButtons = new javax.swing.JPanel();
+        btnCollect = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("Payments and Receipts");
+
+        javax.swing.GroupLayout pnlTopBarLayout = new javax.swing.GroupLayout(pnlTopBar);
+        pnlTopBar.setLayout(pnlTopBarLayout);
+        pnlTopBarLayout.setHorizontalGroup(
+            pnlTopBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTopBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlTopBarLayout.setVerticalGroup(
+            pnlTopBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTopBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitle)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlUnpaid.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pending Payments", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        tblUnpaid.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Appt ID", "Customer", "Service", "Technician", "Date", "Amount (RM)"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblUnpaid);
+
+        javax.swing.GroupLayout pnlUnpaidLayout = new javax.swing.GroupLayout(pnlUnpaid);
+        pnlUnpaid.setLayout(pnlUnpaidLayout);
+        pnlUnpaidLayout.setHorizontalGroup(
+            pnlUnpaidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlUnpaidLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
+        pnlUnpaidLayout.setVerticalGroup(
+            pnlUnpaidLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlUnpaidLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pnlHistory.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Payment History", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        pnlHistory.setPreferredSize(new java.awt.Dimension(474, 230));
+
+        tblHistory.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Payment ID", "Receipt No.", "Appt ID", "Customer", "Amount (RM)", "Date"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblHistory);
+
+        javax.swing.GroupLayout pnlHistoryLayout = new javax.swing.GroupLayout(pnlHistory);
+        pnlHistory.setLayout(pnlHistoryLayout);
+        pnlHistoryLayout.setHorizontalGroup(
+            pnlHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlHistoryLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlHistoryLayout.setVerticalGroup(
+            pnlHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlHistoryLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        btnCollect.setText("Collect Payment");
+        btnCollect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCollectActionPerformed(evt);
+            }
+        });
+
+        btnBack.setText("Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlButtonsLayout = new javax.swing.GroupLayout(pnlButtons);
+        pnlButtons.setLayout(pnlButtonsLayout);
+        pnlButtonsLayout.setHorizontalGroup(
+            pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlButtonsLayout.createSequentialGroup()
+                .addGap(108, 108, 108)
+                .addComponent(btnCollect)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(108, 108, 108))
+        );
+        pnlButtonsLayout.setVerticalGroup(
+            pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlButtonsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCollect)
+                    .addComponent(btnBack))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlHistory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                    .addComponent(pnlUnpaid, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlTopBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlTopBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlUnpaid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlHistory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(csPayments.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(csPayments.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(csPayments.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(csPayments.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void btnCollectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCollectActionPerformed
+        // TODO add your handling code here:
+        String appointmentId = getSelectedAppointmentId();
+        if (appointmentId == null) {
+            return;
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new csPayments().setVisible(true);
+ 
+        // Gather details for confirmation dialog
+        int row = tblUnpaid.getSelectedRow();
+        String customer = tblUnpaid.getValueAt(row, 1).toString();
+        String service_ = tblUnpaid.getValueAt(row, 2).toString();
+        String date = tblUnpaid.getValueAt(row, 4).toString();
+        String amountStr = tblUnpaid.getValueAt(row, 5).toString();
+        double amount = Double.parseDouble(amountStr);
+        String customerId = service.getAppointmentById(appointmentId).getCustomerId();
+ 
+        // Confirmation dialog showing full details
+        String msg = String.format("""
+                                   Confirm payment collection?
+                                   
+                                   Appointment : %s
+                                   Customer    : %s
+                                   Service     : %s
+                                   Date        : %s
+                                   Amount      : RM %.2f""",
+                appointmentId, customer, service_, date, amount);
+ 
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+                msg, "Collect Payment",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE);
+ 
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            String result = service.collectPayment(appointmentId, customerId, amount);
+ 
+            if (result.startsWith("OK:")) {
+                // Parse paymentId, receiptNo, date from result
+                String[] parts  = result.substring(3).split(",");
+                String payId    = parts[0];
+                String receiptNo = parts[1];
+                String today    = parts[2];
+ 
+                // Show receipt summary
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        String.format(
+                                "Payment collected successfully!\n\n" +
+                                "Payment ID  : %s\n" +
+                                "Receipt No  : %s\n" +
+                                "Customer    : %s\n" +
+                                "Amount      : RM %.2f\n" +
+                                "Date        : %s",
+                                payId, receiptNo, customer, amount, today),
+                        "Receipt", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+ 
+                // Refresh both tables
+                loadUnpaidTable();
+                loadHistoryTable();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        result.substring(5), "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-        });
-    }
+        }
+    }//GEN-LAST:event_btnCollectActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        dashboard.setVisible(true);
+    }//GEN-LAST:event_btnBackActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnCollect;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JPanel pnlButtons;
+    private javax.swing.JPanel pnlHistory;
+    private javax.swing.JPanel pnlTopBar;
+    private javax.swing.JPanel pnlUnpaid;
+    private javax.swing.JTable tblHistory;
+    private javax.swing.JTable tblUnpaid;
     // End of variables declaration//GEN-END:variables
 }
