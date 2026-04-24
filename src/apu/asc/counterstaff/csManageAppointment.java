@@ -272,7 +272,7 @@ public class csManageAppointment extends javax.swing.JFrame {
         }
  
         this.setVisible(false);
-        //new csAssignAppointment(counterStaffId, appointmentId, this).setVisible(true);
+        new csAssignAppointment(counterStaffId, appointmentId, this).setVisible(true);
     }//GEN-LAST:event_btnAssignActionPerformed
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
@@ -320,7 +320,7 @@ public class csManageAppointment extends javax.swing.JFrame {
 
     private void cbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFilterActionPerformed
         // TODO add your handling code here:
-         String selected = (String) cbFilter.getSelectedItem();
+        String selected = (String) cbFilter.getSelectedItem();
         loadTable(service.filterAppointmentsByStatus(selected));
     }//GEN-LAST:event_cbFilterActionPerformed
 

@@ -244,7 +244,7 @@ public class csDashboard extends javax.swing.JFrame {
     private void btnPaymentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentsActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        //new csPayments(counterStaffId, this).setVisible(true);
+        new csPayments(counterStaffId, this).setVisible(true);
     }//GEN-LAST:event_btnPaymentsActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
