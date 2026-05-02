@@ -50,7 +50,6 @@ public class tchnSchedule extends javax.swing.JFrame {
         pnlInfo.setPreferredSize(new java.awt.Dimension(720, 40));
 
         lblTodayInfo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblTodayInfo.setForeground(new java.awt.Color(30, 50, 110));
         lblTodayInfo.setText("Loading");
         lblTodayInfo.setMaximumSize(new java.awt.Dimension(420, 26));
         lblTodayInfo.setMinimumSize(new java.awt.Dimension(420, 26));
