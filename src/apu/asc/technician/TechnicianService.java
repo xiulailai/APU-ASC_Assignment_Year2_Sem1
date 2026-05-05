@@ -48,12 +48,12 @@ public class TechnicianService {
             }
             Technician t = Technician.fromFileString(raw);
             if (t.getTechnicianId().equals(technicianId)) {
-                if (name        != null && !name.isBlank())   t.setName(name);
-                if (gender      != null && !gender.isBlank())  t.setGender(gender);
-                if (age > 0)                                   t.setAge(age);
-                if (phone       != null && !phone.isBlank())   t.setPhone(phone);
-                if (email       != null && !email.isBlank())   t.setEmail(email);
-                if (address     != null && !address.isBlank()) t.setAddress(address);
+                if (name != null && !name.isBlank()) t.setName(name);
+                if (gender != null && !gender.isBlank()) t.setGender(gender);
+                if (age > 0) t.setAge(age);
+                if (phone != null && !phone.isBlank()) t.setPhone(phone);
+                if (email != null && !email.isBlank()) t.setEmail(email);
+                if (address != null && !address.isBlank()) t.setAddress(address);
                 if (nationality != null && !nationality.isBlank()) t.setNationality(nationality);
                 updated.add(t.toFileString());
             } else {
@@ -181,8 +181,7 @@ public class TechnicianService {
     }
     
     // 7. PROVIDE FEEDBACK FOR COMPLETED TASKS
-    public String provideFeedback(String appointmentId,
-                                  String feedbackText) throws IOException {
+    public String provideFeedback(String appointmentId, String feedbackText) throws IOException {
  
         Appointment task = getTaskDetail(appointmentId);
  

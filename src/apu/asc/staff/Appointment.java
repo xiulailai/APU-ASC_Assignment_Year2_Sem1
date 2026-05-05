@@ -43,17 +43,11 @@ public class Appointment {
     //conver txt file to object
     public static Appointment fromFileString(String line) {
         String[] p = line.split(",", 8);
-        return new Appointment(
-                p[0].trim(), p[1].trim(), p[2].trim(),
-                p[3].trim(), p[4].trim(), p[5].trim(),
-                p[6].trim(), p[7].trim());
+        return new Appointment(p[0].trim(), p[1].trim(), p[2].trim(),p[3].trim(), p[4].trim(), p[5].trim(),p[6].trim(), p[7].trim());
     }
     
     @Override
     public String toString() {
-        return String.format(
-                "[%s] Date: %s %s | Customer: %s | Service: %s | Status: %s",
-                appointmentId, appointmentDate, appointmentTime,
-                customerId, serviceId, status);
+        return String.format("[%s] Date: %s %s | Customer: %s | Service: %s | Status: %s",appointmentId, appointmentDate, appointmentTime,customerId, serviceId, status);
     }
 }

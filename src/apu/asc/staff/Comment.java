@@ -25,21 +25,17 @@ public class Comment {
     
     //convert object to txt file
     public String toFileString() {
-        return String.join(",",commentId, appointmentId, customerId,    targetUserId, commentText);
+        return String.join(",",commentId, appointmentId, customerId, targetUserId, commentText);
     }
 
     //let system have 5 attributes in the txt file, some comment have "," so just split it with first four ","
     public static Comment fromFileString(String line) {
         String[] p = line.split(",", 5);
-        return new Comment(
-                p[0].trim(), p[1].trim(), p[2].trim(),
-                p[3].trim(), p[4].trim());
+        return new Comment(p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(), p[4].trim());
     }
     
     @Override
     public String toString() {
-        return String.format(
-                "[%s] Appointment: %s | From: %s → %s\n  \"%s\"",
-                commentId, appointmentId, customerId, targetUserId, commentText);
+        return String.format("[%s] Appointment: %s | From: %s → %s\n  \"%s\"",commentId, appointmentId, customerId, targetUserId, commentText);
     }
 }
