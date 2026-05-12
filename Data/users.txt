@@ -13,3 +13,4 @@ U011,siti22,abc123,customer,C002
 U012,tbh88,boon456,customer,C003
 U013,kavi01,kav789,customer,C004
 U014,zul55,zul321,customer,C005
+U015,a006,pass006,customer,C006
