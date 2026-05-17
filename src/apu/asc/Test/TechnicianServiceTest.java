@@ -2,7 +2,6 @@ package apu.asc.Test;
 
 import apu.asc.staff.*;
 import apu.asc.technician.TechnicianService;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -17,7 +16,7 @@ public class TechnicianServiceTest {
 
     public static void main(String[] args) {
 
-        printHeader("APU – ASC  |  TechnicianService Test File");
+        printHeader("APU - ASC | TechnicianService Test File");
         printHeader("Test Technician: T001 (Ahmad Faiz)");
 
         TechnicianService svc = new TechnicianService(TEST_TECH_ID);
@@ -48,7 +47,7 @@ public class TechnicianServiceTest {
     // MAIN FEATURES — DETAILED OUTPUT
     // Test 1: getProfile()
     private static void testGetProfile(TechnicianService svc) {
-        printSectionHeader("Test 1 — getProfile()");
+        printSectionHeader("Test 1 - getProfile()");
         totalTests++;
 
         try {
@@ -88,7 +87,7 @@ public class TechnicianServiceTest {
 
     // Test 2: getMyAppointments()
     private static void testGetMyAppointments(TechnicianService svc) {
-        printSectionHeader("Test 2 — getMyAppointments()");
+        printSectionHeader("Test 2 - getMyAppointments()");
         totalTests++;
 
         try {
@@ -121,7 +120,7 @@ public class TechnicianServiceTest {
 
     // Test 3: filterByStatus()
     private static void testFilterByStatus(TechnicianService svc) {
-        printSectionHeader("Test 3 — filterByStatus()");
+        printSectionHeader("Test 3 - filterByStatus()");
         totalTests++;
 
         try {
@@ -159,7 +158,7 @@ public class TechnicianServiceTest {
 
     // Test 4: searchTasks()
     private static void testSearchTasks(TechnicianService svc) {
-        printSectionHeader("Test 4 — searchTasks()");
+        printSectionHeader("Test 4 - searchTasks()");
         totalTests++;
 
         try {
@@ -198,7 +197,7 @@ public class TechnicianServiceTest {
 
     // Test 5: markTaskCompleted()
     private static void testMarkTaskCompleted(TechnicianService svc) {
-        printSectionHeader("Test 5 — markTaskCompleted()");
+        printSectionHeader("Test 5 - markTaskCompleted()");
         totalTests++;
 
         try {
@@ -244,7 +243,7 @@ public class TechnicianServiceTest {
 
     // Test 6: provideFeedback()
     private static void testProvideFeedback(TechnicianService svc) {
-        printSectionHeader("Test 6 — provideFeedback()");
+        printSectionHeader("Test 6 - provideFeedback()");
         totalTests++;
 
         try {
@@ -286,7 +285,7 @@ public class TechnicianServiceTest {
 
     // Test 7: getMyComments()
     private static void testGetMyComments(TechnicianService svc) {
-        printSectionHeader("Test 7 — getMyComments()");
+        printSectionHeader("Test 7 - getMyComments()");
         totalTests++;
 
         try {
@@ -320,7 +319,7 @@ public class TechnicianServiceTest {
 
     // Test 8: getUpcomingSchedule()
     private static void testGetUpcomingSchedule(TechnicianService svc) {
-        printSectionHeader("Test 8 — getUpcomingSchedule()");
+        printSectionHeader("Test 8 - getUpcomingSchedule()");
         totalTests++;
 
         try {
@@ -438,7 +437,7 @@ public class TechnicianServiceTest {
             System.out.println("Test - buildServiceNameMap(): " + (pass ? "PASS" : "FAIL"));
             if (pass) passedTests++; else failedTests++;
         } catch (Exception e) {
-            System.out.println("  Test - buildServiceNameMap          : FAIL (" + e.getMessage() + ")");
+            System.out.println("Test - buildServiceNameMap: FAIL (" + e.getMessage() + ")");
             failedTests++;
         }
     }
@@ -514,21 +513,21 @@ public class TechnicianServiceTest {
 
     private static void printSectionHeader(String title) {
         System.out.println();
-        System.out.println("│ " + title);
+        System.out.println("# " + title);
     }
 
     private static void printResult(boolean pass) {
         if (pass) {
-            System.out.println("✔ Result: PASS");
+            System.out.println("Result: PASS");
             passedTests++;
         } else {
-            System.out.println("✘ Result: FAIL");
+            System.out.println("Result: FAIL");
             failedTests++;
         }
     }
 
     private static void printError(Exception e) {
-        System.out.println("✘ Result: FAIL (Exception: " + e.getMessage() + ")");
+        System.out.println("Result: FAIL (Exception: " + e.getMessage() + ")");
         failedTests++;
     }
 
@@ -538,6 +537,6 @@ public class TechnicianServiceTest {
         System.out.println("Total Tests: " + totalTests);
         System.out.println("Passed: " + passedTests);
         System.out.println("Failed: " + failedTests);
-        System.out.println("Result: " + (failedTests == 0 ? "ALL TESTS PASSED ✔" : failedTests + " TEST(S) FAILED ✘"));
+        System.out.println("Result: " + (failedTests == 0 ? "ALL TESTS PASSED" : failedTests + " TEST(S) FAILED"));
     }
 }
