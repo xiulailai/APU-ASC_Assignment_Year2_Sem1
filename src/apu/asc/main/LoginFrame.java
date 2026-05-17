@@ -9,7 +9,7 @@ public class LoginFrame extends javax.swing.JFrame {
     public LoginFrame() {
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("APU – ASC | Technician Login");
+        setTitle("APU – ASC Login Interface");
     }
 
     /**
