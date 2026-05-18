@@ -194,35 +194,26 @@ public class tchnFeedback extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSubmitFeedbackActionPerformed
 
-    private void refreshEligibleAppointments() {
-        cbFeedbackAppt.removeAllItems();
- 
-        Set<String> alreadySubmitted = svc.loadAllFeedbacks().stream()
-                .filter(f -> f.getTechnicianId().equals(svc.getTechnicianId()))
-                .map(Feedback::getAppointmentId)
-                .collect(Collectors.toSet());
- 
-        Map<String, String> svcNames = svc.buildServiceNameMap();
-        boolean any = false;
- 
-        for (Appointment a : svc.getMyAppointments()) {
-            if (a.getStatus().equalsIgnoreCase("Completed")
-                    && !alreadySubmitted.contains(a.getAppointmentId())) {
-                cbFeedbackAppt.addItem(a.getAppointmentId()
-                        + "  –  " + svcNames.getOrDefault(a.getServiceId(), a.getServiceId())
-                        + "  (" + a.getAppointmentDate() + ")");
-                any = true;
-            }
+private void refreshEligibleAppointments() {
+    cbFeedbackAppt.removeAllItems();
+
+    Map<String, String> svcNames = svc.buildServiceNameMap();
+    boolean any = false;
+
+    for (Appointment a : svc.getEligibleAppointmentsForFeedback()) {
+        cbFeedbackAppt.addItem(a.getAppointmentId()
+                + "  –  " + svcNames.getOrDefault(a.getServiceId(), a.getServiceId())
+                + "  (" + a.getAppointmentDate() + ")");
+        any = true;
         }
- 
+
         if (!any) {
             cbFeedbackAppt.addItem("No eligible appointments");
             btnSubmitFeedback.setEnabled(false);
         } else {
             btnSubmitFeedback.setEnabled(true);
-        }
     }
- 
+}
     private void refreshPastFeedback() {
         listModel.clear();
         List<Feedback> past = svc.loadAllFeedbacks().stream()

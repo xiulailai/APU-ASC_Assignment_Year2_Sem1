@@ -242,7 +242,7 @@ public class tchnSchedule extends javax.swing.JFrame {
             String duration   = svcInfo != null ? svcInfo.getDurationHours() + " hr(s)" : "-";
  
             // Get day name from date
-            String dayName    = getDayName(a.getAppointmentDate());
+            String dayName    = svc.getDayName(a.getAppointmentDate());
             String svcName    = svcNames.getOrDefault(a.getServiceId(), a.getServiceId());
  
             tableModel.addRow(new Object[]{
@@ -274,17 +274,6 @@ public class tchnSchedule extends javax.swing.JFrame {
     }
  
     
-    //Converts a yyyy-MM-dd date string to a day name like "Monday".
-    private String getDayName(String dateStr) {
-        try {
-            LocalDate date = LocalDate.parse(dateStr,
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            return date.getDayOfWeek().toString().charAt(0)
-                    + date.getDayOfWeek().toString().substring(1).toLowerCase();
-        } catch (Exception e) {
-            return "-";
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRefresh;

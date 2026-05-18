@@ -248,18 +248,8 @@ public class tchnTasks extends javax.swing.JFrame {
     private void refreshTable(String keyword, String status) {
         tableModel.setRowCount(0);
         Map<String, String> svcNames = svc.buildServiceNameMap();
- 
-        List<Appointment> list;
-        if (keyword != null && !keyword.isBlank()) {
-            list = svc.searchTasks(keyword);
-            if (status != null) {
-                list = list.stream()
-                        .filter(a -> a.getStatus().equalsIgnoreCase(status))
-                        .collect(java.util.stream.Collectors.toList());
-            }
-        } else {
-            list = svc.filterByStatus(status);
-        }
+        List<Appointment> list = svc.searchTasks(keyword, status);
+
  
         for (Appointment a : list) {
             tableModel.addRow(new Object[]{

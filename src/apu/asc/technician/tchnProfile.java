@@ -419,40 +419,36 @@ public class tchnProfile extends javax.swing.JFrame {
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
         lblProfileMsg.setForeground(java.awt.Color.RED);
  
-        String ageStr = tfAge.getText().trim();
+        // Parse age — only number check stays in GUI (UI input parsing)
         int age;
         try {
-            age = Integer.parseInt(ageStr);
-            if (age <= 0) throw new NumberFormatException();
+            age = Integer.parseInt(tfAge.getText().trim());
         } catch (NumberFormatException e) {
-            lblProfileMsg.setText("Age must be a positive number.");
+            lblProfileMsg.setText("Age must be a number.");
             return;
         }
  
-        String phone = tfPhone.getText().trim();
-        if (!phone.isEmpty() && !phone.matches("\\d{10,12}")) {
-            lblProfileMsg.setText("Phone must be 10–12 digits.");
+        // Validation logic now in TechnicianService — GUI just calls it
+        String error = svc.validateProfile(
+                tfName.getText().trim(),
+                tfPhone.getText().trim(),
+                tfEmail.getText().trim(),
+                age);
+ 
+        if (error != null) {
+            lblProfileMsg.setText(error);
             return;
         }
  
-        String email = tfEmail.getText().trim();
-        if (!email.isEmpty() && !email.contains("@")) {
-            lblProfileMsg.setText("Invalid email format.");
-            return;
-        }
- 
-        if (tfName.getText().trim().isEmpty()) {
-            lblProfileMsg.setText("Name cannot be empty.");
-            return;
-        }
- 
-        String newPass = new String(pfPassword.getPassword()).trim();
- 
+        // All valid — call service to save
         try {
+            String newPass = new String(pfPassword.getPassword()).trim();
             svc.editProfile(
                     tfName.getText().trim(),
                     tfGender.getText().trim(),
-                    age, phone, email,
+                    age,
+                    tfPhone.getText().trim(),
+                    tfEmail.getText().trim(),
                     tfAddress.getText().trim(),
                     tfNationality.getText().trim(),
                     newPass.isEmpty() ? null : newPass);
@@ -461,7 +457,7 @@ public class tchnProfile extends javax.swing.JFrame {
             lblProfileMsg.setText("Profile updated successfully.");
             loadProfile();
  
-        } catch (IOException e) {
+        } catch (java.io.IOException e) {
             lblProfileMsg.setText("Save error: " + e.getMessage());
         }
     }//GEN-LAST:event_btnSaveProfileActionPerformed

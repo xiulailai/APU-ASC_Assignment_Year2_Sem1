@@ -2,6 +2,8 @@ package apu.asc.technician;
 import apu.asc.staff.Technician;
 import apu.asc.staff.*;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.*;
 
@@ -277,6 +279,58 @@ public class TechnicianService {
         for (String line : readDataLines(FILE_TECHNICIANS)) {
             try { list.add(Technician.fromFileString(line)); }
             catch (Exception ignored) {}
+        }
+        return list;
+    }
+    
+    //12. Validates profile input fields
+    public String validateProfile(String name, String phone, String email, int age) {
+        if (name == null || name.isBlank())
+            return "Name cannot be empty.";
+        if (age <= 0)
+            return "Age must be a positive number.";
+        if (!phone.isEmpty() && !phone.matches("\\d{10,12}"))
+            return "Phone must be 10-12 digits.";
+        if (!email.isEmpty() && !email.contains("@"))
+            return "Invalid email format.";
+        return null; // null = no error, all valid
+    }
+    
+    //13. Get Day name
+    public String getDayName(String dateStr) {
+        try {
+            LocalDate date = LocalDate.parse(dateStr,
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return date.getDayOfWeek().toString().charAt(0)
+                    + date.getDayOfWeek().toString().substring(1).toLowerCase();
+        } catch (Exception e) {
+            return "-";
+        }
+    }
+    
+    //14. Check is it fits condition to submit feedback
+    public List<Appointment> getEligibleAppointmentsForFeedback() {
+        Set<String> alreadySubmitted = loadAllFeedbacks().stream()
+                .filter(f -> f.getTechnicianId().equals(technicianId))
+                .map(Feedback::getAppointmentId)
+                .collect(Collectors.toSet());
+
+        return getMyAppointments().stream()
+                .filter(a -> a.getStatus().equalsIgnoreCase("Completed")
+                        && !alreadySubmitted.contains(a.getAppointmentId()))
+                .collect(Collectors.toList());
+    }
+    
+    //15. Search task keywords
+    public List<Appointment> searchTasks(String keyword, String status) {
+        List<Appointment> list = (keyword != null && !keyword.isBlank())
+                ? searchTasks(keyword)
+                : getMyAppointments();
+
+        if (status != null && !status.isBlank()) {
+            list = list.stream()
+                    .filter(a -> a.getStatus().equalsIgnoreCase(status))
+                    .collect(Collectors.toList());
         }
         return list;
     }

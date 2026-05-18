@@ -1,11 +1,11 @@
 package apu.asc.main;
-import javax.swing.JOptionPane;
 
 public class LoginFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form LoginFrame
-     */
+    private LoginService loginService = new LoginService();
+
+    // Creates new form LoginFrame
+
     public LoginFrame() {
         initComponents();
         setLocationRelativeTo(null);
@@ -139,52 +139,58 @@ public class LoginFrame extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = tfUsername.getText().trim();
         String password = new String(pfPassword.getPassword()).trim();
-
+ 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter username and password.", "Please Input", JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Please enter username and password.",
+                    "Please Input", javax.swing.JOptionPane.WARNING_MESSAGE);
             lblError.setText("Please enter username and password.");
             return;
         }
-
-        String[] result = authenticate(username, password);
-
+ 
+        // GUI just calls service — no logic here
+        String[] result = loginService.authenticate(username, password);
+ 
         if (result == null) {
-            JOptionPane.showMessageDialog(this, "Invalid username or password.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Invalid username or password.",
+                    "Invalid Input", javax.swing.JOptionPane.WARNING_MESSAGE);
             lblError.setText("Invalid username or password.");
             pfPassword.setText("");
             return;
         }
-
-        String role = result[0];  // e.g. "technician", "manager", "counterstaff", "customer"
-        String roleRefId = result[1];  // e.g. "T001", "M001", "CS001", "C001"
-
-        dispose();  // close login window
-
+ 
+        String role      = result[0];
+        String roleRefId = result[1];
+        lblError.setText(" ");
+        dispose();
+ 
         switch (role.toLowerCase()) {
             case "technician":
                 new apu.asc.technician.tchnDashboard(roleRefId).setVisible(true);
                 break;
             case "manager":
-                // new apu.asc.manager.mgrDashboard(roleRefId).setVisible(true);
                 javax.swing.JOptionPane.showMessageDialog(null,
-                    "Manager dashboard not implemented yet.",
-                    "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                new LoginFrame().setVisible(true); // reopen login
+                        "Manager dashboard not implemented yet.",
+                        "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                new LoginFrame().setVisible(true);
                 break;
             case "counterstaff":
-                new apu.asc.counterstaff.csDashboard(roleRefId).setVisible(true);
+                javax.swing.JOptionPane.showMessageDialog(null,
+                        "Counter Staff dashboard not implemented yet.",
+                        "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                new LoginFrame().setVisible(true);
                 break;
             case "customer":
-                // new apu.asc.customer.custDashboard(roleRefId).setVisible(true);
                 javax.swing.JOptionPane.showMessageDialog(null,
-                    "Customer dashboard not implemented yet.",
-                    "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                        "Customer dashboard not implemented yet.",
+                        "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 new LoginFrame().setVisible(true);
                 break;
             default:
                 javax.swing.JOptionPane.showMessageDialog(null,
-                    "Unknown role: " + role,
-                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        "Unknown role: " + role,
+                        "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 new LoginFrame().setVisible(true);
                 break;
         }
@@ -208,23 +214,6 @@ public class LoginFrame extends javax.swing.JFrame {
     }
         
     
-    private String[] authenticate(String username, String password) {
-        try (java.io.BufferedReader br = new java.io.BufferedReader(
-                new java.io.FileReader("Data/users.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("#") || line.isBlank()) continue;
-                // userId, username, password, role, roleRefId
-                String[] p = line.split(",", 5);
-                if (p.length == 5
-                        && p[1].trim().equals(username)
-                        && p[2].trim().equals(password)) {
-                    return new String[]{ p[3].trim(), p[4].trim() };
-                }
-            }
-        } catch (Exception ignored) {}
-        return null;
-    }
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
