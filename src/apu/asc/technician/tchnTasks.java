@@ -219,7 +219,7 @@ public class tchnTasks extends javax.swing.JFrame {
         showDetailDialog(apptId);
     }//GEN-LAST:event_btnViewDetailActionPerformed
 
-        private void setupTable() {
+    private void setupTable() {
         tableModel = new javax.swing.table.DefaultTableModel(
                 new String[]{"Appt ID", "Date", "Time", "Customer ID", "Service", "Status"}, 0) {
             public boolean isCellEditable(int r, int c) { return false; }
@@ -284,10 +284,10 @@ public class tchnTasks extends javax.swing.JFrame {
 
         Object[][] apptRows = {
             {"Appointment ID:", task.getAppointmentId()},
-            {"Date:",           task.getAppointmentDate()},
-            {"Day:",            getDayName(task.getAppointmentDate())},
-            {"Time:",           task.getAppointmentTime()},
-            {"Status:",         task.getStatus()},
+            {"Date:", task.getAppointmentDate()},
+            {"Day:", svc.getDayName(task.getAppointmentDate())},
+            {"Time:", task.getAppointmentTime()},
+            {"Status:", task.getStatus()},
         };
         int rowIdx = 1;
         for (Object[] row : apptRows) {
@@ -368,17 +368,6 @@ public class tchnTasks extends javax.swing.JFrame {
                 ? new java.awt.Color(30, 58, 110)
                 : java.awt.Color.DARK_GRAY);
         p.add(valLbl, gc);
-    }
-
-    private String getDayName(String dateStr) {
-        try {
-            java.time.LocalDate date = java.time.LocalDate.parse(dateStr,
-                    java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String day = date.getDayOfWeek().toString();
-            return day.charAt(0) + day.substring(1).toLowerCase();
-        } catch (Exception e) {
-            return "-";
-        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClearSearch;

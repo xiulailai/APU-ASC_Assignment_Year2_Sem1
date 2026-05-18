@@ -334,6 +334,23 @@ public class TechnicianService {
         }
         return list;
     }
+    
+    //16. Get Technician Feedback
+    public List<Feedback> getMyFeedbacks() {
+        return loadAllFeedbacks().stream()
+                .filter(f -> f.getTechnicianId().equals(technicianId))
+                .collect(Collectors.toList());
+    }
+    
+    //17. status counts
+    public int[] getUpcomingStatusCounts() {
+    List<Appointment> upcoming = getUpcomingSchedule();
+        int assigned = (int) upcoming.stream()
+                .filter(a -> a.getStatus().equalsIgnoreCase("Assigned")).count();
+        int pending  = (int) upcoming.stream()
+                .filter(a -> a.getStatus().equalsIgnoreCase("Pending")).count();
+        return new int[]{upcoming.size(), assigned, pending};
+    }
  
     //Read all non-comment, non-blank lines as Appointment objects.
     public List<Appointment> loadAllAppointments() {

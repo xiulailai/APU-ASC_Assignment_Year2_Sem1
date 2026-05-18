@@ -3,8 +3,6 @@ import apu.asc.staff.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class tchnFeedback extends javax.swing.JFrame {
     private TechnicianService svc;
@@ -216,9 +214,8 @@ private void refreshEligibleAppointments() {
 }
     private void refreshPastFeedback() {
         listModel.clear();
-        List<Feedback> past = svc.loadAllFeedbacks().stream()
-                .filter(f -> f.getTechnicianId().equals(svc.getTechnicianId()))
-                .collect(Collectors.toList());
+        List<Feedback> past = svc.getMyFeedbacks();
+
  
         if (past.isEmpty()) {
             listModel.addElement("No feedback submitted yet.");

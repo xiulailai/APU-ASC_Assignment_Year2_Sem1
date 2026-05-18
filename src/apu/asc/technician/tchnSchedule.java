@@ -242,8 +242,8 @@ public class tchnSchedule extends javax.swing.JFrame {
             String duration   = svcInfo != null ? svcInfo.getDurationHours() + " hr(s)" : "-";
  
             // Get day name from date
-            String dayName    = svc.getDayName(a.getAppointmentDate());
-            String svcName    = svcNames.getOrDefault(a.getServiceId(), a.getServiceId());
+            String dayName = svc.getDayName(a.getAppointmentDate());
+            String svcName = svcNames.getOrDefault(a.getServiceId(), a.getServiceId());
  
             tableModel.addRow(new Object[]{
                 a.getAppointmentDate(),
@@ -259,11 +259,10 @@ public class tchnSchedule extends javax.swing.JFrame {
  
         // Update info bar
         int todayHours   = svc.getTotalHoursForDate(today);
-        int totalUpcoming = upcoming.size();
-        int assignedCount = (int) upcoming.stream()
-                .filter(a -> a.getStatus().equalsIgnoreCase("Assigned")).count();
-        int pendingCount  = (int) upcoming.stream()
-                .filter(a -> a.getStatus().equalsIgnoreCase("Pending")).count();
+        int[] counts      = svc.getUpcomingStatusCounts();
+        int totalUpcoming = counts[0];
+        int assignedCount = counts[1];
+        int pendingCount  = counts[2];
  
         lblTodayInfo.setText(
                 "Today: " + today + "   |   Today's workload: " + todayHours + " hr(s)");
