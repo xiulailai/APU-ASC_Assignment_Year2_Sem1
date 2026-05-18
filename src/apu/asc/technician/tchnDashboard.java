@@ -235,9 +235,10 @@ public class tchnDashboard extends javax.swing.JFrame {
     }
  
     public void refreshStats() {
-        lblAssigned.setText(String.valueOf(svc.filterByStatus("Assigned").size()));
-        lblPending.setText(String.valueOf(svc.filterByStatus("Pending").size()));
-        lblCompleted.setText(String.valueOf(svc.filterByStatus("Completed").size()));
+        int[] counts = svc.getAllStatusCounts();
+        lblAssigned.setText(String.valueOf(counts[0]));
+        lblPending.setText(String.valueOf(counts[1]));
+        lblCompleted.setText(String.valueOf(counts[2]));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

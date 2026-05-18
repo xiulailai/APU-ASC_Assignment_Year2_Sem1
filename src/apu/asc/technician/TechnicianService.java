@@ -261,7 +261,6 @@ public class TechnicianService {
     
     //Calculates Total working hours of upcoming tasks
     public int getTotalHoursForDate(String date) {
-        Map<String, String> svcMap = buildServiceNameMap();
         int total = 0;
         for (Appointment a : getUpcomingSchedule()) {
             if (a.getAppointmentDate().equals(date)) {
@@ -350,6 +349,18 @@ public class TechnicianService {
         int pending  = (int) upcoming.stream()
                 .filter(a -> a.getStatus().equalsIgnoreCase("Pending")).count();
         return new int[]{upcoming.size(), assigned, pending};
+    }
+    
+    //18. Counts Status
+    public int[] getAllStatusCounts() {
+        List<Appointment> all = getMyAppointments();
+        int assigned  = (int) all.stream()
+                .filter(a -> a.getStatus().equalsIgnoreCase("Assigned")).count();
+        int pending   = (int) all.stream()
+                .filter(a -> a.getStatus().equalsIgnoreCase("Pending")).count();
+        int completed = (int) all.stream()
+                .filter(a -> a.getStatus().equalsIgnoreCase("Completed")).count();
+        return new int[]{assigned, pending, completed};
     }
  
     //Read all non-comment, non-blank lines as Appointment objects.
