@@ -155,8 +155,8 @@ public class TechnicianService {
         if (task.getStatus().equalsIgnoreCase("Completed")) {
             return "ERROR: Task is already marked as Completed.";
         }
-        if (!task.getStatus().equalsIgnoreCase("Assigned") && !task.getStatus().equalsIgnoreCase("Pending")) {
-            return "ERROR: Only tasks with status 'Assigned' or 'Pending' can be marked as Completed. " + "Current status: " + task.getStatus();
+        if (!task.getStatus().equalsIgnoreCase("Assigned")) {
+            return "ERROR: Only tasks with status 'Assigned' can be marked as Completed. " + "Current status: " + task.getStatus();
         }
         List<String> rawLines = readRawLines(FILE_APPOINTMENTS); //update to file
         List<String> updated  = new ArrayList<>();
