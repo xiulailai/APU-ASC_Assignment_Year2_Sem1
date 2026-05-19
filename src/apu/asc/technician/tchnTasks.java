@@ -264,12 +264,8 @@ public class tchnTasks extends javax.swing.JFrame {
     }
  
     private void showDetailDialog(String apptId) {
-        Appointment task = svc.getTaskDetail(apptId);
-        if (task == null) return;
-
-        Service  svcInfo  = svc.getServiceInfo(task.getServiceId());
-        Customer customer = svc.getCustomerById(task.getCustomerId());
-        Map<String, String> names = svc.buildServiceNameMap();
+        Map<String, String> d = svc.getTaskDetailMap(apptId);
+        if (d == null) return;
 
         javax.swing.JPanel p = new javax.swing.JPanel(new java.awt.GridBagLayout());
         p.setPreferredSize(new java.awt.Dimension(420, 340));
@@ -278,49 +274,24 @@ public class tchnTasks extends javax.swing.JFrame {
         gc.anchor  = java.awt.GridBagConstraints.WEST;
         gc.fill    = java.awt.GridBagConstraints.HORIZONTAL;
 
-        // ── Section header helper ──
-        // Appointment details section
-        addDialogSection(p, gc, 0, "-----Appointment Details-----");
+        int row = 0;
+        addDialogSection(p, gc, row++, "-----Appointment Details-----");
+        addDialogRow(p, gc, row++, "Appointment ID:", d.get("appointmentId"), false);
+        addDialogRow(p, gc, row++, "Date:",           d.get("date"),          false);
+        addDialogRow(p, gc, row++, "Day:",            d.get("day"),           false);
+        addDialogRow(p, gc, row++, "Time:",           d.get("time"),          false);
+        addDialogRow(p, gc, row++, "Status:",         d.get("status"),        false);
 
-        Object[][] apptRows = {
-            {"Appointment ID:", task.getAppointmentId()},
-            {"Date:", task.getAppointmentDate()},
-            {"Day:", svc.getDayName(task.getAppointmentDate())},
-            {"Time:", task.getAppointmentTime()},
-            {"Status:", task.getStatus()},
-        };
-        int rowIdx = 1;
-        for (Object[] row : apptRows) {
-            addDialogRow(p, gc, rowIdx++, row[0].toString(), row[1].toString(), false);
-        }
+        addDialogSection(p, gc, row++, "-----Service Details-----");
+        addDialogRow(p, gc, row++, "Service:",  d.get("service"),  false);
+        addDialogRow(p, gc, row++, "Duration:", d.get("duration"), false);
+        addDialogRow(p, gc, row++, "Price:",    d.get("price"),    false);
 
-        // Service details section
-        addDialogSection(p, gc, rowIdx++, "-----Service Details-----");
-        Object[][] svcRows = {
-            {"Service:",   names.getOrDefault(task.getServiceId(), task.getServiceId())},
-            {"Duration:",  svcInfo != null ? svcInfo.getDurationHours() + " hr(s)" : "-"},
-            {"Price:",     svcInfo != null ? String.format("RM %.2f", svcInfo.getPrice()) : "-"},
-        };
-        for (Object[] row : svcRows) {
-            addDialogRow(p, gc, rowIdx++, row[0].toString(), row[1].toString(), false);
-        }
-
-        // Customer info section
-        addDialogSection(p, gc, rowIdx++, "-----Customer Info-----");
-        if (customer != null) {
-            Object[][] custRows = {
-                {"Customer ID:", customer.getCustomerId()},
-                {"Name:",        customer.getName()},
-                {"Phone:",       customer.getPhone()},
-                {"Email:",       customer.getEmail()},
-            };
-            for (Object[] row : custRows) {
-                addDialogRow(p, gc, rowIdx++, row[0].toString(), row[1].toString(), false);
-            }
-        } else {
-            addDialogRow(p, gc, rowIdx++, "Customer ID:", task.getCustomerId(), false);
-            addDialogRow(p, gc, rowIdx++, "", "Customer details not found.", false);
-        }
+        addDialogSection(p, gc, row++, "-----Customer Info-----");
+        addDialogRow(p, gc, row++, "Customer ID:", d.get("customerId"),    false);
+        addDialogRow(p, gc, row++, "Name:",        d.get("customerName"),  false);
+        addDialogRow(p, gc, row++, "Phone:",       d.get("customerPhone"), false);
+        addDialogRow(p, gc, row++, "Email:",       d.get("customerEmail"), false);
 
         javax.swing.JScrollPane scroll = new javax.swing.JScrollPane(p);
         scroll.setPreferredSize(new java.awt.Dimension(440, 360));
@@ -331,9 +302,7 @@ public class tchnTasks extends javax.swing.JFrame {
     }
     
     
-    private void addDialogSection(javax.swing.JPanel p,
-                                   java.awt.GridBagConstraints gc,
-                                   int row, String title) {
+    private void addDialogSection(javax.swing.JPanel p, java.awt.GridBagConstraints gc, int row, String title) {
         gc.gridy    = row;
         gc.gridx    = 0;
         gc.gridwidth = 2;

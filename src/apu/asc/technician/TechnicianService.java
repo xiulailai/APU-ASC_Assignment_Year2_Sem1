@@ -34,11 +34,7 @@ public class TechnicianService {
     }
     
     // 2. EDIT OWN PROFILE
-    public void editProfile(String name, String gender, int age,
-                            String phone, String email,
-                            String address, String nationality,
-                            String newPassword) throws IOException {
- 
+    public void editProfile(String name, String gender, int age, String phone, String email, String address, String nationality, String newPassword) throws IOException {
         // ── Update technicians.txt ──
         List<String> rawLines = readRawLines(FILE_TECHNICIANS);
         List<String> updated  = new ArrayList<>();
@@ -159,9 +155,8 @@ public class TechnicianService {
         if (task.getStatus().equalsIgnoreCase("Completed")) {
             return "ERROR: Task is already marked as Completed.";
         }
-        if (!task.getStatus().equalsIgnoreCase("Assigned")) {
-            return "ERROR: Only tasks with status 'Assigned' can be marked as Completed. "
-                 + "Current status: " + task.getStatus();
+        if (!task.getStatus().equalsIgnoreCase("Assigned") && !task.getStatus().equalsIgnoreCase("Pending")) {
+            return "ERROR: Only tasks with status 'Assigned' or 'Pending' can be marked as Completed. " + "Current status: " + task.getStatus();
         }
         List<String> rawLines = readRawLines(FILE_APPOINTMENTS); //update to file
         List<String> updated  = new ArrayList<>();
@@ -191,8 +186,7 @@ public class TechnicianService {
             return "ERROR: Appointment not found or not assigned to you.";
         }
         if (!task.getStatus().equalsIgnoreCase("Completed")) {
-            return "ERROR: Feedback can only be given for Completed tasks. "
-                 + "Current status: " + task.getStatus();
+            return "ERROR: Feedback can only be given for Completed tasks. " + "Current status: " + task.getStatus();
         }
         if (feedbackText == null || feedbackText.isBlank()) {
             return "ERROR: Feedback text cannot be empty.";
@@ -295,9 +289,13 @@ public class TechnicianService {
         } catch (NumberFormatException e) {
             return "Age must be a valid number.";
         }
-        if (!phone.isEmpty() && !phone.matches("\\d{10,12}"))
+        if (phone == null || phone.isBlank())
+            return "Phone cannot be empty.";
+        if (!phone.matches("\\d{10,12}"))
             return "Phone must be 10-12 digits.";
-        if (!email.isEmpty() && !email.contains("@"))
+        if (email == null || email.isBlank())
+            return "Email cannot be empty.";
+        if (!email.contains("@"))
             return "Invalid email format.";
         return null;
     }
@@ -370,6 +368,70 @@ public class TechnicianService {
         return new int[]{assigned, pending, completed};
     }
     
+    // For tchnSchedule - returns ready-to-display rows
+    public List<String[]> getScheduleRows() {
+        Map<String, String> svcNames = buildServiceNameMap();
+        List<String[]> rows = new ArrayList<>();
+        for (Appointment a : getUpcomingSchedule()) {
+            Customer cust    = getCustomerById(a.getCustomerId());
+            Service  svcInfo = getServiceInfo(a.getServiceId());
+            rows.add(new String[]{
+                a.getAppointmentDate(),
+                getDayName(a.getAppointmentDate()),
+                a.getAppointmentTime(),
+                svcNames.getOrDefault(a.getServiceId(), a.getServiceId()),
+                svcInfo  != null ? svcInfo.getDurationHours() + " hr(s)" : "-",
+                cust     != null ? cust.getName()  : a.getCustomerId(),
+                cust     != null ? cust.getPhone() : "-",
+                a.getStatus()
+            });
+        }
+        return rows;
+    }
+
+    // For tchnSchedule - returns today's date string
+    public String getTodayString() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    // For tchnFeedback - returns display labels paired with appointment IDs
+    public List<String[]> getEligibleAppointmentLabels() {
+        Map<String, String> svcNames = buildServiceNameMap();
+        List<String[]> result = new ArrayList<>();
+        for (Appointment a : getEligibleAppointmentsForFeedback()) {
+            String label = a.getAppointmentId()
+                    + "  \u2013  " + svcNames.getOrDefault(a.getServiceId(), a.getServiceId())
+                    + "  (" + a.getAppointmentDate() + ")";
+            result.add(new String[]{ a.getAppointmentId(), label });
+        }
+        return result;
+    }
+
+    // Returns a map of display-ready strings for a task detail dialog
+    public Map<String, String> getTaskDetailMap(String appointmentId) {
+        Appointment task = getTaskDetail(appointmentId);
+        if (task == null) return null;
+
+        Service svcInfo = getServiceInfo(task.getServiceId());
+        Customer customer = getCustomerById(task.getCustomerId());
+        Map<String, String> svcNames = buildServiceNameMap();
+
+        Map<String, String> detail = new LinkedHashMap<>();
+        detail.put("appointmentId", task.getAppointmentId());
+        detail.put("date", task.getAppointmentDate());
+        detail.put("day", getDayName(task.getAppointmentDate()));
+        detail.put("time", task.getAppointmentTime());
+        detail.put("status", task.getStatus());
+        detail.put("service", svcNames.getOrDefault(task.getServiceId(), task.getServiceId()));
+        detail.put("duration", svcInfo != null ? svcInfo.getDurationHours() + " hr(s)" : "-");
+        detail.put("price", svcInfo != null ? String.format("RM %.2f", svcInfo.getPrice()) : "-");
+        detail.put("customerId", task.getCustomerId());
+        detail.put("customerName", customer != null ? customer.getName()  : "Not found");
+        detail.put("customerPhone", customer != null ? customer.getPhone() : "-");
+        detail.put("customerEmail", customer != null ? customer.getEmail() : "-");
+        return detail;
+    }
+
     // Unified method: returns comments filtered by appointment if provided, else all
     public List<Comment> getComments(String apptId) {
         if (apptId != null && !apptId.isBlank()) {

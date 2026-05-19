@@ -1,9 +1,5 @@
 package apu.asc.technician;
-import apu.asc.staff.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 public class tchnSchedule extends javax.swing.JFrame {
 
@@ -197,8 +193,7 @@ public class tchnSchedule extends javax.swing.JFrame {
                     javax.swing.JTable t, Object v,
                     boolean sel, boolean foc, int row, int col) {
                 super.getTableCellRendererComponent(t, v, sel, foc, row, col);
-                String today = LocalDate.now()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String today = svc.getTodayString();
                 String rowDate = tableModel.getValueAt(row, 0) != null
                         ? tableModel.getValueAt(row, 0).toString() : "";
                 if (!sel && rowDate.equals(today)) {
@@ -226,50 +221,22 @@ public class tchnSchedule extends javax.swing.JFrame {
  
     private void loadSchedule() {
         tableModel.setRowCount(0);
-        Map<String, String> svcNames = svc.buildServiceNameMap();
-        List<Appointment> upcoming   = svc.getUpcomingSchedule();
-        String today = LocalDate.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
- 
-        for (Appointment a : upcoming) {
-            // Get customer info
-            Customer cust     = svc.getCustomerById(a.getCustomerId());
-            String custName   = cust != null ? cust.getName()  : a.getCustomerId();
-            String custPhone  = cust != null ? cust.getPhone() : "-";
- 
-            // Get service duration
-            Service svcInfo   = svc.getServiceInfo(a.getServiceId());
-            String duration   = svcInfo != null ? svcInfo.getDurationHours() + " hr(s)" : "-";
- 
-            // Get day name from date
-            String dayName = svc.getDayName(a.getAppointmentDate());
-            String svcName = svcNames.getOrDefault(a.getServiceId(), a.getServiceId());
- 
-            tableModel.addRow(new Object[]{
-                a.getAppointmentDate(),
-                dayName,
-                a.getAppointmentTime(),
-                svcName,
-                duration,
-                custName,
-                custPhone,
-                a.getStatus()
-            });
+
+        List<String[]> rows = svc.getScheduleRows();
+        for (String[] row : rows) {
+            tableModel.addRow(row);
         }
- 
-        // Update info bar
-        int todayHours   = svc.getTotalHoursForDate(today);
+
+        String today      = svc.getTodayString();
+        int todayHours    = svc.getTotalHoursForDate(today);
         int[] counts      = svc.getUpcomingStatusCounts();
-        int totalUpcoming = counts[0];
-        int assignedCount = counts[1];
-        int pendingCount  = counts[2];
- 
+
         lblTodayInfo.setText(
                 "Today: " + today + "   |   Today's workload: " + todayHours + " hr(s)");
         lblSummary.setText(
-                "Total upcoming: " + totalUpcoming
-                + "   |   Assigned: " + assignedCount
-                + "   |   Pending: " + pendingCount);
+                "Total upcoming: " + counts[0]
+                + "   |   Assigned: " + counts[1]
+                + "   |   Pending: " + counts[2]);
     }
  
     

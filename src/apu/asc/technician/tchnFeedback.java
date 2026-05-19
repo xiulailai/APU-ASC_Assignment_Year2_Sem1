@@ -2,7 +2,6 @@ package apu.asc.technician;
 import apu.asc.staff.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class tchnFeedback extends javax.swing.JFrame {
     private TechnicianService svc;
@@ -195,20 +194,17 @@ public class tchnFeedback extends javax.swing.JFrame {
 
     private void refreshEligibleAppointments() {
         cbFeedbackAppt.removeAllItems();
-        eligibleApptIds.clear(); // reset the ID list too
+        eligibleApptIds.clear();
 
-        Map<String, String> svcNames = svc.buildServiceNameMap();
-        List<Appointment> eligible = svc.getEligibleAppointmentsForFeedback();
+        List<String[]> labels = svc.getEligibleAppointmentLabels();
 
-        if (eligible.isEmpty()) {
+        if (labels.isEmpty()) {
             cbFeedbackAppt.addItem("No eligible appointments");
             btnSubmitFeedback.setEnabled(false);
         } else {
-            for (Appointment a : eligible) {
-                cbFeedbackAppt.addItem(a.getAppointmentId()
-                        + "  –  " + svcNames.getOrDefault(a.getServiceId(), a.getServiceId())
-                        + "  (" + a.getAppointmentDate() + ")");
-                eligibleApptIds.add(a.getAppointmentId()); // store ID in parallel list
+            for (String[] pair : labels) {
+                eligibleApptIds.add(pair[0]);      // appointment ID
+                cbFeedbackAppt.addItem(pair[1]);   // display label
             }
             btnSubmitFeedback.setEnabled(true);
         }

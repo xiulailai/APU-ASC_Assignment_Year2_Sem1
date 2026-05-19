@@ -1,7 +1,6 @@
 package apu.asc.technician;
 
 import apu.asc.staff.Technician;
-import java.io.IOException;
 
 public class tchnProfile extends javax.swing.JFrame {
 
@@ -32,9 +31,6 @@ public class tchnProfile extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
         pnlView = new javax.swing.JPanel();
         lblIdKey = new javax.swing.JLabel();
         lblNameVal = new javax.swing.JLabel();
@@ -73,17 +69,6 @@ public class tchnProfile extends javax.swing.JFrame {
         lblProfileMsg = new javax.swing.JLabel();
         lblViewTitle = new javax.swing.JLabel();
         lblEditTitle = new javax.swing.JLabel();
-
-        jPasswordField1.setText("jPasswordField1");
-
-        jTextField7.setText("jTextField1");
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
-            }
-        });
-
-        jTextField8.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(650, 460));
@@ -455,10 +440,6 @@ public class tchnProfile extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSaveProfileActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
-
-    }//GEN-LAST:event_jTextField7ActionPerformed
-
     private void loadProfile() {
         Technician me = svc.getProfile();
         lblIdVal.setText(me.getTechnicianId());
@@ -482,9 +463,6 @@ public class tchnProfile extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSaveProfile;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JLabel lblAddressKey;
     private javax.swing.JLabel lblAddressVal;
     private javax.swing.JLabel lblAgeKey;
