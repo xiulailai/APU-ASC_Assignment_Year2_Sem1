@@ -418,30 +418,23 @@ public class tchnProfile extends javax.swing.JFrame {
 
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
         lblProfileMsg.setForeground(java.awt.Color.RED);
- 
-        // Parse age — only number check stays in GUI (UI input parsing)
-        int age;
-        try {
-            age = Integer.parseInt(tfAge.getText().trim());
-        } catch (NumberFormatException e) {
-            lblProfileMsg.setText("Age must be a number.");
-            return;
-        }
- 
-        // Validation logic now in TechnicianService — GUI just calls it
+
+        String ageStr = tfAge.getText().trim();
+
+        // GUI only passes raw input — all validation logic is in the service
         String error = svc.validateProfile(
                 tfName.getText().trim(),
                 tfPhone.getText().trim(),
                 tfEmail.getText().trim(),
-                age);
- 
+                ageStr);
+
         if (error != null) {
             lblProfileMsg.setText(error);
             return;
         }
- 
-        // All valid — call service to save
+
         try {
+            int age = Integer.parseInt(ageStr); // safe to parse here — already validated
             String newPass = new String(pfPassword.getPassword()).trim();
             svc.editProfile(
                     tfName.getText().trim(),
@@ -452,11 +445,11 @@ public class tchnProfile extends javax.swing.JFrame {
                     tfAddress.getText().trim(),
                     tfNationality.getText().trim(),
                     newPass.isEmpty() ? null : newPass);
- 
+
             lblProfileMsg.setForeground(new java.awt.Color(0, 128, 96));
             lblProfileMsg.setText("Profile updated successfully.");
             loadProfile();
- 
+
         } catch (java.io.IOException e) {
             lblProfileMsg.setText("Save error: " + e.getMessage());
         }

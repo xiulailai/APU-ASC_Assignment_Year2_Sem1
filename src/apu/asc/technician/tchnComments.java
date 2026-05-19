@@ -136,9 +136,7 @@ public class tchnComments extends javax.swing.JFrame {
     private void loadComments(String apptId) {
         commentsListPanel.removeAll();
  
-        List<Comment> comments = (apptId != null && !apptId.isBlank())
-                ? svc.getCommentsForAppointment(apptId)
-                : svc.getMyComments();
+        List<Comment> comments = svc.getComments(apptId);
  
         if (comments.isEmpty()) {
             javax.swing.JLabel empty = new javax.swing.JLabel("  No comments found.");

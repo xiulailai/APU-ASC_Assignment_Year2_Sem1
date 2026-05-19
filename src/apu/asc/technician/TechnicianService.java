@@ -283,16 +283,23 @@ public class TechnicianService {
     }
     
     //12. Validates profile input fields
-    public String validateProfile(String name, String phone, String email, int age) {
+    public String validateProfile(String name, String phone, String email, String ageStr) {
         if (name == null || name.isBlank())
             return "Name cannot be empty.";
-        if (age <= 0)
-            return "Age must be a positive number.";
+        if (ageStr == null || ageStr.isBlank())
+            return "Age cannot be empty.";
+        try {
+            int age = Integer.parseInt(ageStr);
+            if (age <= 0)
+                return "Age must be a positive number.";
+        } catch (NumberFormatException e) {
+            return "Age must be a valid number.";
+        }
         if (!phone.isEmpty() && !phone.matches("\\d{10,12}"))
             return "Phone must be 10-12 digits.";
         if (!email.isEmpty() && !email.contains("@"))
             return "Invalid email format.";
-        return null; // null = no error, all valid
+        return null;
     }
     
     //13. Get Day name
@@ -361,6 +368,14 @@ public class TechnicianService {
         int completed = (int) all.stream()
                 .filter(a -> a.getStatus().equalsIgnoreCase("Completed")).count();
         return new int[]{assigned, pending, completed};
+    }
+    
+    // Unified method: returns comments filtered by appointment if provided, else all
+    public List<Comment> getComments(String apptId) {
+        if (apptId != null && !apptId.isBlank()) {
+            return getCommentsForAppointment(apptId);
+        }
+        return getMyComments();
     }
  
     //Read all non-comment, non-blank lines as Appointment objects.

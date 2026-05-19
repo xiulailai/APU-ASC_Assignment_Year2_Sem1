@@ -7,6 +7,7 @@ import java.util.Map;
 public class tchnFeedback extends javax.swing.JFrame {
     private TechnicianService svc;
     private javax.swing.DefaultListModel<String> listModel;
+    private java.util.List<String> eligibleApptIds = new java.util.ArrayList<>();
  
     public tchnFeedback(String technicianId) {
         initComponents();
@@ -160,15 +161,15 @@ public class tchnFeedback extends javax.swing.JFrame {
 
     private void btnSubmitFeedbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitFeedbackActionPerformed
         lblFeedbackMsg.setForeground(java.awt.Color.RED);
- 
-        String selected = (String) cbFeedbackAppt.getSelectedItem();
-        if (selected == null || selected.startsWith("No eligible")) {
+
+        int selectedIndex = cbFeedbackAppt.getSelectedIndex();
+        if (selectedIndex < 0 || selectedIndex >= eligibleApptIds.size()) {
             lblFeedbackMsg.setText("No eligible appointment selected.");
             return;
         }
  
         // First token before spaces is the appointmentId
-        String apptId = selected.split("\\s")[0];
+        String apptId = eligibleApptIds.get(selectedIndex);
         String text   = taFeedback.getText().trim();
  
         if (text.isEmpty()) {
@@ -192,26 +193,27 @@ public class tchnFeedback extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSubmitFeedbackActionPerformed
 
-private void refreshEligibleAppointments() {
-    cbFeedbackAppt.removeAllItems();
+    private void refreshEligibleAppointments() {
+        cbFeedbackAppt.removeAllItems();
+        eligibleApptIds.clear(); // reset the ID list too
 
-    Map<String, String> svcNames = svc.buildServiceNameMap();
-    boolean any = false;
+        Map<String, String> svcNames = svc.buildServiceNameMap();
+        List<Appointment> eligible = svc.getEligibleAppointmentsForFeedback();
 
-    for (Appointment a : svc.getEligibleAppointmentsForFeedback()) {
-        cbFeedbackAppt.addItem(a.getAppointmentId()
-                + "  –  " + svcNames.getOrDefault(a.getServiceId(), a.getServiceId())
-                + "  (" + a.getAppointmentDate() + ")");
-        any = true;
-        }
-
-        if (!any) {
+        if (eligible.isEmpty()) {
             cbFeedbackAppt.addItem("No eligible appointments");
             btnSubmitFeedback.setEnabled(false);
         } else {
+            for (Appointment a : eligible) {
+                cbFeedbackAppt.addItem(a.getAppointmentId()
+                        + "  –  " + svcNames.getOrDefault(a.getServiceId(), a.getServiceId())
+                        + "  (" + a.getAppointmentDate() + ")");
+                eligibleApptIds.add(a.getAppointmentId()); // store ID in parallel list
+            }
             btnSubmitFeedback.setEnabled(true);
+        }
     }
-}
+    
     private void refreshPastFeedback() {
         listModel.clear();
         List<Feedback> past = svc.getMyFeedbacks();
