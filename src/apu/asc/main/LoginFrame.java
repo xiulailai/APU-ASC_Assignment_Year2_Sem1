@@ -170,10 +170,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 new apu.asc.technician.tchnDashboard(roleRefId).setVisible(true);
                 break;
             case "manager":
-                javax.swing.JOptionPane.showMessageDialog(null,
-                        "Manager dashboard not implemented yet.",
-                        "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                new LoginFrame().setVisible(true);
+                new apu.asc.manager.mgrDashboard(roleRefId).setVisible(true);
                 break;
             case "counterstaff":
                 javax.swing.JOptionPane.showMessageDialog(null,
