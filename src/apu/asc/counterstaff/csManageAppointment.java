@@ -189,7 +189,7 @@ public class csManageAppointment extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        cbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Pending", "Assigned", "Completed" }));
+        cbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Pending", "Assigned", "Completed" }));
         cbFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbFilterActionPerformed(evt);

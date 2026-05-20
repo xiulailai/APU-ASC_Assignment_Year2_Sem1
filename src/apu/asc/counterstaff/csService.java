@@ -382,10 +382,7 @@ public class csService {
         updated.add("# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status");
         for (Appointment a : allAppointment) {
             if (a.getAppointmentId().equals(appointmentId)) {
-                found = true; 
-                if (!a.getStatus().equals("Pending")) {
-                    return "ERR: Only Pending appointments can be deleted."; //not added into updated (skipped n deleted 
-                }
+                found = true; //not added into updated (skipped n deleted
             } else {
                 updated.add(a.toFileString());
             }
@@ -500,7 +497,7 @@ public class csService {
     //returns appointments filtered by status. Returns all if status is blank
     public List<Appointment> filterAppointmentsByStatus(String status) {
         List<Appointment> allAppointment = getAllAppointments();
-        if (status == null || status.isBlank()){
+        if (status == null || status.isBlank() || status.equals("All")){
             return allAppointment;
         }
  
