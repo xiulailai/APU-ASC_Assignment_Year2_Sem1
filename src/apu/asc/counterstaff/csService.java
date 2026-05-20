@@ -373,7 +373,7 @@ public class csService {
         return null;
     }
     
-    //deletes an appointment (only allowed if status is pending)
+    //deletes an appointment 
     public String deleteAppointment(String appointmentId) {
         List<Appointment> allAppointment = getAllAppointments();
         boolean found = false;
@@ -531,14 +531,13 @@ public class csService {
         java.util.Set<String> busyTechs = new java.util.HashSet<>(); //create a collection with no duplicates
 
         for (Appointment a : allAppointments) {
-
             if (a.getAppointmentId().equals(appointment.getAppointmentId())) { //skip if it is the target appointment
                 continue;
             }
             if (!a.getAppointmentDate().equals(appointment.getAppointmentDate())) { //skip if not same day (will not clash time
                 continue;
             }
-            if (a.getStatus().equals("Pending")) { //skip if pending appointment (no tech assigned
+            if (!a.getStatus().equals("Assigned")) { //skip if NOT assigned (completed or pending wont clash)
                 continue;
             }
 

@@ -288,15 +288,6 @@ public class csManageAppointment extends javax.swing.JFrame {
             return;
         }
  
-        // Check status before showing confirmation
-        Appointment a = service.getAppointmentById(appointmentId);
-        if (!a.getStatus().equals("Pending")) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Only Pending appointments can be deleted.",
-                    "Invalid Action", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
- 
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to delete appointment " + appointmentId + "?",
                 "Confirm Delete", javax.swing.JOptionPane.YES_NO_OPTION,
