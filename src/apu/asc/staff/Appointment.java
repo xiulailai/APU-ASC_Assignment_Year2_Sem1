@@ -32,8 +32,9 @@ public class Appointment {
     public String getAppointmentTime(){ return appointmentTime; }
     public String getStatus(){ return status; }
     
-    //setter (only status can be changed or edit in this txt file)
+    //setter (only status n technicianIdcan be changed or edit in this txt file)
     public void setStatus(String status) { this.status = status; }
+    public void setTechnicianId(String id){ this.technicianId = id; }
 
     //convert object to txt file
     public String toFileString() {

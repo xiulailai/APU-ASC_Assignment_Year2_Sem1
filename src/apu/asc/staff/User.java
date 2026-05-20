@@ -11,9 +11,7 @@ public abstract class User {
     protected String nationality;
 
     //Constructor
-    public User(String name, String gender, int age,
-                String phone, String email,
-                String address, String nationality) {
+    public User(String name, String gender, int age, String phone, String email, String address, String nationality) {
         this.name = name;
         this.gender = gender;
         this.age = age;
