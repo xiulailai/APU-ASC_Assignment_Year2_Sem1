@@ -258,13 +258,213 @@ public class TestAllClasses {
 
 
         // Counter Staff Role
-        // apu.asc.counterstaff  —  Service Logic
+        System.out.println(" apu.asc.counterstaff — csService");
+        csService csSvc = new csService();
         
+        // Profile
+        System.out.println("[getProfile] CS001: " + csSvc.getProfile("CS001").getName());
+        System.out.println("[getProfile] CS999 (not found) → null: " + (csSvc.getProfile("CS999") == null));
+        System.out.println("[getAllCounterStaff]: " + csSvc.getAllCounterStaff().size() + " staff member(s)");
+        
+        // updateProfile 
+        System.out.println("[updateProfile] valid: " + csSvc.updateProfile("CS001", "Amy Lee Updated", "Female", "30", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
+        System.out.println("[updateProfile] blank name: " + csSvc.updateProfile("CS001", "", "Female", "30", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
+        System.out.println("[updateProfile] age out of range (150): " + csSvc.updateProfile("CS001", "Amy Lee", "Female", "150", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
+        System.out.println("[updateProfile] non-numeric age: " + csSvc.updateProfile("CS001", "Amy Lee", "Female", "abc", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
+        System.out.println("[updateProfile] short phone: " + csSvc.updateProfile("CS001", "Amy Lee", "Female", "29", "01234", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
+        System.out.println("[updateProfile] invalid email: " + csSvc.updateProfile("CS001", "Amy Lee", "Female", "29", "0134567890", "amyleeNOATsign", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
+        // restore CS001 after modifying
+        csSvc.updateProfile("CS001", "Amy Lee", "Female", "29", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian");
+        System.out.println("[updateProfile] restored CS001: " + csSvc.getProfile("CS001").getName());
+        
+        // manageCustomer
+        System.out.println("[getAllCustomers]: " + csSvc.getAllCustomers().size() + " customer(s)");
+        System.out.println("[getCustomerById] C001: " + csSvc.getCustomerById("C001").getName());
+        System.out.println("[getCustomerById] C999 (not found) → null: " + (csSvc.getCustomerById("C999") == null));
+        
+        // searchCustomers
+        System.out.println("[searchCustomers] 'Ali' (by name): " + csSvc.searchCustomers("Ali").size() + " result(s)");
+        System.out.println("[searchCustomers] '0164445555' (by phone): " + csSvc.searchCustomers("0164445555").size() + " result(s)");
+        System.out.println("[searchCustomers] 'C003' (by ID): " + csSvc.searchCustomers("C003").size() + " result(s)");
+        System.out.println("[searchCustomers] '' (blank → all): " + csSvc.searchCustomers("").size() + " result(s)");
+        System.out.println("[searchCustomers] 'NOMATCH': " + csSvc.searchCustomers("NOMATCH").size() + " result(s)");
+        
+        // addCustomer
+        System.out.println("[addCustomer] valid: " + csSvc.addCustomer("Test User", "Male", "25", "0111234567", "testuser@email.com", "No. 1 Jalan Test", "Malaysian"));
+        System.out.println("[addCustomer] blank name: " + csSvc.addCustomer("", "Male", "25", "0111234567", "testuser@email.com", "No. 1 Jalan Test", "Malaysian"));
+        System.out.println("[addCustomer] invalid age (999): " + csSvc.addCustomer("Test User", "Male", "999", "0111234567", "testuser@email.com", "No. 1 Jalan Test", "Malaysian"));
+        System.out.println("[addCustomer] invalid phone: " + csSvc.addCustomer("Test User", "Male", "25", "123", "testuser@email.com", "No. 1 Jalan Test", "Malaysian"));
+        System.out.println("[addCustomer] invalid email: " + csSvc.addCustomer("Test User", "Male", "25", "0111234567", "notanemail", "No. 1 Jalan Test", "Malaysian"));
+        
+        // updateCustomer
+        System.out.println("[updateCustomer] valid (C002): " + csSvc.updateCustomer("C002", "Siti Rahimah Updated", "Female", "36", "0193334444", "sitirahimah@email.com", "No. 11 Jalan Setia Wangsa Maju", "Malaysian"));
+        System.out.println("[updateCustomer] not found (C999): " + csSvc.updateCustomer("C999", "Ghost", "Male", "30", "0191234567", "ghost@email.com", "Nowhere", "Malaysian"));
+        System.out.println("[updateCustomer] invalid phone: " + csSvc.updateCustomer("C002", "Siti Rahimah", "Female", "35", "999", "sitirahimah@email.com", "No. 11 Jalan Setia Wangsa Maju", "Malaysian"));
+        // restore C002 after modifying
+        csSvc.updateCustomer("C002", "Siti Rahimah", "Female", "35", "0193334444", "sitirahimah@email.com", "No. 11 Jalan Setia Wangsa Maju", "Malaysian");
+        
+        // deleteCustomer — delete the test customer added above
+        String lastCustId = csSvc.getAllCustomers().get(csSvc.getAllCustomers().size() - 1).getCustomerId();
+        System.out.println("[deleteCustomer] test customer (" + lastCustId + "): " + csSvc.deleteCustomer(lastCustId));
+        System.out.println("[deleteCustomer] not found (C999): " + csSvc.deleteCustomer("C999"));
+        
+        // ManageAppointments 
+        System.out.println("[getAllAppointments]: " + csSvc.getAllAppointments().size() + " appointment(s)");
+        System.out.println("[getAppointmentById] A001: " + csSvc.getAppointmentById("A001").getAppointmentId());
+        System.out.println("[getAppointmentById] A999 (not found) → null: " + (csSvc.getAppointmentById("A999") == null));
+        
+        // filterAppointmentByStatus
+        System.out.println("[filterAppointmentsByStatus] 'Pending': " + csSvc.filterAppointmentsByStatus("Pending").size() + " appointment(s)");
+        System.out.println("[filterAppointmentsByStatus] 'Assigned': " + csSvc.filterAppointmentsByStatus("Assigned").size() + " appointment(s)");
+        System.out.println("[filterAppointmentsByStatus] 'Completed': " + csSvc.filterAppointmentsByStatus("Completed").size() + " appointment(s)");
+        System.out.println("[filterAppointmentsByStatus] 'All': " + csSvc.filterAppointmentsByStatus("All").size() + " appointment(s)");
+        
+        // createAppointment
+        System.out.println("[createAppointment] valid: " + csSvc.createAppointment("CS001", "C001", "S001", "2026-12-01", "10:00"));
+        System.out.println("[createAppointment] past date: " + csSvc.createAppointment("CS001", "C001", "S001", "2020-01-01", "10:00"));
+        System.out.println("[createAppointment] wrong date format: " + csSvc.createAppointment("CS001", "C001", "S001", "01-12-2026", "10:00"));
+        System.out.println("[createAppointment] blank customerId: " + csSvc.createAppointment("CS001", "", "S001", "2026-12-01", "10:00"));
+ 
+        // getAvailableTechnicians
+        Appointment a005 = csSvc.getAppointmentById("A005");
+        System.out.println("[getAvailableTechnicians] A005 (" + a005.getAppointmentDate() + " " + a005.getAppointmentTime() + "): " + csSvc.getAvailableTechnicians(a005).size() + " available");
+ 
+        // assignAppointment
+        System.out.println("[assignAppointment] valid (A007 → T003): " + csSvc.assignAppointment("A007", "T003"));
+        System.out.println("[assignAppointment] not found (A999): " + csSvc.assignAppointment("A999", "T001"));
+ 
+        // deleteAppointment — delete the appointment created above
+        String lastApptId = csSvc.getAllAppointments().get(csSvc.getAllAppointments().size() - 1).getAppointmentId();
+        System.out.println("[deleteAppointment] created appt (" + lastApptId + "): " + csSvc.deleteAppointment(lastApptId));
+        System.out.println("[deleteAppointment] not found (A999): " + csSvc.deleteAppointment("A999"));
+        
+        // Lookup Helpers
+        System.out.println("[lookupCustomerName] C001: " + csSvc.lookupCustomerName("C001"));
+        System.out.println("[lookupCustomerName] C999 (not found → returns id): " + csSvc.lookupCustomerName("C999"));
+        System.out.println("[lookupTechnicianName] T001: " + csSvc.lookupTechnicianName("T001"));
+        System.out.println("[lookupTechnicianName] TBD → 'TBD': " + csSvc.lookupTechnicianName("TBD"));
+        System.out.println("[lookupTechnicianName] null → 'TBD': " + csSvc.lookupTechnicianName(null));
+        System.out.println("[lookupServiceName] S001: " + csSvc.lookupServiceName("S001"));
+        System.out.println("[lookupServiceName] S999 (not found → returns id): " + csSvc.lookupServiceName("S999"));
+        System.out.println("[lookupServicePrice] S001: RM " + csSvc.lookupServicePrice("S001"));
+        System.out.println("[lookupServicePrice] S002: RM " + csSvc.lookupServicePrice("S002"));
+        System.out.println("[lookupServicePrice] S999 (not found → 0.0): RM " + csSvc.lookupServicePrice("S999"));
+        
+        // Payments 
+        System.out.println("[getAllPayments]: " + csSvc.getAllPayments().size() + " payment(s)");
+        System.out.println("[getUnpaidAppointments]: " + csSvc.getUnpaidAppointments().size() + " unpaid");
+ 
+        // collectPayment — create a test appointment, assign it, then collect payment
+        csSvc.createAppointment("CS001", "C001", "S001", "2026-12-01", "10:00");
+        String payTestApptId = csSvc.getAllAppointments().get(csSvc.getAllAppointments().size() - 1).getAppointmentId();
+        csSvc.assignAppointment(payTestApptId, "T001");
+        Appointment payTestAppt = csSvc.getAppointmentById(payTestApptId);
+        System.out.println("[collectPayment] " + payTestApptId + ": " + csSvc.collectPayment(payTestApptId, payTestAppt.getCustomerId(), csSvc.lookupServicePrice(payTestAppt.getServiceId())));
 
         // Counter Staff Role GUI
-        // apu.asc.counterstaff  —  GUI Frames
-        
-
+        System.out.println(" apu.asc.counterstaff — GUI Frames");
+ 
+        // csDashboard
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            dashboard.setVisible(true);
+            System.out.println("[csDashboard] opened: " + dashboard.isVisible());
+            System.out.println("[csDashboard] title: " + dashboard.getTitle());
+            dashboard.dispose();
+            System.out.println("[csDashboard] closed: " + !dashboard.isVisible());
+        });
+ 
+        // csEditProfile
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            csEditProfile editProfile = new csEditProfile("CS001", dashboard);
+            editProfile.setVisible(true);
+            System.out.println("[csEditProfile] opened: " + editProfile.isVisible());
+            System.out.println("[csEditProfile] title: " + editProfile.getTitle());
+            editProfile.dispose();
+            dashboard.dispose();
+            System.out.println("[csEditProfile] closed: " + !editProfile.isVisible());
+        });
+ 
+        // csManageCustomer
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            csManageCustomer manageCustomer = new csManageCustomer("CS001", dashboard);
+            manageCustomer.setVisible(true);
+            System.out.println("[csManageCustomer] opened: " + manageCustomer.isVisible());
+            System.out.println("[csManageCustomer] title: " + manageCustomer.getTitle());
+            manageCustomer.dispose();
+            dashboard.dispose();
+            System.out.println("[csManageCustomer] closed: " + !manageCustomer.isVisible());
+        });
+ 
+        // csEditCustomer
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            csManageCustomer manageCustomer = new csManageCustomer("CS001", dashboard);
+            csEditCustomer editCustomer = new csEditCustomer("CS001", "C001", manageCustomer);
+            editCustomer.setVisible(true);
+            System.out.println("[csEditCustomer] opened: " + editCustomer.isVisible());
+            System.out.println("[csEditCustomer] title: " + editCustomer.getTitle());
+            editCustomer.dispose();
+            manageCustomer.dispose();
+            dashboard.dispose();
+            System.out.println("[csEditCustomer] closed: " + !editCustomer.isVisible());
+        });
+ 
+        // csManageAppointment
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            csManageAppointment manageAppt = new csManageAppointment("CS001", dashboard);
+            manageAppt.setVisible(true);
+            System.out.println("[csManageAppointment] opened: " + manageAppt.isVisible());
+            System.out.println("[csManageAppointment] title: " + manageAppt.getTitle());
+            manageAppt.dispose();
+            dashboard.dispose();
+            System.out.println("[csManageAppointment] closed: " + !manageAppt.isVisible());
+        });
+ 
+        // csCreateAppointment
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            csManageAppointment manageAppt = new csManageAppointment("CS001", dashboard);
+            csCreateAppointment createAppt = new csCreateAppointment("CS001", manageAppt);
+            createAppt.setVisible(true);
+            System.out.println("[csCreateAppointment] opened: " + createAppt.isVisible());
+            System.out.println("[csCreateAppointment] title: " + createAppt.getTitle());
+            createAppt.dispose();
+            manageAppt.dispose();
+            dashboard.dispose();
+            System.out.println("[csCreateAppointment] closed: " + !createAppt.isVisible());
+        });
+ 
+        // csAssignAppointment — use A010 (Pending)
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            csManageAppointment manageAppt = new csManageAppointment("CS001", dashboard);
+            csAssignAppointment assignAppt = new csAssignAppointment("CS001", "A010", manageAppt);
+            assignAppt.setVisible(true);
+            System.out.println("[csAssignAppointment] opened: " + assignAppt.isVisible());
+            System.out.println("[csAssignAppointment] title: " + assignAppt.getTitle());
+            assignAppt.dispose();
+            manageAppt.dispose();
+            dashboard.dispose();
+            System.out.println("[csAssignAppointment] closed: " + !assignAppt.isVisible());
+        });
+ 
+        // csPayments
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            csDashboard dashboard = new csDashboard("CS001");
+            csPayments payments = new csPayments("CS001", dashboard);
+            payments.setVisible(true);
+            System.out.println("[csPayments] opened: " + payments.isVisible());
+            System.out.println("[csPayments] title: " + payments.getTitle());
+            payments.dispose();
+            dashboard.dispose();
+            System.out.println("[csPayments] closed: " + !payments.isVisible());
+        });
+ 
+        System.out.println(" Counter Staff Tests Done");
 
         // Customer Role
         // apu.asc.customer  —  Service Logic

@@ -64,6 +64,7 @@ public class csEditProfile extends javax.swing.JFrame {
         btnBack = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Edit Profile");
 
         lblTitle.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
