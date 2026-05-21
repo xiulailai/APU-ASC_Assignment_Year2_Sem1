@@ -1,6 +1,7 @@
 package apu.asc.counterstaff;
 
 import apu.asc.staff.Appointment;
+import apu.asc.staff.Payment;
 import javax.swing.table.DefaultTableModel;
 
 public class csPayments extends javax.swing.JFrame {
@@ -39,16 +40,14 @@ public class csPayments extends javax.swing.JFrame {
     private void loadHistoryTable() {
         DefaultTableModel model = (DefaultTableModel) tblHistory.getModel();
         model.setRowCount(0);
-        for (String[] p : service.getPaymentHistory()) {
-            if (p.length < 6) continue;
-            // p: paymentId, appointmentId, customerId, amount, date, receiptNo
+        for (Payment p : service.getAllPayments()) {
             model.addRow(new Object[]{
-                p[0].trim(), // Payment ID
-                p[5].trim(), // Receipt No
-                p[1].trim(), // Appt ID
-                service.lookupCustomerName(p[2].trim()), // Customer
-                p[3].trim(), // Amount (RM)
-                p[4].trim() // Date
+                p.getPaymentId(),
+                p.getReceiptNo(),
+                p.getAppointmentId(),
+                service.lookupCustomerName(p.getCustomerId()),
+                String.format("%.2f", p.getAmount()),
+                p.getPaymentDate()
             });
         }
     }
