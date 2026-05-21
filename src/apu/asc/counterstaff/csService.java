@@ -24,7 +24,7 @@ public class csService {
     private static final String FILE_PAYMENTS = "Data/payments.txt";
 
     //File I/O activities
-    // Reads all lines from a file. Returns empty list on error.
+    // Reads all lines from a file. Returns empty list on error
     private List<String> readLines(String filePath) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

@@ -285,10 +285,10 @@ public class csPayments extends javax.swing.JFrame {
  
             if (result.startsWith("OK:")) {
                 // Parse paymentId, receiptNo, date from result
-                String[] parts  = result.substring(3).split(",");
-                String payId    = parts[0];
+                String[] parts = result.substring(3).split(",");
+                String payId = parts[0];
                 String receiptNo = parts[1];
-                String today    = parts[2];
+                String today = parts[2];
  
                 // Show receipt summary
                 javax.swing.JOptionPane.showMessageDialog(this,

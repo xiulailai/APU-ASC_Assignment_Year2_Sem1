@@ -39,8 +39,7 @@ public class csCreateAppointment extends javax.swing.JFrame {
         }
  
         // Fixed time slots
-        String[] times = {"08:00", "09:00", "10:00", "11:00", "12:00",
-                          "13:00", "14:00", "15:00", "16:00", "17:00"};
+        String[] times = {"08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"};
         for (String t : times) {
             cbTime.addItem(t);
         }
@@ -211,7 +210,7 @@ public class csCreateAppointment extends javax.swing.JFrame {
         // validation, if no customers or services loaded then return
         if (customerList.isEmpty()) {
             lblMessage.setForeground(new java.awt.Color(200, 0, 0));
-            lblMessage.setText("No customers found. Please add a customer first.");
+            lblMessage.setText("No customers found.");
             return;
         }
         if (serviceList.isEmpty()) {
@@ -223,14 +222,15 @@ public class csCreateAppointment extends javax.swing.JFrame {
         // Get selected IDs using index from parallel lists
         String customerId = customerList.get(cbCustomer.getSelectedIndex()).getCustomerId();
         String serviceId  = serviceList.get(cbService.getSelectedIndex()).getServiceId();
-        String date       = tfDate.getText().trim();
-        String time       = (String) cbTime.getSelectedItem();
+        String date = tfDate.getText().trim();
+        String time = cbTime.getSelectedItem().toString();
  
         String result = service.createAppointment(counterStaffId, customerId, serviceId, date, time);
  
         if (result.startsWith("OK:")) {
             lblMessage.setForeground(new java.awt.Color(0, 150, 0));
             lblMessage.setText(result.substring(4));
+            //clears the textfields
             tfDate.setText("");
             cbCustomer.setSelectedIndex(0);
             cbService.setSelectedIndex(0);
