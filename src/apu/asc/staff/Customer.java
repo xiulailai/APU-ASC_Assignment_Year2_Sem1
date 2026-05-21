@@ -27,6 +27,11 @@ public class Customer extends User {
     }
 
     @Override
+    public String getDisplayInfo() {
+        return "Customer [" + customerId + "] " + getName() + " | " + getPhone();
+    }
+    
+    @Override
     public String toString() {
         return String.format("%s | %s | %s", customerId, name, phone);
     }

@@ -27,6 +27,11 @@ public class Manager extends User {
     }
 
     @Override
+    public String getDisplayInfo() {
+        return "Manager [" + managerId + "] " + getName() + " | " + getEmail();
+    }
+
+    @Override
     public String toString() {
         return String.format("ID: %s | Name: %s | Gender: %s | Age: %d | Phone: %s | Email: %s",managerId, name, gender, age, phone, email);
     }

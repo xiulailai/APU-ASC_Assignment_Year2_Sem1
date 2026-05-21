@@ -26,6 +26,11 @@ public class CounterStaff extends User {
     }
 
     @Override
+    public String getDisplayInfo() {
+        return "CounterStaff [" + counterStaffId + "] " + getName() + " | " + getPhone();
+    }
+
+    @Override
     public String toString() {
         return String.format("ID: %s | Name: %s | Gender: %s | Age: %d | Phone: %s | Email: %s",counterStaffId, name, gender, age, phone, email);
     }

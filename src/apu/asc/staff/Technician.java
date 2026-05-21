@@ -26,6 +26,11 @@ public class Technician extends User {
     }
 
     @Override
+    public String getDisplayInfo() {
+        return "Technician [" + technicianId + "] " + getName() + " | " + getEmail();
+    }
+    
+    @Override
     public String toString() {
         return String.format("ID: %s | Name: %s | Gender: %s | Age: %d | Phone: %s | Email: %s",technicianId, name, gender, age, phone, email);
     }
