@@ -1,38 +1,13 @@
+
 package apu.asc.manager;
 
-import apu.asc.staff.CounterStaff;
-import apu.asc.staff.Manager;
-import apu.asc.staff.Technician;
-import apu.asc.staff.User;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
+public class mgrManageStaff extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mgrManageStaff.class.getName());
 
-public class mgrManageStaff extends JFrame {
-
-    private final ManagerService svc;
-    private final mgrDashboard parent;
-    private final String staffType;   // "Manager" | "CounterStaff" | "Technician"
-
-    private JTextField tfSearch;
-    private DefaultTableModel tableModel;
-    private JTable table;
-    private JLabel lblCount;
+    private ManagerService svc;
+    private mgrDashboard parent;
+    private String staffType;   // "Manager" | "CounterStaff" | "Technician"
 
     public mgrManageStaff(ManagerService svc, mgrDashboard parent, String staffType) {
         this.svc = svc;
@@ -40,105 +15,41 @@ public class mgrManageStaff extends JFrame {
         this.staffType = staffType;
         initComponents();
         setLocationRelativeTo(null);
-        loadData(null);
-    }
-
-    public String getStaffType() { return staffType; }
-
-    private void initComponents() {
+        lblTitle.setText("Manage " + prettyType());
         setTitle("Manage " + prettyType());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(820, 520);
-        setLayout(new BorderLayout());
-
-        //header
-        JLabel header = new JLabel("Manage " + prettyType(), SwingConstants.CENTER);
-        header.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        header.setOpaque(true);
-        header.setBackground(new Color(40, 60, 100));
-        header.setForeground(Color.WHITE);
-        header.setBorder(BorderFactory.createEmptyBorder(12, 8, 12, 8));
-        add(header, BorderLayout.NORTH);
-
-        //center
-        JPanel center = new JPanel(new BorderLayout(8, 8));
-        center.setBorder(BorderFactory.createEmptyBorder(12, 16, 8, 16));
-
-        //search bar
-        JPanel topBar = new JPanel(new BorderLayout(8, 0));
-        JLabel lblSearch = new JLabel("Search:");
-        lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        tfSearch = new JTextField();
-        JButton btnSearch = new JButton("Search");
-        JButton btnClear  = new JButton("Clear");
-        btnSearch.addActionListener(e -> loadData(tfSearch.getText()));
-        btnClear.addActionListener(e -> { tfSearch.setText(""); loadData(null); });
-        JPanel searchBtns = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
-        searchBtns.add(btnSearch);
-        searchBtns.add(btnClear);
-        topBar.add(lblSearch, BorderLayout.WEST);
-        topBar.add(tfSearch,  BorderLayout.CENTER);
-        topBar.add(searchBtns, BorderLayout.EAST);
-        center.add(topBar, BorderLayout.NORTH);
-
-        //table
-        String idHeader = staffType.equals("CounterStaff") ? "CS ID"
-                          : staffType.equals("Technician") ? "Technician ID"
-                          : "Manager ID";
-        tableModel = new DefaultTableModel(
-                new String[]{idHeader, "Name", "Gender", "Age", "Phone", "Email", "Nationality"}, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        };
-        table = new JTable(tableModel);
-        table.setRowHeight(22);
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        center.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        //footer line: count
-        lblCount = new JLabel("0 records");
-        lblCount.setFont(new Font("Segoe UI", Font.ITALIC, 11));
-        center.add(lblCount, BorderLayout.SOUTH);
-
-        add(center, BorderLayout.CENTER);
-
-        //action buttons
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
-        JButton btnAdd    = new JButton("Add");
-        JButton btnEdit   = new JButton("Edit");
-        JButton btnDelete = new JButton("Delete");
-        JButton btnBack   = new JButton("Back");
-
-        btnAdd.setBackground(new Color(60, 130, 80));    btnAdd.setForeground(Color.WHITE);
-        btnEdit.setBackground(new Color(70, 110, 180));  btnEdit.setForeground(Color.WHITE);
-        btnDelete.setBackground(new Color(180, 60, 60)); btnDelete.setForeground(Color.WHITE);
-        for (JButton b : new JButton[]{btnAdd, btnEdit, btnDelete, btnBack}) {
-            b.setFont(new Font("Segoe UI", Font.BOLD, 13));
-            b.setFocusPainted(false);
-        }
-
-        btnAdd.addActionListener(e -> doAdd());
-        btnEdit.addActionListener(e -> doEdit());
-        btnDelete.addActionListener(e -> doDelete());
-        btnBack.addActionListener(e -> doBack());
-
-        buttons.add(btnBack);
-        buttons.add(btnAdd);
-        buttons.add(btnEdit);
-        buttons.add(btnDelete);
-        add(buttons, BorderLayout.SOUTH);
+        loadData(null);
     }
 
     private String prettyType() {
         if (staffType.equals("CounterStaff")) return "Counter Staff";
-        return staffType + "s";
+        return staffType + "s";   // "Managers" / "Technicians"
+    }
+
+    //Polymorphism: fetch returns any of the 3 staff types as a list of User.
+    private java.util.List<? extends apu.asc.staff.User> fetchRecords(String search) {
+        switch (staffType) {
+            case "Manager":      return svc.searchManagers(search);
+            case "CounterStaff": return svc.searchCounterStaff(search);
+            case "Technician":   return svc.searchTechnicians(search);
+        }
+        return new java.util.ArrayList<>();
+    }
+
+    //Polymorphism: each subclass exposes its ID via a different getter.
+    private String getId(apu.asc.staff.User u) {
+        if (u instanceof apu.asc.staff.Manager)      return ((apu.asc.staff.Manager) u).getManagerId();
+        if (u instanceof apu.asc.staff.CounterStaff) return ((apu.asc.staff.CounterStaff) u).getCounterStaffId();
+        if (u instanceof apu.asc.staff.Technician)   return ((apu.asc.staff.Technician) u).getTechnicianId();
+        return "?";
     }
 
     private void loadData(String search) {
-        tableModel.setRowCount(0);
-        List<User> records = fetchRecords(search);
-        for (User u : records) {
-            tableModel.addRow(new Object[]{
+        javax.swing.table.DefaultTableModel m =
+                (javax.swing.table.DefaultTableModel) tblStaff.getModel();
+        m.setRowCount(0);
+        java.util.List<? extends apu.asc.staff.User> records = fetchRecords(search);
+        for (apu.asc.staff.User u : records) {
+            m.addRow(new Object[]{
                 getId(u),
                 u.getName(),
                 u.getGender(),
@@ -150,89 +61,271 @@ public class mgrManageStaff extends JFrame {
         }
         lblCount.setText(records.size() + " record(s)");
     }
-
-    //Polymorphic load — collects User references across the three subclass lists.
-    private List<User> fetchRecords(String search) {
-        List<User> result = new ArrayList<>();
-        switch (staffType) {
-            case "Manager":
-                result.addAll(svc.searchManagers(search));
-                break;
-            case "CounterStaff":
-                result.addAll(svc.searchCounterStaff(search));
-                break;
-            case "Technician":
-                result.addAll(svc.searchTechnicians(search));
-                break;
-        }
-        return result;
+    //Called by mgrAddStaff / mgrEditStaff after a successful save to refresh the table.
+    public void refresh() {
+        loadData(tfSearch.getText());
+        setVisible(true);
     }
+    
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-    private String getId(User u) {
-        if (u instanceof Manager)      return ((Manager) u).getManagerId();
-        if (u instanceof CounterStaff) return ((CounterStaff) u).getCounterStaffId();
-        if (u instanceof Technician)   return ((Technician) u).getTechnicianId();
-        return "?";
+        lblTitle = new javax.swing.JLabel();
+        lblSearch = new javax.swing.JLabel();
+        tfSearch = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblStaff = new javax.swing.JTable();
+        lblCount = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Manage Technicians");
+        setResizable(false);
+
+        lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("Manage Technicians");
+
+        lblSearch.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblSearch.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSearch.setText("Search:");
+
+        tfSearch.addActionListener(this::tfSearchActionPerformed);
+
+        btnSearch.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(this::btnSearchActionPerformed);
+
+        btnClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnClear.setText("Clear");
+        btnClear.addActionListener(this::btnClearActionPerformed);
+
+        tblStaff.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Name", "Gender", "Age", "Phone", "Email", "Nationality"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblStaff);
+
+        lblCount.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        lblCount.setText("0 record(s)");
+
+        btnBack.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBack.setText("Back");
+        btnBack.addActionListener(this::btnBackActionPerformed);
+
+        btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAdd.setText("Add");
+        btnAdd.addActionListener(this::btnAddActionPerformed);
+
+        btnEdit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnEdit.setText("Edit");
+        btnEdit.addActionListener(this::btnEditActionPerformed);
+
+        btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDelete.setText("Delete");
+        btnDelete.addActionListener(this::btnDeleteActionPerformed);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(tfSearch)
+                .addGap(30, 30, 30)
+                .addComponent(btnSearch)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClear)
+                .addGap(34, 34, 34))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblCount)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 713, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(23, Short.MAX_VALUE))))
+            .addComponent(lblTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(lblTitle)
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSearch)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCount)
+                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(55, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(47, 47, 47)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(470, Short.MAX_VALUE)))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tfSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfSearchActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        loadData(tfSearch.getText());
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        tfSearch.setText("");
+        loadData(null);
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        if (parent != null) parent.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+       new mgrAddStaff(svc, this, staffType).setVisible(true);
+       setVisible(false);
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+            int r = tblStaff.getSelectedRow();
+    if (r < 0) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Select a record to edit.",
+            "No selection", javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
     }
+    String id = String.valueOf(tblStaff.getValueAt(r, 0));
+    new mgrEditStaff(svc, this, staffType, id).setVisible(true);
+    setVisible(false);
+    }//GEN-LAST:event_btnEditActionPerformed
 
-    private void doAdd() {
-        new mgrAddStaff(svc, this, staffType).setVisible(true);
-        setVisible(false);
-    }
-
-    private void doEdit() {
-        int r = table.getSelectedRow();
-        if (r < 0) {
-            JOptionPane.showMessageDialog(this, "Select a record to edit.",
-                    "No selection", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        String id = (String) tableModel.getValueAt(r, 0);
-        new mgrEditStaff(svc, this, staffType, id).setVisible(true);
-        setVisible(false);
-    }
-
-    private void doDelete() {
-        int r = table.getSelectedRow();
-        if (r < 0) {
-            JOptionPane.showMessageDialog(this, "Select a record to delete.",
-                    "No selection", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        String id = (String) tableModel.getValueAt(r, 0);
-        String name = (String) tableModel.getValueAt(r, 1);
-        int ok = JOptionPane.showConfirmDialog(this,
-                "Delete " + prettyType() + " " + id + " (" + name + ")?\n"
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        int r = tblStaff.getSelectedRow();
+            if (r < 0) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Select a record to delete.",
+                    "No selection", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        String id   = String.valueOf(tblStaff.getValueAt(r, 0));
+        String name = String.valueOf(tblStaff.getValueAt(r, 1));
+        int ok = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Delete " + prettyType() + " " + id + " (" + name + ")?\n"
                 + "This will also remove their login account.",
-                "Confirm Delete", JOptionPane.YES_NO_OPTION);
-        if (ok != JOptionPane.YES_OPTION) return;
+            "Confirm Delete", javax.swing.JOptionPane.YES_NO_OPTION);
+        if (ok != javax.swing.JOptionPane.YES_OPTION) return;
 
         String result;
         switch (staffType) {
             case "Manager":      result = svc.deleteManager(id);      break;
             case "CounterStaff": result = svc.deleteCounterStaff(id); break;
             case "Technician":   result = svc.deleteTechnician(id);   break;
-            default:             result = "ERR: Unknown staff type."; break;
+            default:             result = "ERR: Unknown staff type.";
         }
         if (result.startsWith("OK")) {
-            JOptionPane.showMessageDialog(this, result.substring(3).trim(),
-                    "Deleted", JOptionPane.INFORMATION_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this,
+                result.substring(result.indexOf(':')+1).trim(),
+                "Deleted", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             loadData(tfSearch.getText());
         } else {
-            JOptionPane.showMessageDialog(this, result.substring(3).trim(),
-                    "Cannot Delete", JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this,
+                result.substring(result.indexOf(':')+1).trim(),
+                "Cannot Delete", javax.swing.JOptionPane.WARNING_MESSAGE);
         }
-    }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+    //test main
+/*  public static void main(String[] args) {
+    ManagerService svc = new ManagerService("M001");
+    // change the third arg to test different types:
+    new mgrManageStaff(svc, null, "Technician").setVisible(true);
+    // new mgrManageStaff(svc, null, "Manager").setVisible(true);
+    // new mgrManageStaff(svc, null, "CounterStaff").setVisible(true);
+}*/
 
-    //Called by child add/edit frames after success to refresh.
-    public void refresh() {
-        loadData(tfSearch.getText());
-        setVisible(true);
-    }
-
-    private void doBack() {
-        parent.refreshStats();
-        parent.setVisible(true);
-        dispose();
-    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblCount;
+    private javax.swing.JLabel lblSearch;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblStaff;
+    private javax.swing.JTextField tfSearch;
+    // End of variables declaration//GEN-END:variables
 }

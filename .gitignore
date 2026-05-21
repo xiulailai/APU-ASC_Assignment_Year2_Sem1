@@ -1,3 +1,6 @@
 /nbproject/private/
 /build/
 /dist/
+# Claude Code worktrees and config
+.claude/
+build/

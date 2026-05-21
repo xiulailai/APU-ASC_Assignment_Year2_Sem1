@@ -1,286 +1,239 @@
+
 package apu.asc.manager;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
+public class mgrReports extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mgrReports.class.getName());
 
-public class mgrReports extends JFrame {
-
-    private final ManagerService svc;
-    private final mgrDashboard parent;
+    private ManagerService svc;
+    private mgrDashboard parent;
 
     public mgrReports(ManagerService svc, mgrDashboard parent) {
         this.svc = svc;
         this.parent = parent;
         initComponents();
         setLocationRelativeTo(null);
+        cbReportPicker.setSelectedIndex(0);   // triggers showReport(0)
     }
 
-    private void initComponents() {
-        setTitle("Reports");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(900, 600);
-        setLayout(new BorderLayout());
-
-        JLabel header = new JLabel("Analytical Reports", SwingConstants.CENTER);
-        header.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        header.setOpaque(true);
-        header.setBackground(new Color(40, 60, 100));
-        header.setForeground(Color.WHITE);
-        header.setBorder(BorderFactory.createEmptyBorder(12, 8, 12, 8));
-        add(header, BorderLayout.NORTH);
-
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        tabs.addTab("1. Revenue",             buildRevenueTab());
-        tabs.addTab("2. Technician Perf.",    buildTechnicianTab());
-        tabs.addTab("3. Counter Staff Perf.", buildCounterStaffTab());
-        tabs.addTab("4. Service Popularity",  buildServicePopularityTab());
-        tabs.addTab("5. Customer Activity",   buildCustomerActivityTab());
-        tabs.addTab("6. Appointment Status",  buildAppointmentStatusTab());
-        tabs.addTab("7. Monthly Revenue",     buildMonthlyRevenueTab());
-        add(tabs, BorderLayout.CENTER);
-
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
-        JButton btnBack = new JButton("Back");
-        btnBack.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnBack.addActionListener(e -> doBack());
-        footer.add(btnBack);
-        add(footer, BorderLayout.SOUTH);
-    }
-
-    // ---------- TAB 1: REVENUE ----------
-    private JPanel buildRevenueTab() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-
-        DefaultTableModel m = new DefaultTableModel(
-                new String[]{"Service", "Payments", "Total Revenue"}, 0) {
+    //Builds a non-editable DefaultTableModel and points the table at it.
+    private void buildTable(String[] columns, java.util.List<String[]> rows) {
+        javax.swing.table.DefaultTableModel m = new javax.swing.table.DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
-        for (String[] row : svc.getRevenueReport()) m.addRow(row);
-
-        JTable table = makeTable(m);
-        panel.add(buildTitleLabel("Revenue Breakdown by Service"), BorderLayout.NORTH);
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        JLabel total = new JLabel(String.format("Total Revenue: RM %.2f   |   This Month: RM %.2f",
-                svc.getTotalRevenue(), svc.getCurrentMonthRevenue()), SwingConstants.RIGHT);
-        total.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        total.setForeground(new Color(30, 80, 30));
-        panel.add(total, BorderLayout.SOUTH);
-        return panel;
-    }
-
-    // ---------- TAB 2: TECHNICIAN PERFORMANCE ----------
-    private JPanel buildTechnicianTab() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-
-        DefaultTableModel m = new DefaultTableModel(
-                new String[]{"Tech ID", "Name", "Assigned", "Completed", "Feedbacks Given"}, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        };
-        for (String[] row : svc.getTechnicianPerformanceReport()) m.addRow(row);
-
-        panel.add(buildTitleLabel("Technician Performance"), BorderLayout.NORTH);
-        panel.add(new JScrollPane(makeTable(m)), BorderLayout.CENTER);
-        return panel;
-    }
-
-    // ---------- TAB 3: COUNTER STAFF PERFORMANCE ----------
-    private JPanel buildCounterStaffTab() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-
-        DefaultTableModel m = new DefaultTableModel(
-                new String[]{"CS ID", "Name", "Appointments Created", "Payments Collected", "Revenue Collected"}, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        };
-        for (String[] row : svc.getCounterStaffPerformanceReport()) m.addRow(row);
-
-        panel.add(buildTitleLabel("Counter Staff Performance"), BorderLayout.NORTH);
-        panel.add(new JScrollPane(makeTable(m)), BorderLayout.CENTER);
-        return panel;
-    }
-
-    // ---------- TAB 4: SERVICE POPULARITY ----------
-    private JPanel buildServicePopularityTab() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-
-        DefaultTableModel m = new DefaultTableModel(
-                new String[]{"Service ID", "Name", "Duration", "Total Appointments", "Completed"}, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        };
-        for (String[] row : svc.getServicePopularityReport()) m.addRow(row);
-
-        panel.add(buildTitleLabel("Service Popularity"), BorderLayout.NORTH);
-        panel.add(new JScrollPane(makeTable(m)), BorderLayout.CENTER);
-        return panel;
-    }
-
-    // ---------- TAB 5: CUSTOMER ACTIVITY ----------
-    private JPanel buildCustomerActivityTab() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-
-        DefaultTableModel m = new DefaultTableModel(
-                new String[]{"Customer ID", "Name", "Total Appointments", "Total Spent"}, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        };
-        for (String[] row : svc.getCustomerActivityReport()) m.addRow(row);
-
-        panel.add(buildTitleLabel("Customer Activity (sorted by spend)"), BorderLayout.NORTH);
-        panel.add(new JScrollPane(makeTable(m)), BorderLayout.CENTER);
-        return panel;
-    }
-
-    // ---------- TAB 6: APPOINTMENT STATUS (with bar chart) ----------
-    private JPanel buildAppointmentStatusTab() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-
-        int[] counts = svc.getAppointmentStatusCounts(); //pending, assigned, completed, total
-
-        JPanel summary = new JPanel(new FlowLayout(FlowLayout.LEFT, 24, 8));
-        summary.add(makeStatLabel("Pending",   counts[0], new Color(190, 130, 0)));
-        summary.add(makeStatLabel("Assigned",  counts[1], new Color(40, 90, 180)));
-        summary.add(makeStatLabel("Completed", counts[2], new Color(40, 130, 60)));
-        summary.add(makeStatLabel("Total",     counts[3], new Color(60, 60, 60)));
-
-        BarChartPanel chart = new BarChartPanel(
-                new String[]{"Pending", "Assigned", "Completed"},
-                new int[]{counts[0], counts[1], counts[2]},
-                new Color[]{
-                    new Color(230, 170, 60),
-                    new Color(80,  130, 220),
-                    new Color(80,  180, 110)
-                });
-
-        panel.add(buildTitleLabel("Appointment Status Summary"), BorderLayout.NORTH);
-        panel.add(summary, BorderLayout.SOUTH);
-        panel.add(chart, BorderLayout.CENTER);
-        return panel;
-    }
-
-    // ---------- TAB 7: MONTHLY REVENUE ----------
-    private JPanel buildMonthlyRevenueTab() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-
-        DefaultTableModel m = new DefaultTableModel(
-                new String[]{"Month", "Payment Count", "Total Revenue"}, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        };
-        List<String[]> rows = svc.getMonthlyRevenueReport();
         for (String[] row : rows) m.addRow(row);
-
-        panel.add(buildTitleLabel("Monthly Revenue"), BorderLayout.NORTH);
-        panel.add(new JScrollPane(makeTable(m)), BorderLayout.CENTER);
-        return panel;
+        tblReport.setModel(m);
+        tblReport.getTableHeader().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+        tblReport.setRowHeight(24);
     }
 
-    // ---------- helpers ----------
-    private JTable makeTable(DefaultTableModel m) {
-        JTable t = new JTable(m);
-        t.setRowHeight(24);
-        t.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        t.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        return t;
-    }
-
-    private JLabel buildTitleLabel(String text) {
-        JLabel l = new JLabel(text);
-        l.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        l.setForeground(new Color(30, 50, 90));
-        l.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
-        return l;
-    }
-
-    private JLabel makeStatLabel(String name, int value, Color color) {
-        JLabel l = new JLabel(name + ": " + value);
-        l.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        l.setForeground(color);
-        return l;
-    }
-
-    private void doBack() {
-        parent.refreshStats();
-        parent.setVisible(true);
-        dispose();
-    }
-
-    //Simple in-house bar chart so we don't pull in third-party libs.
-    private static class BarChartPanel extends JPanel {
-        private final String[] labels;
-        private final int[] values;
-        private final Color[] colors;
-
-        BarChartPanel(String[] labels, int[] values, Color[] colors) {
-            this.labels = labels;
-            this.values = values;
-            this.colors = colors;
-            setPreferredSize(new Dimension(0, 340));
-            setBackground(Color.WHITE);
+    //Dispatches to the right report based on dropdown index.
+    private void showReport(int index) {
+        lblSummary.setText("");
+        switch (index) {
+            case 0: showRevenueReport();             break;
+            case 1: showTechnicianReport();          break;
+            case 2: showCounterStaffReport();        break;
+            case 3: showServicePopularityReport();   break;
+            case 4: showCustomerActivityReport();    break;
+            case 5: showAppointmentStatusReport();   break;
+            case 6: showMonthlyRevenueReport();      break;
         }
+    }
 
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    private void showRevenueReport() {
+        buildTable(new String[]{"Service", "Payments", "Total Revenue"},
+                   svc.getRevenueReport());
+        lblSummary.setText(String.format(
+            "Total Revenue: RM %.2f   |   This Month: RM %.2f",
+            svc.getTotalRevenue(), svc.getCurrentMonthRevenue()));
+    }
 
-            int w = getWidth(), h = getHeight();
-            int marginX = 40, marginTop = 30, marginBottom = 40;
-            int chartH = h - marginTop - marginBottom;
+    private void showTechnicianReport() {
+        buildTable(new String[]{"Tech ID", "Name", "Assigned", "Completed", "Feedbacks Given"},
+                   svc.getTechnicianPerformanceReport());
+    }
 
-            int max = 1;
-            for (int v : values) if (v > max) max = v;
+    private void showCounterStaffReport() {
+        buildTable(new String[]{"CS ID", "Name", "Appts Created", "Payments Collected", "Revenue"},
+                   svc.getCounterStaffPerformanceReport());
+    }
 
-            int barCount = values.length;
-            int gap = 24;
-            int totalGap = gap * (barCount + 1);
-            int barW = Math.max(40, (w - 2 * marginX - totalGap) / barCount);
+    private void showServicePopularityReport() {
+        buildTable(new String[]{"Service ID", "Name", "Duration", "Total Appts", "Completed"},
+                   svc.getServicePopularityReport());
+    }
 
-            g2.setColor(new Color(180, 180, 180));
-            g2.drawLine(marginX, h - marginBottom, w - marginX, h - marginBottom);
+    private void showCustomerActivityReport() {
+        buildTable(new String[]{"Customer ID", "Name", "Total Appts", "Total Spent"},
+                   svc.getCustomerActivityReport());
+        lblSummary.setText("Customers sorted by total spending (highest first).");
+    }
 
-            int x = marginX + gap;
-            for (int i = 0; i < barCount; i++) {
-                int barH = (int) (chartH * (values[i] / (double) max));
-                int y = h - marginBottom - barH;
-                g2.setColor(colors[i % colors.length]);
-                g2.fillRect(x, y, barW, barH);
-                g2.setColor(Color.DARK_GRAY);
-                g2.drawRect(x, y, barW, barH);
-                //value label above bar
-                g2.setFont(new Font("Segoe UI", Font.BOLD, 12));
-                String valStr = String.valueOf(values[i]);
-                int valW = g2.getFontMetrics().stringWidth(valStr);
-                g2.drawString(valStr, x + (barW - valW) / 2, y - 6);
-                //category label below
-                g2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-                int labW = g2.getFontMetrics().stringWidth(labels[i]);
-                g2.drawString(labels[i], x + (barW - labW) / 2, h - marginBottom + 18);
-                x += barW + gap;
+    private void showAppointmentStatusReport() {
+        //The service returns int[] not List<String[]>, so we wrap it as a table.
+        int[] s = svc.getAppointmentStatusCounts();
+        java.util.List<String[]> rows = new java.util.ArrayList<>();
+        rows.add(new String[]{"Pending",   String.valueOf(s[0])});
+        rows.add(new String[]{"Assigned",  String.valueOf(s[1])});
+        rows.add(new String[]{"Completed", String.valueOf(s[2])});
+        rows.add(new String[]{"-- TOTAL --", String.valueOf(s[3])});
+        buildTable(new String[]{"Status", "Count"}, rows);
+        lblSummary.setText("Snapshot of all appointment statuses in the system.");
+    }
+
+    private void showMonthlyRevenueReport() {
+        buildTable(new String[]{"Month", "Payment Count", "Total Revenue"},
+                   svc.getMonthlyRevenueReport());
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        lblTitle = new javax.swing.JLabel();
+        lblPicker = new javax.swing.JLabel();
+        cbReportPicker = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblReport = new javax.swing.JTable();
+        lblSummary = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Analytical Report");
+        setResizable(false);
+
+        lblTitle.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("Analytical Report");
+
+        lblPicker.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblPicker.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPicker.setText("Select Report:");
+
+        cbReportPicker.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cbReportPicker.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1. Revenue Breakdown", "2. Technician Performance", "3. Counter Staff Performance", "4. Service Popularity", "5. Customer Activity", "6. Appointment Status", "7. Monthly Revenue" }));
+        cbReportPicker.addActionListener(this::cbReportPickerActionPerformed);
+
+        tblReport.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                ""
             }
-        }
-    }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblReport);
+
+        lblSummary.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblSummary.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        btnBack.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBack.setText("Back");
+        btnBack.addActionListener(this::btnBackActionPerformed);
+
+        btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(this::btnRefreshActionPerformed);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(lblPicker, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbReportPicker, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE))))
+                .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPicker, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbReportPicker, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cbReportPickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbReportPickerActionPerformed
+        // TODO add your handling code here:
+        showReport(cbReportPicker.getSelectedIndex());
+    }//GEN-LAST:event_cbReportPickerActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        if (parent != null) parent.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        showReport(cbReportPicker.getSelectedIndex());
+    }//GEN-LAST:event_btnRefreshActionPerformed
+    //test main
+/*    public static void main(String[] args) {
+        ManagerService svc = new ManagerService("M001");
+        new mgrReports(svc, null).setVisible(true);
+    }*/
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JComboBox<String> cbReportPicker;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblPicker;
+    private javax.swing.JLabel lblSummary;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblReport;
+    // End of variables declaration//GEN-END:variables
 }

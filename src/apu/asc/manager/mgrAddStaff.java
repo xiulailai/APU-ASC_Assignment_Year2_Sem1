@@ -1,33 +1,13 @@
+
 package apu.asc.manager;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+public class mgrAddStaff extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mgrAddStaff.class.getName());
 
-public class mgrAddStaff extends JFrame {
-
-    private final ManagerService svc;
-    private final mgrManageStaff parent;
-    private final String staffType;
-
-    private JTextField tfName, tfUsername, tfAge, tfPhone, tfEmail, tfAddress, tfNationality;
-    private JComboBox<String> cbGender;
-    private JPasswordField pfPassword, pfConfirm;
+    private ManagerService svc;
+    private mgrManageStaff parent;
+    private String staffType;
 
     public mgrAddStaff(ManagerService svc, mgrManageStaff parent, String staffType) {
         this.svc = svc;
@@ -35,137 +15,330 @@ public class mgrAddStaff extends JFrame {
         this.staffType = staffType;
         initComponents();
         setLocationRelativeTo(null);
-    }
-
-    private void initComponents() {
+        lblTitle.setText("Add New " + prettyType());
         setTitle("Add " + prettyType());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 600);
-        setResizable(false);
-        setLayout(new BorderLayout());
-
-        JLabel header = new JLabel("Add New " + prettyType(), SwingConstants.CENTER);
-        header.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        header.setOpaque(true);
-        header.setBackground(new Color(40, 60, 100));
-        header.setForeground(Color.WHITE);
-        header.setBorder(BorderFactory.createEmptyBorder(12, 8, 12, 8));
-        add(header, BorderLayout.NORTH);
-
-        JPanel form = new JPanel(new GridBagLayout());
-        form.setBorder(BorderFactory.createEmptyBorder(14, 24, 14, 24));
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(5, 5, 5, 5);
-        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.HORIZONTAL;
-
-        tfName        = new JTextField(18);
-        tfUsername    = new JTextField(18);
-        pfPassword    = new JPasswordField(18);
-        pfConfirm     = new JPasswordField(18);
-        cbGender      = new JComboBox<>(new String[]{"Male", "Female"});
-        tfAge         = new JTextField(18);
-        tfPhone       = new JTextField(18);
-        tfEmail       = new JTextField(18);
-        tfAddress     = new JTextField(18);
-        tfNationality = new JTextField(18);
-
-        int row = 0;
-        addRow(form, c, row++, "Name:",         tfName);
-        addRow(form, c, row++, "Username:",     tfUsername);
-        addRow(form, c, row++, "Password:",     pfPassword);
-        addRow(form, c, row++, "Confirm:",      pfConfirm);
-        addRow(form, c, row++, "Gender:",       cbGender);
-        addRow(form, c, row++, "Age:",          tfAge);
-        addRow(form, c, row++, "Phone:",        tfPhone);
-        addRow(form, c, row++, "Email:",        tfEmail);
-        addRow(form, c, row++, "Address:",      tfAddress);
-        addRow(form, c, row++, "Nationality:",  tfNationality);
-
-        add(form, BorderLayout.CENTER);
-
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 8));
-        JButton btnSave = new JButton("Add " + prettyType());
-        JButton btnCancel = new JButton("Cancel");
-        btnSave.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnSave.setBackground(new Color(60, 130, 80));
-        btnSave.setForeground(Color.WHITE);
-        btnSave.setFocusPainted(false);
-        btnSave.addActionListener(e -> doSave());
-        btnCancel.addActionListener(e -> doCancel());
-        buttons.add(btnCancel);
-        buttons.add(btnSave);
-        add(buttons, BorderLayout.SOUTH);
-    }
-
-    private void addRow(JPanel form, GridBagConstraints c, int row, String label, java.awt.Component field) {
-        c.gridx = 0; c.gridy = row; c.weightx = 0;
-        JLabel lbl = new JLabel(label);
-        lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lbl.setPreferredSize(new Dimension(110, 24));
-        form.add(lbl, c);
-        c.gridx = 1; c.weightx = 1;
-        form.add(field, c);
+        btnAdd.setText("Add " + prettyType());
     }
 
     private String prettyType() {
         if (staffType.equals("CounterStaff")) return "Counter Staff";
-        return staffType;
+        return staffType;   // "Manager" or "Technician"
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        lblTitle = new javax.swing.JLabel();
+        lblName = new javax.swing.JLabel();
+        lblUsername = new javax.swing.JLabel();
+        lblPassword = new javax.swing.JLabel();
+        lblConfirm = new javax.swing.JLabel();
+        lblGender = new javax.swing.JLabel();
+        lblPhone = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        lblAge = new javax.swing.JLabel();
+        lblAddress = new javax.swing.JLabel();
+        lblNationality = new javax.swing.JLabel();
+        tfName = new javax.swing.JTextField();
+        tfUsername = new javax.swing.JTextField();
+        tfAge = new javax.swing.JTextField();
+        tfPhone = new javax.swing.JTextField();
+        tfEmail = new javax.swing.JTextField();
+        tfAddress = new javax.swing.JTextField();
+        tfNationality = new javax.swing.JTextField();
+        cbGender = new javax.swing.JComboBox<>();
+        pfPassword = new javax.swing.JPasswordField();
+        pfConfirm = new javax.swing.JPasswordField();
+        btnCancel = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Add Staff");
+        setResizable(false);
+
+        lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("Add New Technician ");
+
+        lblName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblName.setText("Name:");
+
+        lblUsername.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblUsername.setText("Username:");
+
+        lblPassword.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblPassword.setText("Password:");
+
+        lblConfirm.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblConfirm.setText("Confirm:");
+
+        lblGender.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblGender.setText("Gender:");
+
+        lblPhone.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblPhone.setText("Phone:");
+
+        lblEmail.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblEmail.setText("Email:");
+
+        lblAge.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblAge.setText("Age:");
+
+        lblAddress.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblAddress.setText("Address:");
+
+        lblNationality.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblNationality.setText("Nationality:");
+
+        tfName.addActionListener(this::tfNameActionPerformed);
+
+        tfUsername.addActionListener(this::tfUsernameActionPerformed);
+
+        tfPhone.addActionListener(this::tfPhoneActionPerformed);
+
+        tfNationality.addActionListener(this::tfNationalityActionPerformed);
+
+        cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
+
+        pfConfirm.addActionListener(this::pfConfirmActionPerformed);
+
+        btnCancel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(this::btnCancelActionPerformed);
+
+        btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAdd.setText("Add Technician");
+        btnAdd.addActionListener(this::btnAddActionPerformed);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblNationality)
+                            .addComponent(lblAddress))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                            .addComponent(tfNationality))
+                        .addGap(93, 93, 93))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnCancel)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnAdd)
+                        .addGap(49, 49, 49))))
+            .addComponent(lblTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(84, 84, 84)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblName, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblUsername, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblPassword, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblConfirm, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addComponent(lblGender, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblPhone, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblAge, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(tfPhone)
+                                .addComponent(tfAge)
+                                .addComponent(cbGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(pfConfirm, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                                .addComponent(pfPassword, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(tfUsername)
+                                .addComponent(tfName))
+                            .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 88, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jSeparator1)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblName)
+                    .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsername)
+                    .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPassword)
+                    .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pfConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblConfirm))
+                .addGap(9, 9, 9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblGender))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAge))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPhone))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEmail))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAddress))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNationality)
+                    .addComponent(tfNationality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancel)
+                    .addComponent(btnAdd))
+                .addGap(29, 29, 29))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tfNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNameActionPerformed
+
+    private void tfUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfUsernameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfUsernameActionPerformed
+
+    private void tfNationalityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNationalityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNationalityActionPerformed
+
+    private void tfPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPhoneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfPhoneActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+    String pass    = new String(pfPassword.getPassword());
+    String confirm = new String(pfConfirm.getPassword());
+    if (!pass.equals(confirm)) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Password and Confirm do not match.",
+            "Validation", javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
     }
 
-    private void doSave() {
-        String pass    = new String(pfPassword.getPassword());
-        String confirm = new String(pfConfirm.getPassword());
-        if (!pass.equals(confirm)) {
-            JOptionPane.showMessageDialog(this, "Password and Confirm do not match.",
-                    "Validation", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String result;
-        switch (staffType) {
-            case "Manager":
-                result = svc.addManager(tfName.getText(), tfUsername.getText(), pass,
-                        (String) cbGender.getSelectedItem(), tfAge.getText(),
-                        tfPhone.getText(), tfEmail.getText(),
-                        tfAddress.getText(), tfNationality.getText());
-                break;
-            case "CounterStaff":
-                result = svc.addCounterStaff(tfName.getText(), tfUsername.getText(), pass,
-                        (String) cbGender.getSelectedItem(), tfAge.getText(),
-                        tfPhone.getText(), tfEmail.getText(),
-                        tfAddress.getText(), tfNationality.getText());
-                break;
-            case "Technician":
-                result = svc.addTechnician(tfName.getText(), tfUsername.getText(), pass,
-                        (String) cbGender.getSelectedItem(), tfAge.getText(),
-                        tfPhone.getText(), tfEmail.getText(),
-                        tfAddress.getText(), tfNationality.getText());
-                break;
-            default:
-                result = "ERR: Unknown staff type.";
-        }
-
-        if (result.startsWith("OK")) {
-            JOptionPane.showMessageDialog(this, stripPrefix(result),
-                    "Added", JOptionPane.INFORMATION_MESSAGE);
-            parent.refresh();
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, stripPrefix(result),
-                    "Validation", JOptionPane.WARNING_MESSAGE);
-        }
+    String result;
+    switch (staffType) {
+        case "Manager":
+            result = svc.addManager(
+                tfName.getText(), tfUsername.getText(), pass,
+                (String) cbGender.getSelectedItem(), tfAge.getText(),
+                tfPhone.getText(), tfEmail.getText(),
+                tfAddress.getText(), tfNationality.getText());
+            break;
+        case "CounterStaff":
+            result = svc.addCounterStaff(
+                tfName.getText(), tfUsername.getText(), pass,
+                (String) cbGender.getSelectedItem(), tfAge.getText(),
+                tfPhone.getText(), tfEmail.getText(),
+                tfAddress.getText(), tfNationality.getText());
+            break;
+        case "Technician":
+            result = svc.addTechnician(
+                tfName.getText(), tfUsername.getText(), pass,
+                (String) cbGender.getSelectedItem(), tfAge.getText(),
+                tfPhone.getText(), tfEmail.getText(),
+                tfAddress.getText(), tfNationality.getText());
+            break;
+        default:
+            result = "ERR: Unknown staff type.";
     }
 
-    private static String stripPrefix(String result) {
-        if (result == null) return "";
-        int idx = result.indexOf(':');
-        return (idx >= 0) ? result.substring(idx + 1).trim() : result;
-    }
-
-    private void doCancel() {
-        parent.refresh();
+    if (result.startsWith("OK")) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            result.substring(result.indexOf(':')+1).trim(),
+            "Added", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        if (parent != null) parent.refresh();
         dispose();
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            result.substring(result.indexOf(':')+1).trim(),
+            "Validation", javax.swing.JOptionPane.WARNING_MESSAGE);
     }
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+        if (parent != null) parent.refresh();
+        dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void pfConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pfConfirmActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pfConfirmActionPerformed
+
+    //test main
+ /*   public static void main(String[] args) {
+        ManagerService svc = new ManagerService("M001");
+        // Change the third arg to test each type:
+        new mgrAddStaff(svc, null, "Technician").setVisible(true);
+    }*/
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JComboBox<String> cbGender;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblAddress;
+    private javax.swing.JLabel lblAge;
+    private javax.swing.JLabel lblConfirm;
+    private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblGender;
+    private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblNationality;
+    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblPhone;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblUsername;
+    private javax.swing.JPasswordField pfConfirm;
+    private javax.swing.JPasswordField pfPassword;
+    private javax.swing.JTextField tfAddress;
+    private javax.swing.JTextField tfAge;
+    private javax.swing.JTextField tfEmail;
+    private javax.swing.JTextField tfName;
+    private javax.swing.JTextField tfNationality;
+    private javax.swing.JTextField tfPhone;
+    private javax.swing.JTextField tfUsername;
+    // End of variables declaration//GEN-END:variables
 }

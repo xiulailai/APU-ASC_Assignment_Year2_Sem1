@@ -1,27 +1,11 @@
+
 package apu.asc.manager;
 
-import apu.asc.main.LoginFrame;
-import apu.asc.staff.Manager;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+public class mgrDashboard extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mgrDashboard.class.getName());
 
-public class mgrDashboard extends JFrame {
-
-    private final ManagerService svc;
-
-    private JLabel lblWelcome;
-    private JLabel lblMgrCount, lblCsCount, lblTechCount, lblCustCount, lblRevenue;
+    private ManagerService svc;
 
     public mgrDashboard(String managerId) {
         this.svc = new ManagerService(managerId);
@@ -30,172 +14,325 @@ public class mgrDashboard extends JFrame {
         refreshStats();
     }
 
-    private void initComponents() {
-        setTitle("APU - ASC | Manager Dashboard");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(640, 560);
-        setResizable(false);
-        setLayout(new BorderLayout());
-
-        add(buildHeader(),    BorderLayout.NORTH);
-        add(buildCenter(),    BorderLayout.CENTER);
-        add(buildFooter(),    BorderLayout.SOUTH);
-    }
-
-    private JPanel buildHeader() {
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(new Color(40, 60, 100));
-        header.setBorder(BorderFactory.createEmptyBorder(14, 16, 14, 16));
-
-        JLabel lblTitle = new JLabel("APU - ASC", SwingConstants.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblTitle.setForeground(Color.WHITE);
-
-        JLabel lblSub = new JLabel("Manager Dashboard", SwingConstants.CENTER);
-        lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        lblSub.setForeground(new Color(220, 230, 245));
-
-        JPanel titleStack = new JPanel(new GridLayout(2, 1));
-        titleStack.setOpaque(false);
-        titleStack.add(lblTitle);
-        titleStack.add(lblSub);
-
-        lblWelcome = new JLabel("Welcome", SwingConstants.RIGHT);
-        lblWelcome.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblWelcome.setForeground(Color.WHITE);
-
-        header.add(titleStack, BorderLayout.CENTER);
-        header.add(lblWelcome, BorderLayout.EAST);
-        return header;
-    }
-
-    private JPanel buildCenter() {
-        JPanel center = new JPanel(new BorderLayout(10, 10));
-        center.setBorder(BorderFactory.createEmptyBorder(16, 20, 8, 20));
-
-        //stats row
-        JPanel stats = new JPanel(new GridLayout(1, 5, 10, 0));
-        stats.setPreferredSize(new Dimension(0, 80));
-        lblMgrCount  = makeStatBox(stats, "Managers",       "0");
-        lblCsCount   = makeStatBox(stats, "Counter Staff",  "0");
-        lblTechCount = makeStatBox(stats, "Technicians",    "0");
-        lblCustCount = makeStatBox(stats, "Customers",      "0");
-        lblRevenue   = makeStatBox(stats, "This Month",     "RM 0.00");
-
-        //menu buttons
-        JPanel menu = new JPanel(new GridLayout(4, 2, 12, 12));
-        menu.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
-        menu.add(makeMenuButton("Edit My Profile",      this::openEditProfile));
-        menu.add(makeMenuButton("Set Service Prices",   this::openSetPrices));
-        menu.add(makeMenuButton("Manage Managers",      () -> openManageStaff("Manager")));
-        menu.add(makeMenuButton("Manage Counter Staff", () -> openManageStaff("CounterStaff")));
-        menu.add(makeMenuButton("Manage Technicians",   () -> openManageStaff("Technician")));
-        menu.add(makeMenuButton("View Feedbacks",       this::openFeedbacks));
-        menu.add(makeMenuButton("View Comments",        this::openComments));
-        menu.add(makeMenuButton("Reports",              this::openReports));
-
-        center.add(stats, BorderLayout.NORTH);
-        center.add(menu,  BorderLayout.CENTER);
-        return center;
-    }
-
-    private JPanel buildFooter() {
-        JPanel footer = new JPanel(new BorderLayout());
-        footer.setBorder(BorderFactory.createEmptyBorder(8, 20, 14, 20));
-
-        JButton btnLogout = new JButton("Logout");
-        btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnLogout.setBackground(new Color(180, 60, 60));
-        btnLogout.setForeground(Color.WHITE);
-        btnLogout.setFocusPainted(false);
-        btnLogout.setMargin(new Insets(6, 18, 6, 18));
-        btnLogout.addActionListener(e -> doLogout());
-
-        footer.add(btnLogout, BorderLayout.EAST);
-        return footer;
-    }
-
-    private JLabel makeStatBox(JPanel parent, String caption, String value) {
-        JPanel box = new JPanel(new BorderLayout());
-        box.setBackground(new Color(245, 247, 252));
-        box.setBorder(BorderFactory.createLineBorder(new Color(200, 210, 225)));
-
-        JLabel lblCap = new JLabel(caption, SwingConstants.CENTER);
-        lblCap.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblCap.setForeground(new Color(80, 90, 110));
-
-        JLabel lblVal = new JLabel(value, SwingConstants.CENTER);
-        lblVal.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblVal.setForeground(new Color(30, 50, 90));
-
-        box.add(lblCap, BorderLayout.NORTH);
-        box.add(lblVal, BorderLayout.CENTER);
-        parent.add(box);
-        return lblVal;
-    }
-
-    private JButton makeMenuButton(String text, Runnable onClick) {
-        JButton btn = new JButton(text);
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn.setFocusPainted(false);
-        btn.setBackground(new Color(70, 110, 180));
-        btn.setForeground(Color.WHITE);
-        btn.setPreferredSize(new Dimension(0, 50));
-        btn.addActionListener(e -> onClick.run());
-        return btn;
-    }
-
-    //Refreshes the top stats. Called on construction and whenever returning to dashboard.
+    //Public so child frames can call parent.refreshStats() on Back.
     public void refreshStats() {
-        Manager me = svc.getProfile();
+        apu.asc.staff.Manager me = svc.getProfile();
         lblWelcome.setText(me != null
-                ? "  " + me.getName() + " (" + me.getManagerId() + ")"
-                : "  " + svc.getManagerId());
-        lblMgrCount.setText (String.valueOf(svc.countManagers()));
-        lblCsCount.setText  (String.valueOf(svc.countCounterStaff()));
+                ? "Welcome, " + me.getName() + " (" + me.getManagerId() + ")"
+                : "Welcome");
+        lblMgrCount.setText(String.valueOf(svc.countManagers()));
+        lblCsCount.setText(String.valueOf(svc.countCounterStaff()));
         lblTechCount.setText(String.valueOf(svc.countTechnicians()));
         lblCustCount.setText(String.valueOf(svc.countCustomers()));
         lblRevenue.setText(String.format("RM %.2f", svc.getCurrentMonthRevenue()));
     }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-    // ------------- navigation -------------
+        lblTitle = new javax.swing.JLabel();
+        lblSubtitle = new javax.swing.JLabel();
+        lblWelcome = new javax.swing.JLabel();
+        lblMgrCount = new javax.swing.JLabel();
+        lblCsCount = new javax.swing.JLabel();
+        lblTechCount = new javax.swing.JLabel();
+        lblCustCount = new javax.swing.JLabel();
+        lblMgrCap = new javax.swing.JLabel();
+        lblCsCount1 = new javax.swing.JLabel();
+        lblTechCount1 = new javax.swing.JLabel();
+        lblCustCount1 = new javax.swing.JLabel();
+        lblRevenueCap = new javax.swing.JLabel();
+        lblRevenue = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        btnEditProfile = new javax.swing.JButton();
+        btnSetPrices = new javax.swing.JButton();
+        btnManageManagers = new javax.swing.JButton();
+        btnManageCS = new javax.swing.JButton();
+        btnManageTech = new javax.swing.JButton();
+        btnFeedbacks = new javax.swing.JButton();
+        btnComments = new javax.swing.JButton();
+        btnReports = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
 
-    private void openEditProfile() {
-        new mgrEditProfile(svc, this).setVisible(true);
-        setVisible(false);
-    }
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Manager DashBoard");
+        setResizable(false);
 
-    private void openSetPrices() {
-        new mgrSetPrices(svc, this).setVisible(true);
-        setVisible(false);
-    }
+        lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitle.setText("APU - ASC");
 
-    private void openManageStaff(String type) {
-        new mgrManageStaff(svc, this, type).setVisible(true);
-        setVisible(false);
-    }
+        lblSubtitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblSubtitle.setText("Manager Dashboard");
 
-    private void openFeedbacks() {
-        new mgrFeedbacks(svc, this).setVisible(true);
-        setVisible(false);
-    }
+        lblWelcome.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        lblWelcome.setText("Welcome,");
 
-    private void openComments() {
+        lblMgrCount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lblMgrCount.setText("0 ");
+
+        lblCsCount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lblCsCount.setText("0");
+
+        lblTechCount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lblTechCount.setText("0");
+
+        lblCustCount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lblCustCount.setText("0");
+
+        lblMgrCap.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        lblMgrCap.setText("Managers: ");
+
+        lblCsCount1.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        lblCsCount1.setText("Counter Staff:");
+
+        lblTechCount1.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        lblTechCount1.setText("Technicians: ");
+
+        lblCustCount1.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        lblCustCount1.setText("Customers: ");
+
+        lblRevenueCap.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        lblRevenueCap.setText("This Month");
+
+        lblRevenue.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        lblRevenue.setText("RM 0.00");
+
+        btnEditProfile.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnEditProfile.setText("Edit Profile");
+        btnEditProfile.addActionListener(this::btnEditProfileActionPerformed);
+
+        btnSetPrices.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnSetPrices.setText("Set Service Prices");
+        btnSetPrices.addActionListener(this::btnSetPricesActionPerformed);
+
+        btnManageManagers.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnManageManagers.setText("Manage Managers");
+        btnManageManagers.addActionListener(this::btnManageManagersActionPerformed);
+
+        btnManageCS.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnManageCS.setText("Manage Counter Staff");
+        btnManageCS.addActionListener(this::btnManageCSActionPerformed);
+
+        btnManageTech.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnManageTech.setText("Manage Technicians");
+        btnManageTech.addActionListener(this::btnManageTechActionPerformed);
+
+        btnFeedbacks.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnFeedbacks.setText("View Feedbacks");
+        btnFeedbacks.addActionListener(this::btnFeedbacksActionPerformed);
+
+        btnComments.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnComments.setText("View Comments");
+        btnComments.addActionListener(this::btnCommentsActionPerformed);
+
+        btnReports.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        btnReports.setText("Reports");
+        btnReports.addActionListener(this::btnReportsActionPerformed);
+
+        btnLogout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnLogout.setText("Logout");
+        btnLogout.addActionListener(this::btnLogoutActionPerformed);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblSubtitle)
+                                .addGap(87, 87, 87)
+                                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblTitle))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblMgrCap)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblMgrCount)
+                        .addGap(20, 20, 20)
+                        .addComponent(lblCsCount1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCsCount)
+                        .addGap(23, 23, 23)
+                        .addComponent(lblTechCount1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTechCount)
+                        .addGap(29, 29, 29)
+                        .addComponent(lblCustCount1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCustCount)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lblRevenue))
+                            .addComponent(lblRevenueCap))
+                        .addGap(27, 27, 27))))
+            .addComponent(jSeparator1)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator2))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(77, 77, 77)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnManageManagers, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnManageTech, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnComments, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnReports, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFeedbacks, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnManageCS, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSetPrices, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(lblTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSubtitle)
+                    .addComponent(lblWelcome))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMgrCap)
+                    .addComponent(lblCsCount1)
+                    .addComponent(lblTechCount1)
+                    .addComponent(lblCustCount1)
+                    .addComponent(lblCustCount)
+                    .addComponent(lblTechCount)
+                    .addComponent(lblCsCount)
+                    .addComponent(lblMgrCount)
+                    .addComponent(lblRevenueCap))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblRevenue)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSetPrices, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnManageManagers, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnManageCS, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnManageTech, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFeedbacks, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnComments, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReports, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCommentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentsActionPerformed
+        // TODO add your handling code here:
         new mgrComments(svc, this).setVisible(true);
         setVisible(false);
-    }
+    }//GEN-LAST:event_btnCommentsActionPerformed
 
-    private void openReports() {
+    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
+        // TODO add your handling code here:
+        new mgrEditProfile(svc, this).setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnEditProfileActionPerformed
+
+    private void btnSetPricesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetPricesActionPerformed
+        // TODO add your handling code here:
+        new mgrSetPrices(svc, this).setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnSetPricesActionPerformed
+
+    private void btnManageManagersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageManagersActionPerformed
+        // TODO add your handling code here:
+        new mgrManageStaff(svc, this, "Manager").setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnManageManagersActionPerformed
+
+    private void btnManageCSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageCSActionPerformed
+        // TODO add your handling code here:
+        new mgrManageStaff(svc, this, "CounterStaff").setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnManageCSActionPerformed
+
+    private void btnManageTechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageTechActionPerformed
+        // TODO add your handling code here:
+        new mgrManageStaff(svc, this, "Technician").setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnManageTechActionPerformed
+
+    private void btnFeedbacksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFeedbacksActionPerformed
+        // TODO add your handling code here:
+        new mgrFeedbacks(svc, this).setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnFeedbacksActionPerformed
+
+    private void btnReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportsActionPerformed
+        // TODO add your handling code here:
         new mgrReports(svc, this).setVisible(true);
         setVisible(false);
-    }
+    }//GEN-LAST:event_btnReportsActionPerformed
 
-    private void doLogout() {
-        int ok = JOptionPane.showConfirmDialog(this,
-                "Logout and return to login screen?",
-                "Confirm Logout", JOptionPane.YES_NO_OPTION);
-        if (ok != JOptionPane.YES_OPTION) return;
-        dispose();
-        new LoginFrame().setVisible(true);
-    }
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+            int ok = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Logout and return to login screen?",
+            "Confirm Logout", javax.swing.JOptionPane.YES_NO_OPTION);
+                if (ok != javax.swing.JOptionPane.YES_OPTION) return;
+                dispose();
+                new apu.asc.main.LoginFrame().setVisible(true);
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnComments;
+    private javax.swing.JButton btnEditProfile;
+    private javax.swing.JButton btnFeedbacks;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnManageCS;
+    private javax.swing.JButton btnManageManagers;
+    private javax.swing.JButton btnManageTech;
+    private javax.swing.JButton btnReports;
+    private javax.swing.JButton btnSetPrices;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblCsCount;
+    private javax.swing.JLabel lblCsCount1;
+    private javax.swing.JLabel lblCustCount;
+    private javax.swing.JLabel lblCustCount1;
+    private javax.swing.JLabel lblMgrCap;
+    private javax.swing.JLabel lblMgrCount;
+    private javax.swing.JLabel lblRevenue;
+    private javax.swing.JLabel lblRevenueCap;
+    private javax.swing.JLabel lblSubtitle;
+    private javax.swing.JLabel lblTechCount;
+    private javax.swing.JLabel lblTechCount1;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblWelcome;
+    // End of variables declaration//GEN-END:variables
 }

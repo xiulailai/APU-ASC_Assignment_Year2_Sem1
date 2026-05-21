@@ -1,35 +1,12 @@
+
 package apu.asc.manager;
 
-import apu.asc.staff.Service;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
+public class mgrSetPrices extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mgrSetPrices.class.getName());
 
-public class mgrSetPrices extends JFrame {
-
-    private final ManagerService svc;
-    private final mgrDashboard parent;
-
-    private DefaultTableModel tableModel;
-    private JTable table;
-    private JTextField tfServiceId, tfServiceName, tfDuration, tfNewPrice;
+    private ManagerService svc;
+    private mgrDashboard parent;
 
     public mgrSetPrices(ManagerService svc, mgrDashboard parent) {
         this.svc = svc;
@@ -39,141 +16,302 @@ public class mgrSetPrices extends JFrame {
         loadServices();
     }
 
-    private void initComponents() {
-        setTitle("Set Service Prices");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(620, 460);
-        setResizable(false);
-        setLayout(new BorderLayout());
-
-        JLabel header = new JLabel("Set Service Prices", SwingConstants.CENTER);
-        header.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        header.setOpaque(true);
-        header.setBackground(new Color(40, 60, 100));
-        header.setForeground(Color.WHITE);
-        header.setBorder(BorderFactory.createEmptyBorder(12, 8, 12, 8));
-        add(header, BorderLayout.NORTH);
-
-        //center: table on top, form on bottom
-        JPanel center = new JPanel(new BorderLayout(10, 10));
-        center.setBorder(BorderFactory.createEmptyBorder(14, 16, 8, 16));
-
-        tableModel = new DefaultTableModel(
-                new String[]{"Service ID", "Name", "Duration", "Current Price (RM)"}, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        };
-        table = new JTable(tableModel);
-        table.setRowHeight(24);
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        table.getSelectionModel().addListSelectionListener(e -> onRowSelected());
-
-        JScrollPane scroll = new JScrollPane(table);
-        scroll.setPreferredSize(new Dimension(0, 160));
-        center.add(scroll, BorderLayout.NORTH);
-
-        center.add(buildForm(), BorderLayout.CENTER);
-        add(center, BorderLayout.CENTER);
-
-        //bottom buttons
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 8));
-        JButton btnUpdate = new JButton("Update Price");
-        JButton btnBack = new JButton("Back");
-        btnUpdate.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnBack.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnUpdate.setBackground(new Color(60, 130, 80));
-        btnUpdate.setForeground(Color.WHITE);
-        btnUpdate.setFocusPainted(false);
-        btnUpdate.addActionListener(e -> doUpdate());
-        btnBack.addActionListener(e -> doBack());
-        buttons.add(btnBack);
-        buttons.add(btnUpdate);
-        add(buttons, BorderLayout.SOUTH);
-    }
-
-    private JPanel buildForm() {
-        JPanel form = new JPanel(new GridBagLayout());
-        form.setBorder(BorderFactory.createTitledBorder("Selected Service"));
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(5, 5, 5, 5);
-        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.HORIZONTAL;
-
-        tfServiceId   = new JTextField(12); tfServiceId.setEditable(false);
-        tfServiceName = new JTextField(20); tfServiceName.setEditable(false);
-        tfDuration    = new JTextField(8);  tfDuration.setEditable(false);
-        tfNewPrice    = new JTextField(10);
-
-        int row = 0;
-        addRow(form, c, row++, "Service ID:",     tfServiceId);
-        addRow(form, c, row++, "Service Name:",   tfServiceName);
-        addRow(form, c, row++, "Duration (hrs):", tfDuration);
-        addRow(form, c, row++, "New Price (RM):", tfNewPrice);
-
-        return form;
-    }
-
-    private void addRow(JPanel form, GridBagConstraints c, int row, String label, java.awt.Component field) {
-        c.gridx = 0; c.gridy = row; c.weightx = 0;
-        JLabel lbl = new JLabel(label);
-        lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lbl.setPreferredSize(new Dimension(140, 24));
-        form.add(lbl, c);
-        c.gridx = 1; c.weightx = 1;
-        form.add(field, c);
-    }
-
     private void loadServices() {
-        tableModel.setRowCount(0);
-        List<Service> services = svc.getAllServices();
-        for (Service s : services) {
-            tableModel.addRow(new Object[]{
+        javax.swing.table.DefaultTableModel m =
+                (javax.swing.table.DefaultTableModel) tblServices.getModel();
+        m.setRowCount(0);
+        for (apu.asc.staff.Service s : svc.getAllServices()) {
+            m.addRow(new Object[]{
                 s.getServiceId(),
                 s.getServiceName(),
                 s.getDurationHours() + " hr(s)",
                 String.format("%.2f", s.getPrice())
             });
         }
-        if (table.getRowCount() > 0) table.setRowSelectionInterval(0, 0);
+        if (m.getRowCount() > 0) tblServices.setRowSelectionInterval(0, 0);
     }
 
-    private void onRowSelected() {
-        int r = table.getSelectedRow();
-        if (r < 0) return;
-        tfServiceId.setText((String) tableModel.getValueAt(r, 0));
-        tfServiceName.setText((String) tableModel.getValueAt(r, 1));
-        tfDuration.setText((String) tableModel.getValueAt(r, 2));
-        tfNewPrice.setText((String) tableModel.getValueAt(r, 3));
-    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-    private void doUpdate() {
-        int r = table.getSelectedRow();
-        if (r < 0) {
-            JOptionPane.showMessageDialog(this, "Select a service from the table first.",
-                    "Validation", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblServices = new javax.swing.JTable();
+        pnlService = new javax.swing.JPanel();
+        tfDuration = new javax.swing.JTextField();
+        tfNewPrice = new javax.swing.JTextField();
+        lblServiceId = new javax.swing.JLabel();
+        lblServiceName = new javax.swing.JLabel();
+        lblDuration = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        tfServiceId = new javax.swing.JTextField();
+        tfServiceName = new javax.swing.JTextField();
+        btnUpdate = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Set Service Price");
+        setResizable(false);
+
+        lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("Set Service Price");
+
+        tblServices.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Service ID", "Name", "Duration", "Current Price (RM)"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblServices.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblServicesMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblServices);
+
+        pnlService.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Selected Service:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+
+        tfDuration.setEditable(false);
+        tfDuration.setBackground(new java.awt.Color(204, 204, 204));
+        tfDuration.addActionListener(this::tfDurationActionPerformed);
+
+        tfNewPrice.addActionListener(this::tfNewPriceActionPerformed);
+
+        lblServiceId.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblServiceId.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblServiceId.setText("Service ID:");
+
+        lblServiceName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblServiceName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblServiceName.setText("Service Name:");
+
+        lblDuration.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblDuration.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDuration.setText("Duration(hrs):");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("New Price (RM):");
+
+        tfServiceId.setEditable(false);
+        tfServiceId.setBackground(new java.awt.Color(204, 204, 204));
+        tfServiceId.addActionListener(this::tfServiceIdActionPerformed);
+
+        tfServiceName.setEditable(false);
+        tfServiceName.setBackground(new java.awt.Color(204, 204, 204));
+        tfServiceName.addActionListener(this::tfServiceNameActionPerformed);
+
+        javax.swing.GroupLayout pnlServiceLayout = new javax.swing.GroupLayout(pnlService);
+        pnlService.setLayout(pnlServiceLayout);
+        pnlServiceLayout.setHorizontalGroup(
+            pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlServiceLayout.createSequentialGroup()
+                .addContainerGap(48, Short.MAX_VALUE)
+                .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlServiceLayout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblServiceName)
+                            .addComponent(lblServiceId))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfServiceName)
+                            .addComponent(tfServiceId)))
+                    .addGroup(pnlServiceLayout.createSequentialGroup()
+                        .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addComponent(lblDuration))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfNewPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(16, 16, 16))
+        );
+        pnlServiceLayout.setVerticalGroup(
+            pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlServiceLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblServiceId)
+                    .addComponent(tfServiceId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblServiceName)
+                    .addComponent(tfServiceName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDuration))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfNewPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnUpdate.setText("Update Price");
+        btnUpdate.addActionListener(this::btnUpdateActionPerformed);
+
+        btnBack.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBack.setText("Back");
+        btnBack.addActionListener(this::btnBackActionPerformed);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 57, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(pnlService, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(39, 39, 39))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(lblTitle)
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(pnlService, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnBack, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(54, 54, 54)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(551, Short.MAX_VALUE)))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tfServiceIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfServiceIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfServiceIdActionPerformed
+
+    private void tfServiceNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfServiceNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfServiceNameActionPerformed
+
+    private void tfDurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDurationActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfDurationActionPerformed
+
+    private void tfNewPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNewPriceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNewPriceActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        int r = tblServices.getSelectedRow();
+            if (r < 0) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Select a service from the table first.",
+                        "Validation", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+}
         String result = svc.updateServicePrice(tfServiceId.getText(), tfNewPrice.getText());
         if (result.startsWith("OK")) {
-            JOptionPane.showMessageDialog(this, stripPrefix(result),
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadServices();
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    result.substring(result.indexOf(':') + 1).trim(),
+                    "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            loadServices();    // reload so the table shows new price
         } else {
-            JOptionPane.showMessageDialog(this, stripPrefix(result),
-                    "Validation", JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    result.substring(result.indexOf(':') + 1).trim(),
+                    "Validation", javax.swing.JOptionPane.WARNING_MESSAGE);
         }
-    }
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private static String stripPrefix(String result) {
-        if (result == null) return "";
-        int idx = result.indexOf(':');
-        return (idx >= 0) ? result.substring(idx + 1).trim() : result;
-    }
-
-    private void doBack() {
-        parent.refreshStats();
-        parent.setVisible(true);
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        if (parent != null) parent.setVisible(true);
         dispose();
-    }
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void tblServicesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblServicesMouseClicked
+        // TODO add your handling code here:
+        int r = tblServices.getSelectedRow();
+        if (r < 0) return;
+        javax.swing.table.DefaultTableModel m =
+                (javax.swing.table.DefaultTableModel) tblServices.getModel();
+        tfServiceId.setText(String.valueOf(m.getValueAt(r, 0)));
+        tfServiceName.setText(String.valueOf(m.getValueAt(r, 1)));
+        tfDuration.setText(String.valueOf(m.getValueAt(r, 2)));
+        tfNewPrice.setText(String.valueOf(m.getValueAt(r, 3)));
+    }//GEN-LAST:event_tblServicesMouseClicked
+    //test main
+/*    public static void main(String[] args) {
+        ManagerService svc = new ManagerService("M001");
+        new mgrSetPrices(svc, null).setVisible(true);
+    }*/
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblDuration;
+    private javax.swing.JLabel lblServiceId;
+    private javax.swing.JLabel lblServiceName;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JPanel pnlService;
+    private javax.swing.JTable tblServices;
+    private javax.swing.JTextField tfDuration;
+    private javax.swing.JTextField tfNewPrice;
+    private javax.swing.JTextField tfServiceId;
+    private javax.swing.JTextField tfServiceName;
+    // End of variables declaration//GEN-END:variables
 }
