@@ -280,6 +280,9 @@ public class TechnicianService {
     public String validateProfile(String name, String gender, String phone, String email, String ageStr) {
         if (name == null || name.isBlank())
             return "Name cannot be empty.";
+        if (gender != null && !gender.isBlank()) {
+            gender = gender.substring(0, 1).toUpperCase() + gender.substring(1).toLowerCase();
+        }
         if (gender == null || (!gender.equals("Male") && !gender.equals("Female")))
             return "Gender must be Male or Female.";
         if (ageStr == null || ageStr.isBlank())
