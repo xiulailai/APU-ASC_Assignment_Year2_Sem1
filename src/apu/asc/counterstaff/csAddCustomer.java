@@ -233,7 +233,7 @@ public class csAddCustomer extends javax.swing.JFrame {
         // TODO add your handling code here:
         String result = service.addCustomer(
                 tfName.getText(),
-                (String) cbGender.getSelectedItem(),
+                cbGender.getSelectedItem().toString(),
                 tfAge.getText(),
                 tfPhone.getText(),
                 tfEmail.getText(),
@@ -245,7 +245,7 @@ public class csAddCustomer extends javax.swing.JFrame {
             lblMessage.setForeground(new java.awt.Color(0, 150, 0));
             lblMessage.setText(result.substring(4));
             clearFields();
-            parentFrame.refreshTable(); // update table in csCustomers
+            parentFrame.refreshTable(); // update table in csManageCustomers
         } else {
             lblMessage.setForeground(new java.awt.Color(200, 0, 0));
             lblMessage.setText(result.substring(5));

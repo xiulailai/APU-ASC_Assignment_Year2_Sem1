@@ -277,7 +277,9 @@ public class csManageCustomer extends javax.swing.JFrame {
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
         String customerId = getSelectedCustomerId();
-        if (customerId == null) return;
+        if (customerId == null) {
+            return;
+        }
         this.setVisible(false);
         new csEditCustomer(counterStaffId, customerId, this).setVisible(true);
     }//GEN-LAST:event_btnEditActionPerformed

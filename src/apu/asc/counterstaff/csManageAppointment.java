@@ -262,7 +262,7 @@ public class csManageAppointment extends javax.swing.JFrame {
             return;
         }
  
-        // Only allow assigning Pending appointments
+        // Only allow assigning Pending appointments to be assigned
         Appointment a = service.getAppointmentById(appointmentId);
         if (!a.getStatus().equals("Pending")) {
             javax.swing.JOptionPane.showMessageDialog(this,
@@ -287,7 +287,15 @@ public class csManageAppointment extends javax.swing.JFrame {
         if (appointmentId == null) {
             return;
         }
- 
+        // do not allow completed service to be deleted
+        Appointment a = service.getAppointmentById(appointmentId);
+        if (a.getStatus().equals("Completed")){
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Completed appointments cannot be deleted.",
+                "Invalid Action", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to delete appointment " + appointmentId + "?",
                 "Confirm Delete", javax.swing.JOptionPane.YES_NO_OPTION,
@@ -311,7 +319,7 @@ public class csManageAppointment extends javax.swing.JFrame {
 
     private void cbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFilterActionPerformed
         // TODO add your handling code here:
-        String selected = (String) cbFilter.getSelectedItem();
+        String selected = cbFilter.getSelectedItem().toString();
         loadTable(service.filterAppointmentsByStatus(selected));
     }//GEN-LAST:event_cbFilterActionPerformed
 
