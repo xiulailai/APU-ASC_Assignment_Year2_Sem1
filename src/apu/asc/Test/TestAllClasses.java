@@ -7,6 +7,7 @@ import apu.asc.main.LoginService;
 import apu.asc.technician.*;
 import apu.asc.counterstaff.*;
 import apu.asc.customer.*;
+import apu.asc.manager.*;
 
 
 public class TestAllClasses {
@@ -274,11 +275,201 @@ public class TestAllClasses {
         
         
         // Manager Role
-        // 
-        
+        // apu.asc.manager  —  Service Logic
+        System.out.println(" apu.asc.manager — ManagerService");
+
+        ManagerService mgrSvc = new ManagerService("M001");
+
+        // Profile
+        System.out.println("[getProfile]: " + mgrSvc.getProfile().getName());
+        System.out.println("[getMyUsername]: " + mgrSvc.getMyUsername());
+        System.out.println("[lookupUsername] M002: " + mgrSvc.lookupUsername("M002"));
+
+        // Validation — person fields
+        System.out.println("[validatePerson] valid: " + mgrSvc.validatePerson("Alice", "30", "0123456789", "a@b.com", "Addr", "MY"));
+        System.out.println("[validatePerson] blank: " + mgrSvc.validatePerson("", "30", "0123456789", "a@b.com", "Addr", "MY"));
+        System.out.println("[validatePerson] bad age: " + mgrSvc.validatePerson("Alice", "abc", "0123456789", "a@b.com", "Addr", "MY"));
+        System.out.println("[validatePerson] bad phone: " + mgrSvc.validatePerson("Alice", "30", "12", "a@b.com", "Addr", "MY"));
+        System.out.println("[validatePerson] bad email: " + mgrSvc.validatePerson("Alice", "30", "0123456789", "noatsign", "Addr", "MY"));
+
+        // Validation — account
+        System.out.println("[validateAccount] valid: " + mgrSvc.validateAccount("freshuser", "pass1234", null));
+        System.out.println("[validateAccount] dup username: " + mgrSvc.validateAccount("manager1", "pass1234", null));
+        System.out.println("[validateAccount] short password: " + mgrSvc.validateAccount("freshuser", "x", null));
+
+        // Validation — price
+        System.out.println("[validatePrice] valid: " + mgrSvc.validatePrice("75.50"));
+        System.out.println("[validatePrice] zero: " + mgrSvc.validatePrice("0"));
+        System.out.println("[validatePrice] non-numeric: " + mgrSvc.validatePrice("abc"));
+
+        // Staff counts
+        System.out.println("[countManagers]: " + mgrSvc.countManagers());
+        System.out.println("[countCounterStaff]: " + mgrSvc.countCounterStaff());
+        System.out.println("[countTechnicians]: " + mgrSvc.countTechnicians());
+        System.out.println("[countCustomers]: " + mgrSvc.countCustomers());
+
+        // CRUD reads (no mutations)
+        System.out.println("[getAllManagers]: " + mgrSvc.getAllManagers().size() + " manager(s)");
+        System.out.println("[getAllCounterStaff]: " + mgrSvc.getAllCounterStaff().size() + " counter staff");
+        System.out.println("[getAllTechnicians]: " + mgrSvc.getAllTechnicians().size() + " technician(s)");
+        System.out.println("[getAllServices]: " + mgrSvc.getAllServices().size() + " service(s)");
+
+        // Lookups by ID
+        System.out.println("[getManagerById] M001: " + (mgrSvc.getManagerById("M001") == null ? "null" : mgrSvc.getManagerById("M001").getName()));
+        System.out.println("[getCounterStaffById] CS001: " + (mgrSvc.getCounterStaffById("CS001") == null ? "null" : mgrSvc.getCounterStaffById("CS001").getName()));
+        System.out.println("[getTechnicianById] T001: " + (mgrSvc.getTechnicianById("T001") == null ? "null" : mgrSvc.getTechnicianById("T001").getName()));
+        System.out.println("[getServiceById] S001: " + (mgrSvc.getServiceById("S001") == null ? "null" : mgrSvc.getServiceById("S001").getServiceName()));
+
+        // Search
+        System.out.println("[searchManagers] 'John': " + mgrSvc.searchManagers("John").size() + " result(s)");
+        System.out.println("[searchCounterStaff] 'Amy': " + mgrSvc.searchCounterStaff("Amy").size() + " result(s)");
+        System.out.println("[searchTechnicians] 'Ahmad': " + mgrSvc.searchTechnicians("Ahmad").size() + " result(s)");
+
+        // Name lookups
+        System.out.println("[lookupTechnicianName] T001: " + mgrSvc.lookupTechnicianName("T001"));
+        System.out.println("[lookupCounterStaffName] CS001: " + mgrSvc.lookupCounterStaffName("CS001"));
+        System.out.println("[lookupCustomerName] C001: " + mgrSvc.lookupCustomerName("C001"));
+        System.out.println("[lookupServiceName] S001: " + mgrSvc.lookupServiceName("S001"));
+        System.out.println("[lookupTargetName] T001: " + mgrSvc.lookupTargetName("T001"));
+        System.out.println("[lookupTargetName] CS001: " + mgrSvc.lookupTargetName("CS001"));
+
+        // Feedback & comment rows (used by GUI tables)
+        System.out.println("[getFeedbackRows] no filter: " + mgrSvc.getFeedbackRows(null).size() + " row(s)");
+        System.out.println("[getFeedbackRows] 'Ahmad': " + mgrSvc.getFeedbackRows("Ahmad").size() + " row(s)");
+        System.out.println("[getCommentRows] no filter: " + mgrSvc.getCommentRows(null).size() + " row(s)");
+        System.out.println("[getCommentRows] 'Amy': " + mgrSvc.getCommentRows("Amy").size() + " row(s)");
+
+        // Reports (7 unique)
+        System.out.println("[Report 1 Revenue]: " + mgrSvc.getRevenueReport().size() + " row(s)");
+        System.out.println("[Report 2 Technician Performance]: " + mgrSvc.getTechnicianPerformanceReport().size() + " row(s)");
+        System.out.println("[Report 3 Counter Staff Performance]: " + mgrSvc.getCounterStaffPerformanceReport().size() + " row(s)");
+        System.out.println("[Report 4 Service Popularity]: " + mgrSvc.getServicePopularityReport().size() + " row(s)");
+        System.out.println("[Report 5 Customer Activity]: " + mgrSvc.getCustomerActivityReport().size() + " row(s)");
+        int[] aps = mgrSvc.getAppointmentStatusCounts();
+        System.out.println("[Report 6 Appointment Status]: pending=" + aps[0] + " assigned=" + aps[1] + " completed=" + aps[2] + " total=" + aps[3]);
+        System.out.println("[Report 7 Monthly Revenue]: " + mgrSvc.getMonthlyRevenueReport().size() + " row(s)");
+
+        // Aggregate stats
+        System.out.println("[getTotalRevenue]: RM " + String.format("%.2f", mgrSvc.getTotalRevenue()));
+        System.out.println("[getCurrentMonthRevenue]: RM " + String.format("%.2f", mgrSvc.getCurrentMonthRevenue()));
+
 
         // Manager Role GUI
-        // 
+        // apu.asc.manager  —  GUI Frames
+        System.out.println(" apu.asc.manager — GUI Frames");
+
+        // mgrDashboard
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            dashboard.setVisible(true);
+            System.out.println("[mgrDashboard] opened: " + dashboard.isVisible());
+            System.out.println("[mgrDashboard] title: " + dashboard.getTitle());
+            dashboard.dispose();
+            System.out.println("[mgrDashboard] closed: " + !dashboard.isVisible());
+        });
+
+        // mgrEditProfile
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            mgrEditProfile profile = new mgrEditProfile(mgrSvc, dashboard);
+            profile.setVisible(true);
+            System.out.println("[mgrEditProfile] opened: " + profile.isVisible());
+            System.out.println("[mgrEditProfile] title: " + profile.getTitle());
+            profile.dispose();
+            dashboard.dispose();
+            System.out.println("[mgrEditProfile] closed: " + !profile.isVisible());
+        });
+
+        // mgrSetPrices
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            mgrSetPrices prices = new mgrSetPrices(mgrSvc, dashboard);
+            prices.setVisible(true);
+            System.out.println("[mgrSetPrices] opened: " + prices.isVisible());
+            System.out.println("[mgrSetPrices] title: " + prices.getTitle());
+            prices.dispose();
+            dashboard.dispose();
+            System.out.println("[mgrSetPrices] closed: " + !prices.isVisible());
+        });
+
+        // mgrManageStaff (all 3 staff types)
+        for (final String type : new String[]{"Manager", "CounterStaff", "Technician"}) {
+            javax.swing.SwingUtilities.invokeAndWait(() -> {
+                mgrDashboard dashboard = new mgrDashboard("M001");
+                mgrManageStaff manage = new mgrManageStaff(mgrSvc, dashboard, type);
+                manage.setVisible(true);
+                System.out.println("[mgrManageStaff " + type + "] opened: " + manage.isVisible());
+                System.out.println("[mgrManageStaff " + type + "] title: " + manage.getTitle());
+                manage.dispose();
+                dashboard.dispose();
+                System.out.println("[mgrManageStaff " + type + "] closed: " + !manage.isVisible());
+            });
+        }
+
+        // mgrAddStaff
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            mgrManageStaff manage = new mgrManageStaff(mgrSvc, dashboard, "Technician");
+            mgrAddStaff add = new mgrAddStaff(mgrSvc, manage, "Technician");
+            add.setVisible(true);
+            System.out.println("[mgrAddStaff] opened: " + add.isVisible());
+            System.out.println("[mgrAddStaff] title: " + add.getTitle());
+            add.dispose();
+            manage.dispose();
+            dashboard.dispose();
+            System.out.println("[mgrAddStaff] closed: " + !add.isVisible());
+        });
+
+        // mgrEditStaff
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            mgrManageStaff manage = new mgrManageStaff(mgrSvc, dashboard, "Technician");
+            mgrEditStaff edit = new mgrEditStaff(mgrSvc, manage, "Technician", "T001");
+            edit.setVisible(true);
+            System.out.println("[mgrEditStaff] opened: " + edit.isVisible());
+            System.out.println("[mgrEditStaff] title: " + edit.getTitle());
+            edit.dispose();
+            manage.dispose();
+            dashboard.dispose();
+            System.out.println("[mgrEditStaff] closed: " + !edit.isVisible());
+        });
+
+        // mgrFeedbacks
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            mgrFeedbacks fbView = new mgrFeedbacks(mgrSvc, dashboard);
+            fbView.setVisible(true);
+            System.out.println("[mgrFeedbacks] opened: " + fbView.isVisible());
+            System.out.println("[mgrFeedbacks] title: " + fbView.getTitle());
+            fbView.dispose();
+            dashboard.dispose();
+            System.out.println("[mgrFeedbacks] closed: " + !fbView.isVisible());
+        });
+
+        // mgrComments
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            mgrComments cmView = new mgrComments(mgrSvc, dashboard);
+            cmView.setVisible(true);
+            System.out.println("[mgrComments] opened: " + cmView.isVisible());
+            System.out.println("[mgrComments] title: " + cmView.getTitle());
+            cmView.dispose();
+            dashboard.dispose();
+            System.out.println("[mgrComments] closed: " + !cmView.isVisible());
+        });
+
+        // mgrReports
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            mgrDashboard dashboard = new mgrDashboard("M001");
+            mgrReports reports = new mgrReports(mgrSvc, dashboard);
+            reports.setVisible(true);
+            System.out.println("[mgrReports] opened: " + reports.isVisible());
+            System.out.println("[mgrReports] title: " + reports.getTitle());
+            reports.dispose();
+            dashboard.dispose();
+            System.out.println("[mgrReports] closed: " + !reports.isVisible());
+        });
+
 
         // End
         System.out.println(" All Tests Done — No data files modified");
