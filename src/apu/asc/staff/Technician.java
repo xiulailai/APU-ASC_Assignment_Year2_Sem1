@@ -1,7 +1,7 @@
 package apu.asc.staff;
 
 // Subclass of User. Adds technicianId as the unique identifier.
-public class Technician extends User {
+public class Technician extends User implements FileStorable {
     private String technicianId;
 
     //Constructor
@@ -25,6 +25,11 @@ public class Technician extends User {
         return new Technician(p[0].trim(), p[1].trim(), p[2].trim(),Integer.parseInt(p[3].trim()),p[4].trim(), p[5].trim(), p[6].trim(), p[7].trim());
     }
 
+    @Override
+    public String getDisplayInfo() {
+        return "Technician [" + technicianId + "] " + getName() + " | " + getEmail();
+    }
+    
     @Override
     public String toString() {
         return String.format("ID: %s | Name: %s | Gender: %s | Age: %d | Phone: %s | Email: %s",technicianId, name, gender, age, phone, email);

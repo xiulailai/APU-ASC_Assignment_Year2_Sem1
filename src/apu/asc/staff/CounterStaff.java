@@ -1,7 +1,7 @@
 package apu.asc.staff;
 
 // Subclass of User. Adds counterStaffId as the unique identifier.
-public class CounterStaff extends User {
+public class CounterStaff extends User implements FileStorable {
     private String counterStaffId;
 
     //constructor
@@ -23,6 +23,11 @@ public class CounterStaff extends User {
     public static CounterStaff fromFileString(String line) {
         String[] p = line.split(",", 8);
         return new CounterStaff(p[0].trim(), p[1].trim(), p[2].trim(),Integer.parseInt(p[3].trim()),p[4].trim(), p[5].trim(), p[6].trim(), p[7].trim());
+    }
+
+    @Override
+    public String getDisplayInfo() {
+        return "CounterStaff [" + counterStaffId + "] " + getName() + " | " + getPhone();
     }
 
     @Override
