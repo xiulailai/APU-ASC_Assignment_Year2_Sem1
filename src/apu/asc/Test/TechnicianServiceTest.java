@@ -16,9 +16,6 @@ public class TechnicianServiceTest {
 
     public static void main(String[] args) {
 
-        printHeader("APU - ASC | TechnicianService Test File");
-        printHeader("Test Technician: T001 (Ahmad Faiz)");
-
         TechnicianService svc = new TechnicianService(TEST_TECH_ID);
 
         // Main Features in TechnicianService.java

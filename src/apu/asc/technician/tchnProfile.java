@@ -405,13 +405,16 @@ public class tchnProfile extends javax.swing.JFrame {
         lblProfileMsg.setForeground(java.awt.Color.RED);
 
         String ageStr = tfAge.getText().trim();
+        String genderInput = tfGender.getText().trim();
+        
+        // Convert user text to first uppercase other lower
+        if (!genderInput.isEmpty()) {
+            genderInput = genderInput.substring(0, 1).toUpperCase() 
+                        + genderInput.substring(1).toLowerCase();
+        }
 
         // GUI only passes raw input — all validation logic is in the service
-        String error = svc.validateProfile(
-                tfName.getText().trim(),
-                tfPhone.getText().trim(),
-                tfEmail.getText().trim(),
-                ageStr);
+        String error = svc.validateProfile(tfName.getText().trim(), genderInput, tfPhone.getText().trim(), tfEmail.getText().trim(), ageStr);
 
         if (error != null) {
             lblProfileMsg.setText(error);
@@ -423,7 +426,7 @@ public class tchnProfile extends javax.swing.JFrame {
             String newPass = new String(pfPassword.getPassword()).trim();
             svc.editProfile(
                     tfName.getText().trim(),
-                    tfGender.getText().trim(),
+                    genderInput,
                     age,
                     tfPhone.getText().trim(),
                     tfEmail.getText().trim(),

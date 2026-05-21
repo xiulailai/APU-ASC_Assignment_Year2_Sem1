@@ -277,9 +277,11 @@ public class TechnicianService {
     }
     
     //12. Validates profile input fields
-    public String validateProfile(String name, String phone, String email, String ageStr) {
+    public String validateProfile(String name, String gender, String phone, String email, String ageStr) {
         if (name == null || name.isBlank())
             return "Name cannot be empty.";
+        if (gender == null || (!gender.equals("Male") && !gender.equals("Female")))
+            return "Gender must be Male or Female.";
         if (ageStr == null || ageStr.isBlank())
             return "Age cannot be empty.";
         try {

@@ -1,6 +1,7 @@
 package apu.asc.Test;
 
 import apu.asc.staff.*;
+import apu.asc.staff.Technician;
 import apu.asc.technician.*;
 import apu.asc.main.LoginFrame;
 
