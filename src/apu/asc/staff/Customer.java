@@ -2,7 +2,7 @@ package apu.asc.staff;
 
 
 // Subclass of User. Adds customerId as the unique identifier.
-public class Customer extends User {
+public class Customer extends User implements FileStorable {
     private String customerId;
 
     // constructor
@@ -26,6 +26,11 @@ public class Customer extends User {
         return new Customer(p[0].trim(), p[1].trim(), p[2].trim(),Integer.parseInt(p[3].trim()),p[4].trim(), p[5].trim(), p[6].trim(), p[7].trim());
     }
 
+    @Override
+    public String getDisplayInfo() {
+        return "Customer [" + customerId + "] " + getName() + " | " + getPhone();
+    }
+    
     @Override
     public String toString() {
         return String.format("%s | %s | %s", customerId, name, phone);

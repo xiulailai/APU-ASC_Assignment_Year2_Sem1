@@ -173,16 +173,10 @@ public class LoginFrame extends javax.swing.JFrame {
                 new apu.asc.manager.mgrDashboard(roleRefId).setVisible(true);
                 break;
             case "counterstaff":
-                javax.swing.JOptionPane.showMessageDialog(null,
-                        "Counter Staff dashboard not implemented yet.",
-                        "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                new LoginFrame().setVisible(true);
+                new apu.asc.counterstaff.csDashboard(roleRefId).setVisible(true);
                 break;
             case "customer":
-                javax.swing.JOptionPane.showMessageDialog(null,
-                        "Customer dashboard not implemented yet.",
-                        "Coming Soon", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                new LoginFrame().setVisible(true);
+                new apu.asc.customer.custDashboard(roleRefId).setVisible(true);
                 break;
             default:
                 javax.swing.JOptionPane.showMessageDialog(null,

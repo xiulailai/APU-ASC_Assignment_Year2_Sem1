@@ -245,7 +245,7 @@ public class csEditCustomer extends javax.swing.JFrame {
         String result = service.updateCustomer(
                 customerId,
                 tfName.getText(),
-                (String) cbGender.getSelectedItem(),
+                cbGender.getSelectedItem().toString(),
                 tfAge.getText(),
                 tfPhone.getText(),
                 tfEmail.getText(),

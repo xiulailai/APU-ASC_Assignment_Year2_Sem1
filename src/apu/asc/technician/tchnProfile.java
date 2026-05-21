@@ -405,13 +405,10 @@ public class tchnProfile extends javax.swing.JFrame {
         lblProfileMsg.setForeground(java.awt.Color.RED);
 
         String ageStr = tfAge.getText().trim();
+        String genderInput = tfGender.getText().trim();
 
         // GUI only passes raw input — all validation logic is in the service
-        String error = svc.validateProfile(
-                tfName.getText().trim(),
-                tfPhone.getText().trim(),
-                tfEmail.getText().trim(),
-                ageStr);
+        String error = svc.validateProfile(tfName.getText().trim(), genderInput, tfPhone.getText().trim(), tfEmail.getText().trim(), ageStr);
 
         if (error != null) {
             lblProfileMsg.setText(error);
@@ -421,9 +418,11 @@ public class tchnProfile extends javax.swing.JFrame {
         try {
             int age = Integer.parseInt(ageStr); // safe to parse here — already validated
             String newPass = new String(pfPassword.getPassword()).trim();
+            String normGender = genderInput.isEmpty() ? genderInput
+                : genderInput.substring(0, 1).toUpperCase() + genderInput.substring(1).toLowerCase();
             svc.editProfile(
                     tfName.getText().trim(),
-                    tfGender.getText().trim(),
+                    normGender,
                     age,
                     tfPhone.getText().trim(),
                     tfEmail.getText().trim(),

@@ -291,15 +291,15 @@ public class csEditProfile extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
         String result = service.updateProfile(
-                counterStaffId,
-                tfName.getText(),
-                (String) cbGender.getSelectedItem(),
-                tfAge.getText(),
-                tfPhone.getText(),
-                tfEmail.getText(),
-                tfAddress.getText(),
-                tfNationality.getText()
-                );
+            counterStaffId,
+            tfName.getText(),
+            cbGender.getSelectedItem().toString(),
+            tfAge.getText(),
+            tfPhone.getText(),
+            tfEmail.getText(),
+            tfAddress.getText(),
+            tfNationality.getText()
+            );
  
         if (result.startsWith("OK:")) {
             lblMessage.setForeground(new java.awt.Color(0, 150, 0));

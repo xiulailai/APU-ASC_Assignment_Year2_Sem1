@@ -15,9 +15,9 @@ public class csAssignAppointment extends javax.swing.JFrame {
 
     public csAssignAppointment(String counterStaffId, String appointmentId, csManageAppointment parentFrame) {
         this.counterStaffId = counterStaffId;
-        this.appointmentId  = appointmentId;
-        this.parentFrame    = parentFrame;
-        this.service        = new csService();
+        this.appointmentId = appointmentId;
+        this.parentFrame = parentFrame;
+        this.service = new csService();
         initComponents();
         setLocationRelativeTo(null);
         loadAppointmentDetails();

@@ -3,6 +3,7 @@ package apu.asc.counterstaff;
 import apu.asc.staff.Appointment;
 import apu.asc.staff.CounterStaff;
 import apu.asc.staff.Customer;
+import apu.asc.staff.Payment;
 import apu.asc.staff.Service;
 import apu.asc.staff.Technician;
 import java.io.BufferedReader;
@@ -23,31 +24,21 @@ public class csService {
     private static final String FILE_PAYMENTS = "Data/payments.txt";
 
     //File I/O activities
-
-    // Reads all lines from a file. Returns empty list on error.
+    // Reads all lines from a file. Returns empty list on error
     private List<String> readLines(String filePath) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
+                if (line.startsWith("#") || line.isBlank()) {
+                    continue;
+                }
                 lines.add(line);
             }
         } catch (Exception e) {
             System.err.println("csService.readLines error [" + filePath + "]: " + e.getMessage());
         }
         return lines;
-    }
-
-    // Overwrites a file with the given list of lines.
-    private void writeLines(String filePath, List<String> lines) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-            for (String line : lines) {
-                bw.write(line);
-                bw.newLine();
-            }
-        } catch (Exception e) {
-            System.err.println("csService.writeLines error [" + filePath + "]: " + e.getMessage());
-        }
     }
 
     // Appends a single line to the end of a file.
@@ -59,20 +50,77 @@ public class csService {
             System.err.println("csService.appendLine error [" + filePath + "]: " + e.getMessage());
         }
     }
+    
+    private void saveAllCounterStaff(List<CounterStaff> list) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_COUNTERSTAFF))) {
+            bw.write("# counterStaffId,name,gender,age,phone,email,address,nationality"); 
+            bw.newLine();
+            for (CounterStaff cs : list) { 
+                bw.write(cs.toFileString()); 
+                bw.newLine(); 
+            }
+        } catch (Exception e) {
+            System.err.println("csService.saveAllCounterStaff error: " + e.getMessage());
+        }
+    }
+    
+    private void saveAllCustomers(List<Customer> list) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_CUSTOMERS))) {
+            bw.write("# customerId,name,gender,age,phone,email,address,nationality"); 
+            bw.newLine();
+            for (Customer c : list) { 
+                bw.write(c.toFileString()); 
+                bw.newLine(); 
+            }
+        } catch (Exception e) {
+            System.err.println("csService.saveAllCustomers error: " + e.getMessage());
+        }
+    }
+    
+    private void saveAllAppointments(List<Appointment> list) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_APPOINTMENTS))) {
+            bw.write("# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status"); 
+            bw.newLine();
+            for (Appointment a : list) { 
+                bw.write(a.toFileString()); 
+                bw.newLine(); 
+            }
+        } catch (Exception e) {
+            System.err.println("csService.saveAllAppointments error: " + e.getMessage());
+        }
+    }
+    
+    private void saveAllUsers(List<String> list) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_USERS))) {
+            bw.write("# userId,username,password,role,roleRefId"); 
+            bw.newLine();
+            for (String line : list) { 
+                bw.write(line); 
+                bw.newLine(); 
+            }
+        } catch (Exception e) {
+            System.err.println("csService.saveAllUsers error: " + e.getMessage());
+        }
+    }
 
     //for Dashboard
     //Finds and returns the CounterStaff object matching the given ID. Returns null if not found.
     public CounterStaff getProfile(String counterStaffId) {
-        for (String line : readLines(FILE_COUNTERSTAFF)) {
-            if (line.startsWith("#") || line.isBlank()) {
-                continue;
-            }
-            CounterStaff cs = CounterStaff.fromFileString(line);
+        for (CounterStaff cs : getAllCounterStaff()) {
             if (cs.getCounterStaffId().equals(counterStaffId)) {
                 return cs;
             }
         }
         return null;
+    }
+    
+    //gets all counter staff
+    public List<CounterStaff> getAllCounterStaff() {
+        List<CounterStaff> list = new ArrayList<>();
+        for (String line : readLines(FILE_COUNTERSTAFF)) {
+            list.add(CounterStaff.fromFileString(line));
+        }
+        return list;
     }
 
     //for EditProfile
@@ -83,52 +131,42 @@ public class csService {
         if (name.isBlank() || ageStr.isBlank() || phone.isBlank() || email.isBlank() || address.isBlank() || nationality.isBlank()) {
             return "ERR: All fields are required.";
         }
-
         int age;
         try {
             age = Integer.parseInt(ageStr.trim());
-            if (age < 0 || age > 100) return "ERR: Age must be between 0 and 100.";
+            if (age < 0 || age > 100) {
+                return "ERR: Age must be between 0 and 100.";
+            }
         } catch (NumberFormatException e) {
             return "ERR: Age must be a valid number.";
         }
-
         if (!phone.trim().matches("\\d{10,12}")) {
             return "ERR: Phone must be 10 to 12 digits.";
         }
-
         if (!email.contains("@") || !email.contains(".")) {
             return "ERR: Enter a valid email address.";
         }
 
         //Write to file
-        List<String> lines = readLines(FILE_COUNTERSTAFF);
+        List<CounterStaff> allStaff = getAllCounterStaff();
         boolean found = false;
-        List<String> updated = new ArrayList<>();
-
-        for (String line : lines) {
-            if (!line.startsWith("#") && !line.isBlank()) {
-                CounterStaff cs = CounterStaff.fromFileString(line);
-                if (cs.getCounterStaffId().equals(counterStaffId)) {
-                    cs.setName(name.trim());
-                    cs.setGender(gender);
-                    cs.setAge(age);
-                    cs.setPhone(phone.trim());
-                    cs.setEmail(email.trim());
-                    cs.setAddress(address.trim());
-                    cs.setNationality(nationality.trim());
-                    updated.add(cs.toFileString());
-                    found = true;
-                    continue;
-                }
+        for (CounterStaff cs : allStaff) {
+            if (cs.getCounterStaffId().equals(counterStaffId)) {
+                cs.setName(name.trim());
+                cs.setGender(gender);
+                cs.setAge(age);
+                cs.setPhone(phone.trim());
+                cs.setEmail(email.trim());
+                cs.setAddress(address.trim());
+                cs.setNationality(nationality.trim());
+                found = true;
+                break;
             }
-            updated.add(line);
         }
-
         if (!found) {
             return "ERR: Staff record not found.";
         }
-
-        writeLines(FILE_COUNTERSTAFF, updated);
+        saveAllCounterStaff(allStaff);
         return "OK: Profile updated successfully!";
     }
 
@@ -137,25 +175,21 @@ public class csService {
     public List<Customer> getAllCustomers() {
         List<Customer> list = new ArrayList<>();
         for (String line : readLines(FILE_CUSTOMERS)) {
-            if (line.startsWith("#") || line.isBlank()) {
-                continue;
-            }
             list.add(Customer.fromFileString(line));
         }
         return list;
     }
-
-    //Returns customers based on ID, name, or phone in the query (case-insensitive)
-    //returns all customer if query is blank
+    
+    //Returns customers based on ID, name, or phone in the query (case-insensitive), returns all customer if query is blank
     public List<Customer> searchCustomers(String query) {
-        List<Customer> all = getAllCustomers();
+        List<Customer> allCustomer = getAllCustomers();
         if (query == null || query.isBlank()) {
-            return all;
+            return allCustomer;
         }
 
         List<Customer> result = new ArrayList<>();
         String q = query.toLowerCase().trim();
-        for (Customer c : all) {
+        for (Customer c : allCustomer) {
             if (c.getCustomerId().toLowerCase().contains(q) || c.getName().toLowerCase().contains(q) || c.getPhone().contains(q)) {
                 result.add(c);
             }
@@ -166,12 +200,10 @@ public class csService {
     //validates and adds a new customer to customers.txt
     //also adds in user.txt
     public String addCustomer(String name, String gender, String ageStr, String phone, String email, String address, String nationality) {
-
         //validation
         if (name.isBlank() || ageStr.isBlank() || phone.isBlank() || email.isBlank() || address.isBlank() || nationality.isBlank()) {
             return "ERR: All fields are required.";
         }
-
         int age;
         try {
             age = Integer.parseInt(ageStr.trim());
@@ -181,11 +213,9 @@ public class csService {
         } catch (NumberFormatException e) {
             return "ERR: Age must be a valid number.";
         }
-
         if (!phone.trim().matches("\\d{10,12}")) {
             return "ERR: Phone must be 10 to 12 digits.";
         }
-
         if (!email.contains("@") || !email.contains(".")) {
             return "ERR: Enter a valid email address.";
         }
@@ -205,6 +235,47 @@ public class csService {
 
         return "OK: Customer " + newId + " added successfully!";
     }
+    
+    //generates the next customer ID
+    private String generateCustomerId() {
+        int max = 0;
+        for (Customer c : getAllCustomers()) {
+            try {
+                int num = Integer.parseInt(c.getCustomerId().substring(1)); //takes the numbers after the first character (Cxxx becomes xxx)
+                if (num > max) {
+                    max = num;
+                }
+            } catch (Exception ignored) {}
+        }
+        return String.format("C%03d", max + 1);
+    }
+    
+    //creates a new user acc for customer
+    private String createUserAccount(String customerId, String name) {
+        int maxId = 0;
+        for (String line : readLines(FILE_USERS)) {
+            String[] data = line.split(",", 5);
+            if (data.length >= 1) {
+                try {
+                    int num = Integer.parseInt(data[0].trim().substring(1)); //takes the numbers after the first character (Uxxx becomes xxx)
+                    if (num > maxId) {
+                        maxId = num;
+                    }
+                } catch (Exception ignored) {}
+            }
+        }
+
+        String userId = String.format("U%03d", maxId + 1);
+        String idNum = customerId.substring(1);
+        // default username: first 4 letters of name (lowercase) + id number
+        String safeName = name.replaceAll("\\s+", "").toLowerCase();
+        String username = safeName.substring(0, Math.min(4, safeName.length())) + idNum;
+        String password = "pass" + idNum;
+        String userLine = String.join(",", userId, username, password, "customer", customerId);
+
+        appendLine(FILE_USERS, userLine);
+        return "OK";
+    }
 
     //updates existing customers
     public String updateCustomer(String customerId, String name, String gender, String ageStr, String phone, String email, String address, String nationality) {
@@ -213,7 +284,6 @@ public class csService {
         if (name.isBlank() || ageStr.isBlank() || phone.isBlank() || email.isBlank() || address.isBlank() || nationality.isBlank()) {
             return "ERR: All fields are required.";
         }
-
         int age;
         try {
             age = Integer.parseInt(ageStr.trim());
@@ -233,55 +303,57 @@ public class csService {
         }
 
         //Write to file
-        List<Customer> all = getAllCustomers();
+        List<Customer> allCustomer = getAllCustomers();
         boolean found = false;
-        List<String> updated = new ArrayList<>();
-
-        updated.add("# customerId,name,gender,age,phone,email,address,nationality");
-        for (Customer c : all) {
+        for (Customer c : allCustomer) {
             if (c.getCustomerId().equals(customerId)) {
-                Customer updatedCustomer = new Customer(customerId, name.trim(), gender, age, phone.trim(), email.trim(), address.trim(), nationality.trim());
-                updated.add(updatedCustomer.toFileString());
+                c.setName(name.trim());
+                c.setGender(gender);
+                c.setAge(age);
+                c.setPhone(phone.trim());
+                c.setEmail(email.trim());
+                c.setAddress(address.trim());
+                c.setNationality(nationality.trim());
                 found = true;
-            } else {
-                updated.add(c.toFileString());
+                break;
             }
         }
-
         if (!found) return "ERR: Customer record not found.";
-
-        writeLines(FILE_CUSTOMERS, updated);
+        saveAllCustomers(allCustomer);
         return "OK: Customer updated successfully!";
     }
 
-    //Deletes a customer by ID from customers.txt and their account from users.txt
+    //deletes a customer by ID from customers.txt and their account from users.txt
     public String deleteCustomer(String customerId) {
-        List<Customer> all = getAllCustomers();
-        boolean found = false;
-        List<String> updated = new ArrayList<>();
+        List<Customer> allCustomer = getAllCustomers();
+        boolean removed = allCustomer.removeIf(c -> c.getCustomerId().equals(customerId));
 
-        updated.add("# customerId,name,gender,age,phone,email,address,nationality");
-        for (Customer c : all) {
-            if (c.getCustomerId().equals(customerId)) {
-                found = true; // skip — effectively deletes
-            } else {
-                updated.add(c.toFileString());
-            }
-        }
-
-        if (!found) {
+        if (!removed) {
             return "ERR: Customer not found.";
         }
 
-        writeLines(FILE_CUSTOMERS, updated);
-
-        // Also remove from users.txt
+        saveAllCustomers(allCustomer);
         removeUserByRoleRef(customerId);
-
         return "OK: Customer " + customerId + " deleted successfully!";
     }
+    
+    //removes user by id in users.txt
+    private void removeUserByRoleRef(String roleRefId) {
+        List<String> allUsers = readLines(FILE_USERS);
+        List<String> updated  = new ArrayList<>();
+ 
+        for (String line : allUsers) {
+            String[] data = line.split(",", 5);
+            if (data.length == 5 && data[4].trim().equals(roleRefId)) {
+                continue; //not added in updated (skipped and updated one gone)
+            }
+            updated.add(line);
+        }
+ 
+        saveAllUsers(updated);
+    }
 
-    //Finds a single customer by ID. Returns null if not found.
+    //Finds a single customer by ID. Returns null if not found
     public Customer getCustomerById(String customerId) {
         for (Customer c : getAllCustomers()) {
             if (c.getCustomerId().equals(customerId)) {
@@ -290,73 +362,12 @@ public class csService {
         }
         return null;
     }
-
-    //generates the next customer ID
-    private String generateCustomerId() {
-        int max = 0;
-        for (Customer c : getAllCustomers()) {
-            try {
-                int num = Integer.parseInt(c.getCustomerId().substring(1));
-                if (num > max) max = num;
-            } catch (Exception ignored) {}
-        }
-        return String.format("C%03d", max + 1);
-    }
-
-    //creates a new user acc for customer
-    private String createUserAccount(String customerId, String name) {
-        int maxId = 0;
-        for (String line : readLines(FILE_USERS)) {
-            if (line.startsWith("#") || line.isBlank()) {
-                continue;
-            }
-            String[] p = line.split(",", 5);
-            if (p.length >= 1) {
-                try {
-                    int num = Integer.parseInt(p[0].trim().substring(1));
-                    if (num > maxId) maxId = num;
-                } catch (Exception ignored) {}
-            }
-        }
-
-        String userId = String.format("U%03d", maxId + 1);
-        String idNum = customerId.substring(1);
-        // default username: first 4 letters of name (lowercase) + id number
-        String safeName = name.replaceAll("\\s+", "").toLowerCase();
-        String username = safeName.substring(0, Math.min(4, safeName.length())) + idNum;
-        String password = "pass" + idNum;
-        String userLine = String.join(",", userId, username, password, "customer", customerId);
-
-        appendLine(FILE_USERS, userLine);
-        return "OK";
-    }
-
-    //removes user by id
-    private void removeUserByRoleRef(String roleRefId) {
-        List<String> lines = readLines(FILE_USERS);
-        List<String> updated = new ArrayList<>();
-
-        for (String line : lines) {
-            if (!line.startsWith("#") && !line.isBlank()) {
-                String[] p = line.split(",", 5);
-                if (p.length == 5 && p[4].trim().equals(roleRefId)) {
-                    continue;
-                }
-            }
-            updated.add(line);
-        }
-
-        writeLines(FILE_USERS, updated);
-    }
     
     //for ManageAppointment
     //gets all appointments from file
     public List<Appointment> getAllAppointments() {
         List<Appointment> list = new ArrayList<>();
         for (String line : readLines(FILE_APPOINTMENTS)) {
-            if (line.startsWith("#") || line.isBlank()) {
-                continue;
-            }
             list.add(Appointment.fromFileString(line));
         }
         return list;
@@ -372,30 +383,16 @@ public class csService {
         return null;
     }
     
-    //deletes an appointment — only allowed if status is Pending
+    //deletes an appointment 
     public String deleteAppointment(String appointmentId) {
-        List<Appointment> all = getAllAppointments();
-        boolean found = false;
-        List<String> updated = new ArrayList<>();
- 
-        updated.add("# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status");
-        for (Appointment a : all) {
-            if (a.getAppointmentId().equals(appointmentId)) {
-                found = true;
-                if (!a.getStatus().equals("Pending")) {
-                    return "ERR: Only Pending appointments can be deleted.";
-                }
-                // skip this record — effectively deletes it
-            } else {
-                updated.add(a.toFileString());
-            }
-        }
- 
-        if (!found) {
+    List<Appointment> allAppointment = getAllAppointments();
+        boolean removed = allAppointment.removeIf(a -> a.getAppointmentId().equals(appointmentId));
+
+        if (!removed) {
             return "ERR: Appointment not found.";
         }
- 
-        writeLines(FILE_APPOINTMENTS, updated);
+
+        saveAllAppointments(allAppointment);
         return "OK: Appointment " + appointmentId + " deleted successfully!";
     }
     
@@ -403,30 +400,27 @@ public class csService {
     public List<Technician> getAllTechnicians() {
         List<Technician> list = new ArrayList<>();
         for (String line : readLines(FILE_TECHNICIANS)) {
-            if (line.startsWith("#") || line.isBlank()) {
-                continue;
-            }
             list.add(Technician.fromFileString(line));
         }
         return list;
     }
- 
+    
     //gets all services from file
     public List<Service> getAllServices() {
         List<Service> list = new ArrayList<>();
         for (String line : readLines(FILE_SERVICES)) {
-            if (line.startsWith("#") || line.isBlank()) {
-                continue;
-            }
             list.add(Service.fromFileString(line));
         }
         return list;
     }
  
-    //looks up a customer name by ID. Returns the ID itself if not found.
+    //looks up a customer name by ID. Returns the ID itself if not found
     public String lookupCustomerName(String customerId) {
         Customer c = getCustomerById(customerId);
-        return (c != null) ? c.getName() : customerId;
+        if (c != null) {
+            return c.getName();
+        }
+        return customerId;
     }
  
     //looks up a technician name by ID. Returns "TBD" if not assigned yet.
@@ -454,17 +448,14 @@ public class csService {
     
     //validates and creates a new appointment with status Pending and technicianId TBD
     public String createAppointment(String counterStaffId, String customerId, String serviceId, String date, String time) {
- 
         //Validation
         if (customerId.isBlank() || serviceId.isBlank() || date.isBlank() || time.isBlank()) {
             return "ERR: All fields are required.";
         }
- 
         //Validate date format yyyy-MM-dd
         if (!date.trim().matches("\\d{4}-\\d{2}-\\d{2}")) {
             return "ERR: Date must be in yyyy-MM-dd format.";
         }
- 
         //Validate date is not in the past
         try {
             java.time.LocalDate inputDate = java.time.LocalDate.parse(date.trim());
@@ -478,7 +469,7 @@ public class csService {
         //Generate new appointment ID
         String newId = generateAppointmentId();
  
-        //Write to file with status Pending and technicianId TBD
+        //Write to file with default status pending and technicianId TBD
         Appointment newAppointment = new Appointment(newId, customerId, "TBD", counterStaffId, serviceId, date.trim(), time, "Pending");
         appendLine(FILE_APPOINTMENTS, newAppointment.toFileString());
  
@@ -490,20 +481,22 @@ public class csService {
         int max = 0;
         for (Appointment a : getAllAppointments()) {
             try {
-                int num = Integer.parseInt(a.getAppointmentId().substring(1));
+                int num = Integer.parseInt(a.getAppointmentId().substring(1)); //only grabs number Axxx becomes xxx
                 if (num > max) max = num;
             } catch (Exception ignored) {}
         }
         return String.format("A%03d", max + 1);
     }
     
-    //returns appointments filtered by status. Returns all if status is blank.
+    //returns appointments filtered by status. Returns all if status is blank
     public List<Appointment> filterAppointmentsByStatus(String status) {
-        List<Appointment> all = getAllAppointments();
-        if (status == null || status.isBlank()) return all;
+        List<Appointment> allAppointment = getAllAppointments();
+        if (status == null || status.isBlank() || status.equals("All")){
+            return allAppointment;
+        }
  
         List<Appointment> result = new ArrayList<>();
-        for (Appointment a : all) {
+        for (Appointment a : allAppointment) {
             if (a.getStatus().equalsIgnoreCase(status.trim())) {
                 result.add(a);
             }
@@ -512,170 +505,145 @@ public class csService {
     }
     
     //returns list of technicians with no time clash on the target appointment's date and time window
-    public List<Technician> getAvailableTechnicians(Appointment target) {
-        //get service duration of the target appointment
-        int targetDuration = 1;
-        for (Service s : getAllServices()) {
-            if (s.getServiceId().equals(target.getServiceId())) {
-                targetDuration = s.getDurationHours();
+    public List<Technician> getAvailableTechnicians(Appointment appointment) {
+        List<Service> allServices = getAllServices();
+        List<Appointment> allAppointments = getAllAppointments();
+        List<Technician> allTechnicians = getAllTechnicians();
+
+        // get duration of target appointment
+        int targetDuration = 1; //default to 1 (normal service)
+        for (Service s : allServices) {
+            if (s.getServiceId().equals(appointment.getServiceId())) {
+                targetDuration = s.getDurationHours(); //updates duration accordingly
                 break;
             }
         }
- 
-        java.time.LocalTime targetStart = java.time.LocalTime.parse(target.getAppointmentTime());
-        java.time.LocalTime targetEnd   = targetStart.plusHours(targetDuration);
- 
-        //find all busy technicians on the same date
-        java.util.Set<String> busy = new java.util.HashSet<>();
-        for (Appointment a : getAllAppointments()) {
-            //skip the target appointment itself and Pending ones (not yet committed)
-            if (a.getAppointmentId().equals(target.getAppointmentId())) {
+        //find the time gap of the target appointment
+        java.time.LocalTime targetStart = java.time.LocalTime.parse(appointment.getAppointmentTime());
+        java.time.LocalTime targetEnd = targetStart.plusHours(targetDuration); 
+
+        java.util.Set<String> busyTechs = new java.util.HashSet<>(); //create a collection with no duplicates
+
+        for (Appointment a : allAppointments) {
+            if (a.getAppointmentId().equals(appointment.getAppointmentId())) { //skip target itself
                 continue;
             }
-            if (!a.getAppointmentDate().equals(target.getAppointmentDate())) {
+            if (!a.getAppointmentDate().equals(appointment.getAppointmentDate())) { //skip different days (will not clash time
                 continue;
             }
-            if (a.getStatus().equals("Pending")) {
+            if (!a.getStatus().equals("Assigned")) { //skip if NOT assigned (completed or pending wont clash)
                 continue;
             }
- 
-            //get duration of this existing appointment
-            int existingDuration = 1;
-            for (Service s : getAllServices()) {
+
+            int duration = 1; 
+            for (Service s : allServices) {
                 if (s.getServiceId().equals(a.getServiceId())) {
-                    existingDuration = s.getDurationHours();
+                    duration = s.getDurationHours();
                     break;
                 }
             }
- 
-            java.time.LocalTime existingStart = java.time.LocalTime.parse(a.getAppointmentTime());
-            java.time.LocalTime existingEnd   = existingStart.plusHours(existingDuration);
- 
-            //overlap check: two windows overlap if one starts before the other ends
-            if (targetStart.isBefore(existingEnd) && targetEnd.isAfter(existingStart)) {
-                busy.add(a.getTechnicianId());
+            //find time gap of existing appointment (that may clash)
+            java.time.LocalTime start = java.time.LocalTime.parse(a.getAppointmentTime());
+            java.time.LocalTime end = start.plusHours(duration);
+
+            if (targetStart.isBefore(end) && targetEnd.isAfter(start)) {
+                busyTechs.add(a.getTechnicianId());
             }
         }
- 
-        //return technicians not in the busy set
-        List<Technician> available = new ArrayList<>();
-        for (Technician t : getAllTechnicians()) {
-            if (!busy.contains(t.getTechnicianId())) {
-                available.add(t);
+
+        List<Technician> availableTechs = new ArrayList<>();
+        for (Technician t : allTechnicians) {
+            if (!busyTechs.contains(t.getTechnicianId())) { //only store tech ids that are not busy
+                availableTechs.add(t);
             }
         }
-        return available;
+
+        return availableTechs;
     }
  
     //assigns a technician to an appointment and updates status to Assigned
     public String assignAppointment(String appointmentId, String technicianId) {
-        List<Appointment> all = getAllAppointments();
+        List<Appointment> allAppointment = getAllAppointments();
         boolean found = false;
-        List<String> updated = new ArrayList<>();
  
-        updated.add("# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status");
-        for (Appointment a : all) {
+        for (Appointment a : allAppointment) {
             if (a.getAppointmentId().equals(appointmentId)) {
+                a.setTechnicianId(technicianId);
+                a.setStatus("Assigned");
                 found = true;
-                Appointment assigned = new Appointment(
-                        a.getAppointmentId(), a.getCustomerId(), technicianId,
-                        a.getCounterStaffId(), a.getServiceId(),
-                        a.getAppointmentDate(), a.getAppointmentTime(), "Assigned");
-                updated.add(assigned.toFileString());
-            } else {
-                updated.add(a.toFileString());
+                break;
             }
         }
  
-        if (!found) return "ERR: Appointment not found.";
- 
-        writeLines(FILE_APPOINTMENTS, updated);
+        if (!found) {
+            return "ERR: Appointment not found.";
+        }
+        saveAllAppointments(allAppointment);
         return "OK: Technician assigned successfully!";
     }
     
     //for csPayments 
-    //returns Assigned appointments that have no payment record yet
+    //returns assigned appointments that have no payment record yet
     public List<Appointment> getUnpaidAppointments() {
-        //collect all appointment IDs that already have a payment
-        java.util.Set<String> paidIds = new java.util.HashSet<>();
-        for (String line : readLines(FILE_PAYMENTS)) {
-            if (line.startsWith("#") || line.isBlank()) continue;
-            String[] p = line.split(",", 6);
-            if (p.length >= 2) paidIds.add(p[1].trim());
+        //gets all paid appointment ids first
+        List<Payment> allPayments = getAllPayments();
+        java.util.Set<String> paidAppointmentIds = new java.util.HashSet<>(); //create and store paid appointment ids
+        for (Payment data : allPayments) {
+            paidAppointmentIds.add(data.getAppointmentId());
         }
- 
-        //return Assigned appointments not in the paid set
-        List<Appointment> unpaid = new ArrayList<>();
-        for (Appointment a : getAllAppointments()) {
-            if (a.getStatus().equals("Assigned") && !paidIds.contains(a.getAppointmentId())) {
-                unpaid.add(a);
+        
+        //gets appointments that are assigned and not paid
+        List<Appointment> allAppointment = getAllAppointments();
+        List<Appointment> unpaidAppointment = new ArrayList<>();
+        for (Appointment a : allAppointment) {
+            if (a.getStatus().equals("Assigned") && !paidAppointmentIds.contains(a.getAppointmentId())) {
+                unpaidAppointment.add(a);
             }
         }
-        return unpaid;
+        return unpaidAppointment;
     }
- 
-    //looks up the price of a service by ID. Returns 0.0 if not found.
-    public double lookupServicePrice(String serviceId) {
-        for (Service s : getAllServices()) {
-            if (s.getServiceId().equals(serviceId)) return s.getPrice();
-        }
-        return 0.0;
-    }
- 
-    //collects payment for an appointment — writes to payments.txt and marks appointment Completed
-    public String collectPayment(String appointmentId, String customerId, double amount) {
-        //generate IDs
-        String paymentId = generatePaymentId();
-        String receiptNo = generateReceiptNo();
-        String today = java.time.LocalDate.now().toString();
- 
-        //write payment record
-        String paymentLine = String.join(",", paymentId, appointmentId, customerId,
-                String.format("%.2f", amount), today, receiptNo);
-        appendLine(FILE_PAYMENTS, paymentLine);
- 
-        //update appointment status to Completed
-        List<Appointment> all = getAllAppointments();
-        List<String> updated = new ArrayList<>();
-        updated.add("# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status");
-        for (Appointment a : all) {
-            if (a.getAppointmentId().equals(appointmentId)) {
-                Appointment completed = new Appointment(
-                        a.getAppointmentId(), a.getCustomerId(), a.getTechnicianId(),
-                        a.getCounterStaffId(), a.getServiceId(),
-                        a.getAppointmentDate(), a.getAppointmentTime(), "Completed");
-                updated.add(completed.toFileString());
-            } else {
-                updated.add(a.toFileString());
-            }
-        }
-        writeLines(FILE_APPOINTMENTS, updated);
- 
-        return "OK:" + paymentId + "," + receiptNo + "," + today;
-    }
- 
-    //returns all payment records from file
-    public List<String[]> getPaymentHistory() {
-        List<String[]> list = new ArrayList<>();
+    
+    //gets all payments
+    public List<Payment> getAllPayments() {
+        List<Payment> list = new ArrayList<>();
         for (String line : readLines(FILE_PAYMENTS)) {
-            if (line.startsWith("#") || line.isBlank()) continue;
-            list.add(line.split(",", 6));
+            list.add(Payment.fromFileString(line));
         }
         return list;
     }
  
+    //looks up the price of a service by ID. Returns 0.0 if not found
+    public double lookupServicePrice(String serviceId) {
+        for (Service s : getAllServices()) {
+            if (s.getServiceId().equals(serviceId)) {
+                return s.getPrice();
+            }
+        }
+        return 0.0;
+    }
+ 
+    //collects payment for an appointment
+    public String collectPayment(String appointmentId, String customerId, double amount) {
+        String paymentId = generatePaymentId();
+        String receiptNo = generateReceiptNo();
+        String today = java.time.LocalDate.now().toString();
+
+        Payment payment = new Payment(paymentId, appointmentId, customerId, amount, today, receiptNo);
+        appendLine(FILE_PAYMENTS, payment.toFileString());
+
+        return "OK:" + paymentId + "," + receiptNo + "," + today;
+    }
+    
     //generates the next payment ID (e.g. P004)
     private String generatePaymentId() {
         int max = 0;
-        for (String line : readLines(FILE_PAYMENTS)) {
-            if (line.startsWith("#") || line.isBlank()) continue;
-            String[] p = line.split(",", 6);
-            if (p.length >= 1) {
-                try {
-                    int num = Integer.parseInt(p[0].trim().substring(1));
-                    if (num > max) max = num;
-                } catch (Exception ignored) {}
-            }
+        for (Payment p : getAllPayments()) {
+            try {
+                int num = Integer.parseInt(p.getPaymentId().substring(1)); //Pxxx becomes xxx
+                if (num > max) {
+                    max = num;
+                }
+            } catch (Exception ignored) {}
         }
         return String.format("P%03d", max + 1);
     }
@@ -683,15 +651,13 @@ public class csService {
     //generates the next receipt number (e.g. R004)
     private String generateReceiptNo() {
         int max = 0;
-        for (String line : readLines(FILE_PAYMENTS)) {
-            if (line.startsWith("#") || line.isBlank()) continue;
-            String[] p = line.split(",", 6);
-            if (p.length >= 6) {
-                try {
-                    int num = Integer.parseInt(p[5].trim().substring(1));
-                    if (num > max) max = num;
-                } catch (Exception ignored) {}
-            }
+        for (Payment p : getAllPayments()) {
+            try {
+                int num = Integer.parseInt(p.getReceiptNo().substring(1)); ///Rxxx becomes xxx
+                if (num > max) {
+                    max = num;
+                }
+            } catch (Exception ignored) {}
         }
         return String.format("R%03d", max + 1);
     }

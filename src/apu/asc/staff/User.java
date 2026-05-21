@@ -1,19 +1,17 @@
 package apu.asc.staff;
 
 // Abstract superclass for all person-type entities in the system.
-public abstract class User {
+public abstract class User implements Displayable {
     protected String name;
     protected String gender;
-    protected int    age;
+    protected int age;
     protected String phone;
     protected String email;
     protected String address;
     protected String nationality;
 
     //Constructor
-    public User(String name, String gender, int age,
-                String phone, String email,
-                String address, String nationality) {
+    public User(String name, String gender, int age, String phone, String email, String address, String nationality) {
         this.name = name;
         this.gender = gender;
         this.age = age;
