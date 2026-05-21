@@ -1,6 +1,6 @@
 package apu.asc.staff;
 
-public class Payment {
+public class Payment implements FileStorable {
     private String paymentId;
     private String appointmentId;
     private String customerId;

@@ -2,7 +2,7 @@ package apu.asc.staff;
 
 
 // Subclass of User. Adds customerId as the unique identifier.
-public class Customer extends User {
+public class Customer extends User implements FileStorable {
     private String customerId;
 
     // constructor

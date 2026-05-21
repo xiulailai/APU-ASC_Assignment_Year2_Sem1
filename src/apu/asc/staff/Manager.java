@@ -1,7 +1,7 @@
 package apu.asc.staff;
 
 //Subclass of User. Adds managerId as the unique identifier.
-public class Manager extends User {
+public class Manager extends User implements FileStorable {
 
     private String managerId;
 

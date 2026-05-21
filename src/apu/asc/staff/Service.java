@@ -1,6 +1,6 @@
 package apu.asc.staff;
 
-public class Service {
+public class Service implements FileStorable {
     private String serviceId;
     private String serviceName;
     private int durationHours;
