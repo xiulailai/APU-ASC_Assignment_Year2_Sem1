@@ -38,7 +38,12 @@ public class TechnicianService {
         // ── Update technicians.txt ──
         List<String> rawLines = readRawLines(FILE_TECHNICIANS);
         List<String> updated  = new ArrayList<>();
- 
+        
+        if (gender != null && !gender.isBlank()) {
+            gender = gender.substring(0, 1).toUpperCase()
+                     + gender.substring(1).toLowerCase();
+        }
+
         for (String raw : rawLines) {
             if (raw.startsWith(COMMENT_CHAR) || raw.isBlank()) {
                 updated.add(raw);

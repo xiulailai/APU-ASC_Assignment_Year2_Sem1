@@ -418,11 +418,10 @@ public class tchnProfile extends javax.swing.JFrame {
         try {
             int age = Integer.parseInt(ageStr); // safe to parse here — already validated
             String newPass = new String(pfPassword.getPassword()).trim();
-            String normGender = genderInput.isEmpty() ? genderInput
-                : genderInput.substring(0, 1).toUpperCase() + genderInput.substring(1).toLowerCase();
+            
             svc.editProfile(
                     tfName.getText().trim(),
-                    normGender,
+                    genderInput,
                     age,
                     tfPhone.getText().trim(),
                     tfEmail.getText().trim(),
