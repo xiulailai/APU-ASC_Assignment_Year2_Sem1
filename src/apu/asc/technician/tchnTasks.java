@@ -1,7 +1,5 @@
 package apu.asc.technician;
-import apu.asc.staff.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class tchnTasks extends javax.swing.JFrame {
@@ -245,19 +243,8 @@ public class tchnTasks extends javax.swing.JFrame {
  
     private void refreshTable(String keyword, String status) {
         tableModel.setRowCount(0);
-        Map<String, String> svcNames = svc.buildServiceNameMap();
-        List<Appointment> list = svc.searchTasks(keyword, status);
-
- 
-        for (Appointment a : list) {
-            tableModel.addRow(new Object[]{
-                a.getAppointmentId(),
-                a.getAppointmentDate(),
-                a.getAppointmentTime(),
-                a.getCustomerId(),
-                svcNames.getOrDefault(a.getServiceId(), a.getServiceId()),
-                a.getStatus()
-            });
+        for (String[] row : svc.getTaskRows(keyword, status)) {
+            tableModel.addRow(row);
         }
     }
  

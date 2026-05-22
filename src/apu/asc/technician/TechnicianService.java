@@ -393,7 +393,25 @@ public class TechnicianService {
         }
         return rows;
     }
-
+    
+    // Returns display-ready rows for the tasks table
+    public List<String[]> getTaskRows(String keyword, String status) {
+        Map<String, String> svcNames = buildServiceNameMap();
+        List<Appointment> list = searchTasks(keyword, status);
+        List<String[]> rows = new ArrayList<>();
+        for (Appointment a : list) {
+            rows.add(new String[]{
+                a.getAppointmentId(),
+                a.getAppointmentDate(),
+                a.getAppointmentTime(),
+                a.getCustomerId(),
+                svcNames.getOrDefault(a.getServiceId(), a.getServiceId()),
+                a.getStatus()
+            });
+        }
+        return rows;
+    }
+    
     // For tchnSchedule - returns today's date string
     public String getTodayString() {
         return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
