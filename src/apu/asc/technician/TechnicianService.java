@@ -378,6 +378,23 @@ public class TechnicianService {
         return new int[]{assigned, pending, completed};
     }
     
+    public String editProfileFromInput(String name, String gender, String ageStr, String phone, String email, String address, String nationality, String newPassword) {
+        String error = validateProfile(name, gender, phone, email, ageStr);
+        if (error != null) {
+            return "ERROR: " + error;
+        }
+
+        try {
+            int age = Integer.parseInt(ageStr.trim());
+
+            editProfile(name, gender, age, phone, email, address, nationality, newPassword);
+
+            return "SUCCESS: Profile updated successfully.";
+        } catch (IOException e) {
+            return "ERROR: Save error: " + e.getMessage();
+        }
+    }
+    
     // For tchnSchedule - returns ready-to-display rows
     public List<String[]> getScheduleRows() {
         Map<String, String> svcNames = buildServiceNameMap();

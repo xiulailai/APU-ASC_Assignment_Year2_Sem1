@@ -171,11 +171,6 @@ public class tchnFeedback extends javax.swing.JFrame {
         String apptId = eligibleApptIds.get(selectedIndex);
         String text   = taFeedback.getText().trim();
  
-        if (text.isEmpty()) {
-            lblFeedbackMsg.setText("Feedback text cannot be empty.");
-            return;
-        }
- 
         try {
             String result = svc.provideFeedback(apptId, text);
             boolean ok = result.startsWith("SUCCESS");

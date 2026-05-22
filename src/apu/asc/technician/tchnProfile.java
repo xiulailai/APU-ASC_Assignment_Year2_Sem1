@@ -404,38 +404,25 @@ public class tchnProfile extends javax.swing.JFrame {
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
         lblProfileMsg.setForeground(java.awt.Color.RED);
 
-        String ageStr = tfAge.getText().trim();
-        String genderInput = tfGender.getText().trim();
+       String newPass = new String(pfPassword.getPassword()).trim();
 
-        // GUI only passes raw input — all validation logic is in the service
-        String error = svc.validateProfile(tfName.getText().trim(), genderInput, tfPhone.getText().trim(), tfEmail.getText().trim(), ageStr);
+       String result = svc.editProfileFromInput(
+               tfName.getText().trim(),
+               tfGender.getText().trim(),
+               tfAge.getText().trim(),
+               tfPhone.getText().trim(),
+               tfEmail.getText().trim(),
+               tfAddress.getText().trim(),
+               tfNationality.getText().trim(),
+               newPass.isEmpty() ? null : newPass);
 
-        if (error != null) {
-            lblProfileMsg.setText(error);
-            return;
-        }
+       boolean ok = result.startsWith("SUCCESS");
+       lblProfileMsg.setForeground(ok ? new java.awt.Color(0, 128, 96) : java.awt.Color.RED);
+       lblProfileMsg.setText(result.replace("SUCCESS: ", "").replace("ERROR: ", ""));
 
-        try {
-            int age = Integer.parseInt(ageStr); // safe to parse here — already validated
-            String newPass = new String(pfPassword.getPassword()).trim();
-            
-            svc.editProfile(
-                    tfName.getText().trim(),
-                    genderInput,
-                    age,
-                    tfPhone.getText().trim(),
-                    tfEmail.getText().trim(),
-                    tfAddress.getText().trim(),
-                    tfNationality.getText().trim(),
-                    newPass.isEmpty() ? null : newPass);
-
-            lblProfileMsg.setForeground(new java.awt.Color(0, 128, 96));
-            lblProfileMsg.setText("Profile updated successfully.");
-            loadProfile();
-
-        } catch (java.io.IOException e) {
-            lblProfileMsg.setText("Save error: " + e.getMessage());
-        }
+       if (ok) {
+           loadProfile();
+       }
     }//GEN-LAST:event_btnSaveProfileActionPerformed
 
     private void loadProfile() {
