@@ -21,6 +21,7 @@ public class Feedback implements FileStorable {
     public String getFeedbackText(){ return feedbackText; }
     
     //convert object to txt file
+    @Override
     public String toFileString() {
         return String.join(",",feedbackId, appointmentId, technicianId, feedbackText);
     }
@@ -28,6 +29,9 @@ public class Feedback implements FileStorable {
     //split txt file attributes
     public static Feedback fromFileString(String line) {
         String[] p = line.split(",", 4);
+        if (p.length < 4) {
+            throw new IllegalArgumentException("Invalid feedback record: " + line);
+        }
         return new Feedback(p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim());
     }
 

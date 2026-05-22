@@ -27,6 +27,7 @@ public class Payment implements FileStorable {
     public String getReceiptNo() { return receiptNo; }
 
     //convert object to txt file
+    @Override
     public String toFileString() {
         return String.join(",",paymentId, appointmentId, customerId,String.format("%.2f", amount), paymentDate, receiptNo);
     }
@@ -34,6 +35,9 @@ public class Payment implements FileStorable {
     //conver txt file to object
     public static Payment fromFileString(String line) {
         String[] p = line.split(",", 6);
+        if (p.length < 6) {
+            throw new IllegalArgumentException("Invalid payment record: " + line);
+        }
         return new Payment(p[0].trim(), p[1].trim(), p[2].trim(),Double.parseDouble(p[3].trim()),p[4].trim(), p[5].trim());
     }
 

@@ -383,6 +383,15 @@ public class TechnicianService {
         if (error != null) {
             return "ERROR: " + error;
         }
+        
+        if (newPassword != null && !newPassword.isBlank()) {
+            if (newPassword.length() < 4) {
+                return "ERROR: Password must be at least 4 characters.";
+            }
+            if (newPassword.contains(",")) {
+                return "ERROR: Password cannot contain commas.";
+            }
+        }
 
         try {
             int age = Integer.parseInt(ageStr.trim());

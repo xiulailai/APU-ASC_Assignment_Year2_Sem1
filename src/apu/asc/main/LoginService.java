@@ -22,7 +22,9 @@ public class LoginService {
                     return new String[]{ p[3].trim(), p[4].trim() };
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            System.err.println("Login error: " + e.getMessage());
+        }
         return null;
     }
 }

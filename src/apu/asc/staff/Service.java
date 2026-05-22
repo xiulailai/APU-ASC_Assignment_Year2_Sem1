@@ -21,6 +21,7 @@ public class Service implements FileStorable {
     public double getPrice(){ return price; }
     
     //convert object to txt file
+    @Override
     public String toFileString() {
         return String.join(",", serviceId, serviceName, String.valueOf(durationHours), String.format("%.2f", price));
     }
@@ -28,6 +29,9 @@ public class Service implements FileStorable {
     //convert txt file to object
     public static Service fromFileString(String line) {
         String[] p = line.split(",", 4);
+        if (p.length < 4) {
+            throw new IllegalArgumentException("Invalid service record: " + line);
+        }
         return new Service(p[0].trim(), p[1].trim(),Integer.parseInt(p[2].trim()),Double.parseDouble(p[3].trim()));
     }  
     

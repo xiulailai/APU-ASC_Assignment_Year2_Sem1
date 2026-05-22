@@ -37,6 +37,7 @@ public class Appointment implements FileStorable {
     public void setTechnicianId(String id){ this.technicianId = id; }
 
     //convert object to txt file
+    @Override
     public String toFileString() {
         return String.join(",",appointmentId, customerId, technicianId,counterStaffId, serviceId,appointmentDate, appointmentTime, status);
     }
@@ -44,7 +45,10 @@ public class Appointment implements FileStorable {
     //conver txt file to object
     public static Appointment fromFileString(String line) {
         String[] p = line.split(",", 8);
-        return new Appointment(p[0].trim(), p[1].trim(), p[2].trim(),p[3].trim(), p[4].trim(), p[5].trim(),p[6].trim(), p[7].trim());
+        if (p.length < 8) {
+            throw new IllegalArgumentException("Invalid appointment record: " + line);
+        }
+        return new Appointment(p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(), p[4].trim(), p[5].trim(), p[6].trim(), p[7].trim());
     }
     
     @Override

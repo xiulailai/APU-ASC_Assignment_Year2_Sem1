@@ -23,6 +23,9 @@ public class Manager extends User implements FileStorable {
     //conver txt file to object
     public static Manager fromFileString(String line) {
         String[] p = line.split(",", 8);
+        if (p.length < 8) {
+            throw new IllegalArgumentException("Invalid manager record: " + line);
+        }
         return new Manager(p[0].trim(), p[1].trim(), p[2].trim(),Integer.parseInt(p[3].trim()),p[4].trim(), p[5].trim(), p[6].trim(), p[7].trim());
     }
 

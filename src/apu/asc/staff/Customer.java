@@ -23,6 +23,9 @@ public class Customer extends User implements FileStorable {
     //conver txt file to object
     public static Customer fromFileString(String line) {
         String[] p = line.split(",", 8);
+        if (p.length < 8) {
+            throw new IllegalArgumentException("Invalid customer record: " + line);
+        }
         return new Customer(p[0].trim(), p[1].trim(), p[2].trim(),Integer.parseInt(p[3].trim()),p[4].trim(), p[5].trim(), p[6].trim(), p[7].trim());
     }
 
