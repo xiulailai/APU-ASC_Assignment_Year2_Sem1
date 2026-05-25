@@ -1,3 +1,4 @@
 # managerId,name,gender,age,phone,email,address,nationality
 M001,John Tan,Male,38,0123456789,johntan@email.com,No. 12 Jalan Mawar Kuala Lumpur,Malaysian
 M002,Sarah Wong,Female,45,0198765432,sarahwong@email.com,No. 5 Jalan Bunga Petaling Jaya,Malaysian
+M003,Gay,Male,0,0123456789,gay@gay.my,gay gay gay,GayCountry
