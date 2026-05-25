@@ -230,9 +230,9 @@ public class tchnTasks extends javax.swing.JFrame {
                 super.getTableCellRendererComponent(t, v, sel, foc, row, col);
                 String s = v == null ? "" : v.toString();
                 switch (s) {
-                    case "Completed": setForeground(new java.awt.Color(0, 128, 96));   break;
-                    case "Assigned": setForeground(new java.awt.Color(30, 58, 110));  break;
-                    case "Pending": setForeground(new java.awt.Color(160, 90, 0));   break;
+                    case "Completed": setForeground(new java.awt.Color(0, 0, 0));   break;
+                    case "Assigned": setForeground(new java.awt.Color(0, 0, 0));  break;
+                    case "Pending": setForeground(new java.awt.Color(0, 0, 0));   break;
                     default: setForeground(java.awt.Color.DARK_GRAY);
                 }
                 setFont(getFont().deriveFont(java.awt.Font.BOLD));
