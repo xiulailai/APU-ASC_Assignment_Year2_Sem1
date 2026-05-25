@@ -111,7 +111,7 @@ public class custFeedback extends javax.swing.JFrame {
         } else {
             apu.asc.staff.Feedback f = feedbacks.get(0);
             jTextArea1.setText(f.getFeedbackText());
-            apu.asc.staff.Technician tech = svc.getTechnicianById(f.getTechnicianId());
+            apu.asc.staff.Technician tech = svc.getTechnicianById (f.getTechnicianId());
             String name = tech != null ? tech.getName() : f.getTechnicianId();
             lblTarget.setText("Submitted by: " + name + " [" + f.getTechnicianId() + "]");
         }

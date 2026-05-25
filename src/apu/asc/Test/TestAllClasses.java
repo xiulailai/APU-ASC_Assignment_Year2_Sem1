@@ -148,7 +148,6 @@ public class TestAllClasses {
 
         // Service and customer lookup
         System.out.println("[getServiceInfo] S001: " + techSvc.getServiceInfo("S001").getServiceName());
-        System.out.println("[getCustomerById] C001: " + techSvc.getCustomerById("C001").getName());
 
         // Schedule
         System.out.println("[getUpcomingSchedule]: " + techSvc.getUpcomingSchedule().size() + " upcoming task(s)");
