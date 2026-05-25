@@ -1,15 +1,6 @@
 package apu.asc.manager;
 
-import apu.asc.staff.Appointment;
-import apu.asc.staff.BaseFileHelper;
-import apu.asc.staff.Comment;
-import apu.asc.staff.CounterStaff;
-import apu.asc.staff.Customer;
-import apu.asc.staff.Feedback;
-import apu.asc.staff.Manager;
-import apu.asc.staff.Payment;
-import apu.asc.staff.Service;
-import apu.asc.staff.Technician;
+import apu.asc.staff.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -671,8 +662,19 @@ public class ManagerService extends BaseFileHelper {
     }
  
     // Expose for screens that need to display current usernames
-    public List<Customer> getAllCustomers() { return loadAllCustomers(); }
-    public List<Appointment> getAllAppointments() { return loadAllAppointments(); }
-    public Appointment getAppointmentById(String id) { return findAppointmentById(id); }
-    public List<Payment> getAllPayments() { return loadAllPayments(); }
+    public List<Customer> getAllCustomers() { 
+        return loadAllCustomers(); 
+    }
+    
+    public List<Appointment> getAllAppointments() { 
+        return loadAllAppointments(); 
+    }
+    
+    public Appointment getAppointmentById(String id) { 
+        return findAppointmentById(id); 
+    }
+    
+    public List<Payment> getAllPayments() { 
+        return loadAllPayments(); 
+    }
 }
