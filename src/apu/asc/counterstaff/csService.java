@@ -44,10 +44,11 @@ public class csService extends BaseFileHelper {
     
     // 3. Edit Profile
     // Validates then overwrites the matching existing record in counterstaff.txt
-    public String updateProfile(String counterStaffId, String name, String gender, String ageStr,
-                                String phone, String email, String address, String nationality) {
+    public String updateProfile(String counterStaffId, String name, String gender, String ageStr, String phone, String email, String address, String nationality) {
         String err = validatePersonFields(name, ageStr, phone, email, address, nationality);
-        if (err != null) return err;
+        if (err != null) {
+            return err;
+        }
  
         int age = Integer.parseInt(ageStr.trim());
  
@@ -66,7 +67,9 @@ public class csService extends BaseFileHelper {
                 break;
             }
         }
-        if (!found) return "ERR: Staff record not found.";
+        if (!found) {
+            return "ERR: Staff record not found.";
+        }
         saveAllCounterStaff(allStaff);
         return "OK: Profile updated successfully!";
     }
@@ -80,14 +83,14 @@ public class csService extends BaseFileHelper {
     // Returns customers matching ID, name, or phone (case-insensitive). Returns all if query is blank.
     public List<Customer> searchCustomers(String query) {
         List<Customer> all = loadAllCustomers();
-        if (query == null || query.isBlank()) return all;
+        if (query == null || query.isBlank()) {
+            return all;
+        }
  
         List<Customer> result = new ArrayList<>();
         String q = query.toLowerCase().trim();
         for (Customer c : all) {
-            if (c.getCustomerId().toLowerCase().contains(q)
-                    || c.getName().toLowerCase().contains(q)
-                    || c.getPhone().contains(q)) {
+            if (c.getCustomerId().toLowerCase().contains(q) || c.getName().toLowerCase().contains(q) || c.getPhone().contains(q)) {
                 result.add(c);
             }
         }
@@ -95,20 +98,22 @@ public class csService extends BaseFileHelper {
     }
  
     // Validates and adds a new customer to customers.txt, then creates their user account
-    public String addCustomer(String name, String gender, String ageStr, String phone,
-                              String email, String address, String nationality) {
+    public String addCustomer(String name, String gender, String ageStr, String phone, String email, String address, String nationality) {
         String err = validatePersonFields(name, ageStr, phone, email, address, nationality);
-        if (err != null) return err;
+        if (err != null) {
+            return err;
+        }
  
         int age = Integer.parseInt(ageStr.trim());
         String newId = generateCustomerId();
  
-        Customer newCustomer = new Customer(newId, name.trim(), gender, age,
-                phone.trim(), email.trim(), address.trim(), nationality.trim());
+        Customer newCustomer = new Customer(newId, name.trim(), gender, age, phone.trim(), email.trim(), address.trim(), nationality.trim());
         appendLine(FILE_CUSTOMERS, newCustomer.toFileString());
  
         String userResult = createDefaultUserAccount(newId, name.trim());
-        if (userResult.startsWith("ERR:")) return userResult;
+        if (userResult.startsWith("ERR:")) {
+            return userResult;
+        }
  
         return "OK: Customer " + newId + " added successfully!";
     }
@@ -118,18 +123,21 @@ public class csService extends BaseFileHelper {
         int max = 0;
         for (Customer c : loadAllCustomers()) {
             try {
-                int num = Integer.parseInt(c.getCustomerId().substring(1));
-                if (num > max) max = num;
+                int num = Integer.parseInt(c.getCustomerId().substring(1)); //C004 becomes 004
+                if (num > max) {
+                    max = num;
+                }
             } catch (Exception ignored) {}
         }
         return String.format("C%03d", max + 1);
     }
  
     // Updates an existing customer record
-    public String updateCustomer(String customerId, String name, String gender, String ageStr,
-                                 String phone, String email, String address, String nationality) {
+    public String updateCustomer(String customerId, String name, String gender, String ageStr, String phone, String email, String address, String nationality) {
         String err = validatePersonFields(name, ageStr, phone, email, address, nationality);
-        if (err != null) return err;
+        if (err != null) {
+            return err;
+        }
  
         int age = Integer.parseInt(ageStr.trim());
  
@@ -148,7 +156,9 @@ public class csService extends BaseFileHelper {
                 break;
             }
         }
-        if (!found) return "ERR: Customer record not found.";
+        if (!found) {
+            return "ERR: Customer record not found.";
+        }
         saveAllCustomers(allCustomer);
         return "OK: Customer updated successfully!";
     }
@@ -157,7 +167,9 @@ public class csService extends BaseFileHelper {
     public String deleteCustomer(String customerId) {
         List<Customer> allCustomer = loadAllCustomers();
         boolean removed = allCustomer.removeIf(c -> c.getCustomerId().equals(customerId));
-        if (!removed) return "ERR: Customer not found.";
+        if (!removed) {
+            return "ERR: Customer not found.";
+        }
  
         saveAllCustomers(allCustomer);
         removeUserByRoleRef(customerId);
@@ -184,7 +196,9 @@ public class csService extends BaseFileHelper {
     public String deleteAppointment(String appointmentId) {
         List<Appointment> all = loadAllAppointments();
         boolean removed = all.removeIf(a -> a.getAppointmentId().equals(appointmentId));
-        if (!removed) return "ERR: Appointment not found.";
+        if (!removed) {
+            return "ERR: Appointment not found.";
+        }
  
         saveAllAppointments(all);
         return "OK: Appointment " + appointmentId + " deleted successfully!";
@@ -203,11 +217,15 @@ public class csService extends BaseFileHelper {
     // Returns appointments filtered by status. Returns all if status is blank or "All".
     public List<Appointment> filterAppointmentsByStatus(String status) {
         List<Appointment> all = loadAllAppointments();
-        if (status == null || status.isBlank() || status.equals("All")) return all;
+        if (status == null || status.isBlank() || status.equals("All")) {
+            return all;
+        }
  
         List<Appointment> result = new ArrayList<>();
         for (Appointment a : all) {
-            if (a.getStatus().equalsIgnoreCase(status.trim())) result.add(a);
+            if (a.getStatus().equalsIgnoreCase(status.trim())) {
+                result.add(a);
+            }
         }
         return result;
     }
@@ -227,20 +245,30 @@ public class csService extends BaseFileHelper {
         }
  
         java.time.LocalTime targetStart = java.time.LocalTime.parse(appointment.getAppointmentTime());
-        java.time.LocalTime targetEnd   = targetStart.plusHours(targetDuration);
-        java.util.Set<String> busyTechs = new java.util.HashSet<>();
- 
+        java.time.LocalTime targetEnd = targetStart.plusHours(targetDuration);
+        java.util.Set<String> busyTechs = new java.util.HashSet<>();  //create a collection with no duplicates
+        
+        // find appointment that may clash time (same day, assigned)
         for (Appointment a : allAppointments) {
-            if (a.getAppointmentId().equals(appointment.getAppointmentId())) continue;
-            if (!a.getAppointmentDate().equals(appointment.getAppointmentDate())) continue;
-            if (!a.getStatus().equals("Assigned")) continue;
+            if (a.getAppointmentId().equals(appointment.getAppointmentId())) { //skip target itself 
+                continue;
+            }
+            if (!a.getAppointmentDate().equals(appointment.getAppointmentDate())) { //skip appointments that are differnt days
+                continue;
+            }
+            if (!a.getStatus().equals("Assigned")) { //skip if NOT assigned
+                continue;
+            }
  
             int duration = 1;
             for (Service s : allServices) {
-                if (s.getServiceId().equals(a.getServiceId())) { duration = s.getDurationHours(); break; }
+                if (s.getServiceId().equals(a.getServiceId())) { 
+                    duration = s.getDurationHours(); 
+                    break; 
+                }
             }
             java.time.LocalTime start = java.time.LocalTime.parse(a.getAppointmentTime());
-            java.time.LocalTime end   = start.plusHours(duration);
+            java.time.LocalTime end = start.plusHours(duration);
  
             if (targetStart.isBefore(end) && targetEnd.isAfter(start)) {
                 busyTechs.add(a.getTechnicianId());
@@ -249,7 +277,9 @@ public class csService extends BaseFileHelper {
  
         List<Technician> available = new ArrayList<>();
         for (Technician t : allTechnicians) {
-            if (!busyTechs.contains(t.getTechnicianId())) available.add(t);
+            if (!busyTechs.contains(t.getTechnicianId())) {
+                available.add(t);
+            }
         }
         return available;
     }
@@ -266,14 +296,15 @@ public class csService extends BaseFileHelper {
                 break;
             }
         }
-        if (!found) return "ERR: Appointment not found.";
+        if (!found) {
+            return "ERR: Appointment not found.";
+        }
         saveAllAppointments(all);
         return "OK: Technician assigned successfully!";
     }
  
     // Validates and creates a new appointment with status Pending and technicianId TBD
-    public String createAppointment(String counterStaffId, String customerId, String serviceId,
-                                    String date, String time) {
+    public String createAppointment(String counterStaffId, String customerId, String serviceId, String date, String time) {
         if (customerId.isBlank() || serviceId.isBlank() || date.isBlank() || time.isBlank()) {
             return "ERR: All fields are required.";
         }
@@ -290,8 +321,7 @@ public class csService extends BaseFileHelper {
         }
  
         String newId = generateAppointmentId();
-        Appointment appt = new Appointment(newId, customerId, "TBD", counterStaffId,
-                serviceId, date.trim(), time, "Pending");
+        Appointment appt = new Appointment(newId, customerId, "TBD", counterStaffId, serviceId, date.trim(), time, "Pending");
         appendLine(FILE_APPOINTMENTS, appt.toFileString());
         return "OK: Appointment " + newId + " created successfully!";
     }
@@ -301,8 +331,10 @@ public class csService extends BaseFileHelper {
         int max = 0;
         for (Appointment a : loadAllAppointments()) {
             try {
-                int num = Integer.parseInt(a.getAppointmentId().substring(1));
-                if (num > max) max = num;
+                int num = Integer.parseInt(a.getAppointmentId().substring(1)); //A008 becomes 008
+                if (num > max) {
+                    max = num;
+                }
             } catch (Exception ignored) {}
         }
         return String.format("A%03d", max + 1);
@@ -312,7 +344,9 @@ public class csService extends BaseFileHelper {
     // Returns assigned appointments that have no payment record yet
     public List<Appointment> getUnpaidAppointments() {
         java.util.Set<String> paidIds = new java.util.HashSet<>();
-        for (Payment p : loadAllPayments()) paidIds.add(p.getAppointmentId());
+        for (Payment p : loadAllPayments()) {
+            paidIds.add(p.getAppointmentId());
+        }
  
         List<Appointment> unpaid = new ArrayList<>();
         for (Appointment a : loadAllAppointments()) {
@@ -332,7 +366,7 @@ public class csService extends BaseFileHelper {
     public String collectPayment(String appointmentId, String customerId, double amount) {
         String paymentId = generatePaymentId();
         String receiptNo = generateReceiptNo();
-        String today     = java.time.LocalDate.now().toString();
+        String today = java.time.LocalDate.now().toString();
  
         Payment payment = new Payment(paymentId, appointmentId, customerId, amount, today, receiptNo);
         appendLine(FILE_PAYMENTS, payment.toFileString());
@@ -344,8 +378,10 @@ public class csService extends BaseFileHelper {
         int max = 0;
         for (Payment p : loadAllPayments()) {
             try {
-                int num = Integer.parseInt(p.getPaymentId().substring(1));
-                if (num > max) max = num;
+                int num = Integer.parseInt(p.getPaymentId().substring(1)); //P004 becomes 004
+                if (num > max) {
+                    max = num;
+                }
             } catch (Exception ignored) {}
         }
         return String.format("P%03d", max + 1);
@@ -356,8 +392,10 @@ public class csService extends BaseFileHelper {
         int max = 0;
         for (Payment p : loadAllPayments()) {
             try {
-                int num = Integer.parseInt(p.getReceiptNo().substring(1));
-                if (num > max) max = num;
+                int num = Integer.parseInt(p.getReceiptNo().substring(1)); //R004 becomes 004
+                if (num > max) {
+                    max = num;
+                }
             } catch (Exception ignored) {}
         }
         return String.format("R%03d", max + 1);
