@@ -6,11 +6,37 @@ import apu.asc.main.LoginFrame;
 import apu.asc.main.LoginService;
 import apu.asc.technician.*;
 import apu.asc.counterstaff.*;
-import apu.asc.customer.*;
 import apu.asc.manager.*;
 
 
-public class TestAllClasses {
+public class TestAllClasses{
+        // Test helper to expose protected BaseFileHelper methods without changing app code.
+        static class BaseFileHelperTestProbe extends BaseFileHelper {
+            int customerCount() { return loadAllCustomers().size(); }
+            int technicianCount() { return loadAllTechnicians().size(); }
+            int counterStaffCount() { return loadAllCounterStaff().size(); }
+            int managerCount() { return loadAllManagers().size(); }
+            int serviceCount() { return loadAllServices().size(); }
+            int appointmentCount() { return loadAllAppointments().size(); }
+            int paymentCount() { return loadAllPayments().size(); }
+            int feedbackCount() { return loadAllFeedbacks().size(); }
+            int commentCount() { return loadAllComments().size(); }
+
+            boolean hasCustomer(String id) { return findCustomerById(id) != null; }
+            boolean hasTechnician(String id) { return findTechnicianById(id) != null; }
+            boolean hasCounterStaff(String id) { return findCounterStaffById(id) != null; }
+            boolean hasAppointment(String id) { return findAppointmentById(id) != null; }
+
+            int serviceNameMapCount() { return buildServiceNameMap().size(); }
+
+            String validatePerson(String name, String age, String phone, String email, String address, String nationality) {
+                return validatePersonFields(name, age, phone, email, address, nationality);
+            }
+
+            int missingFileLineCount() {
+                return readLines("Data/not_exists_for_test.txt").size();
+            }
+        }
 
     public static void main(String[] args) throws Exception {
 
@@ -83,6 +109,48 @@ public class TestAllClasses {
         System.out.println("[Comment] getCommentText(): " + cm.getCommentText());
         System.out.println("[Comment] toFileString(): " + cm.toFileString());
 
+        System.out.println("[Technician] fromFileString(): " + Technician.fromFileString(t.toFileString()).getName());
+        System.out.println("[Technician] implements FileStorable: " + (t instanceof FileStorable));
+        System.out.println("[Technician] implements Displayable: " + (t instanceof Displayable));
+
+        System.out.println("[Customer] fromFileString(): " + Customer.fromFileString(c.toFileString()).getName());
+        System.out.println("[CounterStaff] fromFileString(): " + CounterStaff.fromFileString(cs.toFileString()).getName());
+        System.out.println("[Manager] fromFileString(): " + Manager.fromFileString(mg.toFileString()).getName());
+        System.out.println("[Appointment] fromFileString(): " + Appointment.fromFileString(ap.toFileString()).getAppointmentId());
+        System.out.println("[Service] fromFileString(): " + Service.fromFileString(sv.toFileString()).getServiceName());
+        System.out.println("[Payment] fromFileString(): " + Payment.fromFileString(py.toFileString()).getPaymentId());
+        System.out.println("[Feedback] fromFileString(): " + Feedback.fromFileString(fb.toFileString()).getFeedbackId());
+        System.out.println("[Comment] fromFileString(): " + Comment.fromFileString(cm.toFileString()).getCommentId());
+
+        BaseFileHelperTestProbe baseProbe = new BaseFileHelperTestProbe();
+        System.out.println("[BaseFileHelper] loadAllCustomers(): " + baseProbe.customerCount());
+        System.out.println("[BaseFileHelper] loadAllTechnicians(): " + baseProbe.technicianCount());
+        System.out.println("[BaseFileHelper] loadAllCounterStaff(): " + baseProbe.counterStaffCount());
+        System.out.println("[BaseFileHelper] loadAllManagers(): " + baseProbe.managerCount());
+        System.out.println("[BaseFileHelper] loadAllServices(): " + baseProbe.serviceCount());
+        System.out.println("[BaseFileHelper] loadAllAppointments(): " + baseProbe.appointmentCount());
+        System.out.println("[BaseFileHelper] loadAllPayments(): " + baseProbe.paymentCount());
+        System.out.println("[BaseFileHelper] loadAllFeedbacks(): " + baseProbe.feedbackCount());
+        System.out.println("[BaseFileHelper] loadAllComments(): " + baseProbe.commentCount());
+
+        System.out.println("[BaseFileHelper] findCustomerById C001: " + baseProbe.hasCustomer("C001"));
+        System.out.println("[BaseFileHelper] findTechnicianById T001: " + baseProbe.hasTechnician("T001"));
+        System.out.println("[BaseFileHelper] findCounterStaffById CS001: " + baseProbe.hasCounterStaff("CS001"));
+        System.out.println("[BaseFileHelper] findAppointmentById A001: " + baseProbe.hasAppointment("A001"));
+
+        System.out.println("[BaseFileHelper] lookupCustomerName C001: " + baseProbe.lookupCustomerName("C001"));
+        System.out.println("[BaseFileHelper] lookupTechnicianName T001: " + baseProbe.lookupTechnicianName("T001"));
+        System.out.println("[BaseFileHelper] lookupCounterStaffName CS001: " + baseProbe.lookupCounterStaffName("CS001"));
+        System.out.println("[BaseFileHelper] lookupServiceName S001: " + baseProbe.lookupServiceName("S001"));
+        System.out.println("[BaseFileHelper] lookupServicePrice S001: RM " + baseProbe.lookupServicePrice("S001"));
+        System.out.println("[BaseFileHelper] buildServiceNameMap(): " + baseProbe.serviceNameMapCount());
+        System.out.println("[BaseFileHelper] lookupUsername T001: " + baseProbe.lookupUsername("T001"));
+
+        System.out.println("[BaseFileHelper] validatePerson valid: " + baseProbe.validatePerson("Test", "25", "0111234567", "test@email.com", "Addr", "MY"));
+
+        System.out.println("[BaseFileHelper] validatePerson bad age: " + baseProbe.validatePerson("Test", "abc", "0111234567", "test@email.com", "Addr", "MY"));
+
+        System.out.println("[BaseFileHelper] missing file readLines(): " + baseProbe.missingFileLineCount());
 
         // Login Function
         // apu.asc.main  -  Login
@@ -177,7 +245,20 @@ public class TestAllClasses {
         System.out.println("[provideFeedback] A009 not Completed yet: " + techSvc.provideFeedback("A009", "Not done yet"));
         System.out.println("[provideFeedback] empty text: " + techSvc.provideFeedback("A001", ""));
 
+        System.out.println("[getTechnicianId]: " + techSvc.getTechnicianId());
 
+        System.out.println("[editProfileFromInput] blank name: " + techSvc.editProfileFromInput("", "Male", "31", "0145678901", "ahmadfaiz@email.com", "No. 9 Jalan Dahlia Ampang", "Malaysian", ""));
+
+        System.out.println("[editProfileFromInput] short password: " + techSvc.editProfileFromInput("Ahmad Faiz", "Male", "31", "0145678901", "ahmadfaiz@email.com", "No. 9 Jalan Dahlia Ampang", "Malaysian", "123"));
+
+        System.out.println("[searchTasks] blank keyword: " + techSvc.searchTasks("").size() + " result(s)");
+
+        System.out.println("[getTaskRows] all: " + techSvc.getTaskRows(null, null).size() + " row(s)");
+        System.out.println("[getTaskRows] assigned: " + techSvc.getTaskRows(null, "Assigned").size() + " row(s)");
+
+        System.out.println("[getTaskDetailMap] invalid: " + techSvc.getTaskDetailMap("A999"));
+        
+        
         // Technician Role GUI
         // apu.asc.technician  —  GUI Frames
         System.out.println(" apu.asc.technician — GUI Frames");
