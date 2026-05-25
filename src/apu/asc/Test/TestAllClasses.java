@@ -15,13 +15,12 @@ public class TestAllClasses {
     public static void main(String[] args) throws Exception {
 
         // Staff Model
-        // apu.asc.staff  —  Model Classes
-        System.out.println(" apu.asc.staff — Model Classes");
+        // apu.asc.staff  -  Model Classes
+        System.out.println(" apu.asc.staff - Model Classes");
 
         // User (abstract superclass) — tested through each subclass
         // Technician
-        Technician t = new Technician("T001", "Ahmad Faiz", "Male", 31,
-                "0145678901", "ahmadfaiz@email.com", "No. 9 Jalan Dahlia Ampang", "Malaysian");
+        Technician t = new Technician("T001", "Ahmad Faiz", "Male", 31, "0145678901", "ahmadfaiz@email.com", "No. 9 Jalan Dahlia Ampang", "Malaysian");
         System.out.println("[Technician] extends User: " + (t instanceof User));
         System.out.println("[Technician] getName(): " + t.getName());
         System.out.println("[Technician] getTechnicianId(): " + t.getTechnicianId());
@@ -29,17 +28,15 @@ public class TestAllClasses {
         System.out.println("[Technician] toFileString(): " + t.toFileString());
 
         // Customer
-        Customer c = new Customer("C001", "Ali Hassan", "Male", 42,
-                "0121112222", "alihassan@email.com", "No. 6 Jalan Pelangi Kepong", "Malaysian");
-        System.out.println("[Customer]   extends User: " + (c instanceof User));
-        System.out.println("[Customer]   getName(): " + c.getName());
-        System.out.println("[Customer]   getCustomerId(): " + c.getCustomerId());
-        System.out.println("[Customer]   getDisplayInfo(): " + c.getDisplayInfo());
-        System.out.println("[Customer]   toFileString(): " + c.toFileString());
+        Customer c = new Customer("C001", "Ali Hassan", "Male", 42, "0121112222", "alihassan@email.com", "No. 6 Jalan Pelangi Kepong", "Malaysian");
+        System.out.println("[Customer] extends User: " + (c instanceof User));
+        System.out.println("[Customer] getName(): " + c.getName());
+        System.out.println("[Customer] getCustomerId(): " + c.getCustomerId());
+        System.out.println("[Customer] getDisplayInfo(): " + c.getDisplayInfo());
+        System.out.println("[Customer] toFileString(): " + c.toFileString());
 
         // CounterStaff
-        CounterStaff cs = new CounterStaff("CS001", "Amy Lee", "Female", 29,
-                "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian");
+        CounterStaff cs = new CounterStaff("CS001", "Amy Lee", "Female", 29, "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian");
         System.out.println("[CounterStaff] extends User: " + (cs instanceof User));
         System.out.println("[CounterStaff] getName(): " + cs.getName());
         System.out.println("[CounterStaff] getCounterStaffId(): " + cs.getCounterStaffId());
@@ -47,8 +44,7 @@ public class TestAllClasses {
         System.out.println("[CounterStaff] toFileString(): " + cs.toFileString());
 
         // Manager
-        Manager mg = new Manager("M001", "John Tan", "Male", 38,
-                "0123456789", "johntan@email.com", "No. 12 Jalan Mawar Kuala Lumpur", "Malaysian");
+        Manager mg = new Manager("M001", "John Tan", "Male", 38, "0123456789", "johntan@email.com", "No. 12 Jalan Mawar Kuala Lumpur", "Malaysian");
         System.out.println("[Manager] extends User: " + (mg instanceof User));
         System.out.println("[Manager] getName(): " + mg.getName());
         System.out.println("[Manager] getManagerId(): " + mg.getManagerId());
@@ -56,8 +52,7 @@ public class TestAllClasses {
         System.out.println("[Manager] toFileString(): " + mg.toFileString());
 
         // Appointment
-        Appointment ap = new Appointment("A001", "C001", "T001", "CS001",
-                "S001", "2026-06-20", "10:00", "Completed");
+        Appointment ap = new Appointment("A001", "C001", "T001", "CS001", "S001", "2026-06-20", "10:00", "Completed");
         System.out.println("[Appointment] getAppointmentId(): " + ap.getAppointmentId());
         System.out.println("[Appointment] getStatus(): " + ap.getStatus());
         System.out.println("[Appointment] toFileString(): " + ap.toFileString());
@@ -90,8 +85,8 @@ public class TestAllClasses {
 
 
         // Login Function
-        // apu.asc.main  —  Login
-        System.out.println(" apu.asc.main — Login");
+        // apu.asc.main  -  Login
+        System.out.println(" apu.asc.main - Login");
 
         LoginService loginSvc = new LoginService();
 
@@ -101,14 +96,14 @@ public class TestAllClasses {
         String[] custLogin = loginSvc.authenticate("ali123",   "pass123");
         String[] mgrLogin = loginSvc.authenticate("manager1", "pass123");
 
-        System.out.println("[LoginService] tech1    → role: " + techLogin[0]  + " | id: " + techLogin[1]);
-        System.out.println("[LoginService] counter1 → role: " + csLogin[0]    + " | id: " + csLogin[1]);
-        System.out.println("[LoginService] ali123   → role: " + custLogin[0]  + " | id: " + custLogin[1]);
-        System.out.println("[LoginService] manager1 → role: " + mgrLogin[0]   + " | id: " + mgrLogin[1]);
+        System.out.println("[LoginService] tech1 > role: " + techLogin[0]  + " | id: " + techLogin[1]);
+        System.out.println("[LoginService] counter1 > role: " + csLogin[0]    + " | id: " + csLogin[1]);
+        System.out.println("[LoginService] ali123 > role: " + custLogin[0]  + " | id: " + custLogin[1]);
+        System.out.println("[LoginService] manager1 > role: " + mgrLogin[0]   + " | id: " + mgrLogin[1]);
 
-        // Invalid login — should return null
+        // Invalid login - should return null
         String[] badLogin = loginSvc.authenticate("wronguser", "wrongpass");
-        System.out.println("[LoginService] bad credentials → null: " + (badLogin == null));
+        System.out.println("[LoginService] bad credentials > null: " + (badLogin == null));
 
         // LoginFrame GUI
         javax.swing.SwingUtilities.invokeAndWait(() -> {
@@ -160,12 +155,8 @@ public class TestAllClasses {
         System.out.println("[getTotalHoursForDate] today: " + techSvc.getTotalHoursForDate(techSvc.getTodayString()) + " hr(s)");
         System.out.println("[getDayName] 2026-06-20: " + techSvc.getDayName("2026-06-20"));
         System.out.println("[getScheduleRows]: " + techSvc.getScheduleRows().size() + " row(s)");
-        System.out.println("[getUpcomingStatusCounts]: total=" + techSvc.getUpcomingStatusCounts()[0]
-                + " assigned=" + techSvc.getUpcomingStatusCounts()[1]
-                + " pending=" + techSvc.getUpcomingStatusCounts()[2]);
-        System.out.println("[getAllStatusCounts]: assigned=" + techSvc.getAllStatusCounts()[0]
-                + " pending=" + techSvc.getAllStatusCounts()[1]
-                + " completed=" + techSvc.getAllStatusCounts()[2]);
+        System.out.println("[getUpcomingStatusCounts]: total=" + techSvc.getUpcomingStatusCounts()[0] + " assigned=" + techSvc.getUpcomingStatusCounts()[1] + " pending=" + techSvc.getUpcomingStatusCounts()[2]);
+        System.out.println("[getAllStatusCounts]: assigned=" + techSvc.getAllStatusCounts()[0] + " pending=" + techSvc.getAllStatusCounts()[1] + " completed=" + techSvc.getAllStatusCounts()[2]);
 
         // Comments
         System.out.println("[getMyComments]: " + techSvc.getMyComments().size() + " comment(s)");
@@ -255,8 +246,8 @@ public class TestAllClasses {
             feedback.dispose();
             System.out.println("[tchnFeedback] closed: " + !feedback.isVisible());
         });
-
-
+        
+        // Counter Staff 
         // Counter Staff Role
         System.out.println(" apu.asc.counterstaff — csService");
         csService csSvc = new csService();

@@ -148,7 +148,6 @@ public class LoginFrame extends javax.swing.JFrame {
             return;
         }
  
-        // GUI just calls service — no logic here
         String[] result = loginService.authenticate(username, password);
  
         if (result == null) {
@@ -160,7 +159,7 @@ public class LoginFrame extends javax.swing.JFrame {
             return;
         }
  
-        String role      = result[0];
+        String role = result[0];
         String roleRefId = result[1];
         lblError.setText(" ");
         dispose();

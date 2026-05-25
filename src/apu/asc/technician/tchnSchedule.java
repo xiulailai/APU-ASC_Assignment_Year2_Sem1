@@ -152,8 +152,7 @@ public class tchnSchedule extends javax.swing.JFrame {
 
     private void setupTable() {
         tableModel = new javax.swing.table.DefaultTableModel(
-                new String[]{"Date", "Day", "Time", "Service",
-                             "Duration", "Customer", "Phone", "Status"}, 0) {
+                new String[]{"Date", "Day", "Time", "Service", "Duration", "Customer", "Phone", "Status"}, 0) {
             public boolean isCellEditable(int r, int c) { return false; }
         };
         tblSchedule.setModel(tableModel);
@@ -169,17 +168,14 @@ public class tchnSchedule extends javax.swing.JFrame {
         tblSchedule.getColumnModel().getColumn(7).setPreferredWidth(75);  // Status
  
         // Colour-code Status column
-        tblSchedule.getColumnModel().getColumn(7).setCellRenderer(
-                new javax.swing.table.DefaultTableCellRenderer() {
-            public java.awt.Component getTableCellRendererComponent(
-                    javax.swing.JTable t, Object v,
-                    boolean sel, boolean foc, int row, int col) {
+        tblSchedule.getColumnModel().getColumn(7).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable t, Object v, boolean sel, boolean foc, int row, int col) {
                 super.getTableCellRendererComponent(t, v, sel, foc, row, col);
                 String s = v == null ? "" : v.toString();
                 switch (s) {
                     case "Assigned": setForeground(new java.awt.Color(30, 58, 110));  break;
-                    case "Pending":  setForeground(new java.awt.Color(160, 90, 0));   break;
-                    default:         setForeground(java.awt.Color.DARK_GRAY);
+                    case "Pending": setForeground(new java.awt.Color(160, 90, 0));   break;
+                    default: setForeground(java.awt.Color.DARK_GRAY);
                 }
                 setFont(getFont().deriveFont(java.awt.Font.BOLD));
                 return this;
@@ -206,8 +202,8 @@ public class tchnSchedule extends javax.swing.JFrame {
                     String s = v == null ? "" : v.toString();
                     switch (s) {
                         case "Assigned": setForeground(new java.awt.Color(30, 58, 110));  break;
-                        case "Pending":  setForeground(new java.awt.Color(160, 90, 0));   break;
-                        default:         setForeground(java.awt.Color.DARK_GRAY);
+                        case "Pending": setForeground(new java.awt.Color(160, 90, 0));   break;
+                        default: setForeground(java.awt.Color.DARK_GRAY);
                     }
                     setFont(getFont().deriveFont(java.awt.Font.BOLD));
                 } else {
@@ -227,16 +223,12 @@ public class tchnSchedule extends javax.swing.JFrame {
             tableModel.addRow(row);
         }
 
-        String today      = svc.getTodayString();
-        int todayHours    = svc.getTotalHoursForDate(today);
-        int[] counts      = svc.getUpcomingStatusCounts();
+        String today = svc.getTodayString();
+        int todayHours = svc.getTotalHoursForDate(today);
+        int[] counts = svc.getUpcomingStatusCounts();
 
-        lblTodayInfo.setText(
-                "Today: " + today + "   |   Today's workload: " + todayHours + " hr(s)");
-        lblSummary.setText(
-                "Total upcoming: " + counts[0]
-                + "   |   Assigned: " + counts[1]
-                + "   |   Pending: " + counts[2]);
+        lblTodayInfo.setText("Today: " + today + "   |   Today's workload: " + todayHours + " hr(s)");
+        lblSummary.setText("Total upcoming: " + counts[0] + "   |   Assigned: " + counts[1] + "   |   Pending: " + counts[2]);
     }
  
     

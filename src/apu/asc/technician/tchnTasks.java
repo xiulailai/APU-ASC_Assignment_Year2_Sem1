@@ -231,9 +231,9 @@ public class tchnTasks extends javax.swing.JFrame {
                 String s = v == null ? "" : v.toString();
                 switch (s) {
                     case "Completed": setForeground(new java.awt.Color(0, 128, 96));   break;
-                    case "Assigned":  setForeground(new java.awt.Color(30, 58, 110));  break;
-                    case "Pending":   setForeground(new java.awt.Color(160, 90, 0));   break;
-                    default:          setForeground(java.awt.Color.DARK_GRAY);
+                    case "Assigned": setForeground(new java.awt.Color(30, 58, 110));  break;
+                    case "Pending": setForeground(new java.awt.Color(160, 90, 0));   break;
+                    default: setForeground(java.awt.Color.DARK_GRAY);
                 }
                 setFont(getFont().deriveFont(java.awt.Font.BOLD));
                 return this;
@@ -255,28 +255,28 @@ public class tchnTasks extends javax.swing.JFrame {
         javax.swing.JPanel p = new javax.swing.JPanel(new java.awt.GridBagLayout());
         p.setPreferredSize(new java.awt.Dimension(420, 340));
         java.awt.GridBagConstraints gc = new java.awt.GridBagConstraints();
-        gc.insets  = new java.awt.Insets(4, 8, 4, 8);
-        gc.anchor  = java.awt.GridBagConstraints.WEST;
-        gc.fill    = java.awt.GridBagConstraints.HORIZONTAL;
+        gc.insets = new java.awt.Insets(4, 8, 4, 8);
+        gc.anchor = java.awt.GridBagConstraints.WEST;
+        gc.fill = java.awt.GridBagConstraints.HORIZONTAL;
 
         int row = 0;
         addDialogSection(p, gc, row++, "-----Appointment Details-----");
         addDialogRow(p, gc, row++, "Appointment ID:", d.get("appointmentId"), false);
-        addDialogRow(p, gc, row++, "Date:",           d.get("date"),          false);
-        addDialogRow(p, gc, row++, "Day:",            d.get("day"),           false);
-        addDialogRow(p, gc, row++, "Time:",           d.get("time"),          false);
-        addDialogRow(p, gc, row++, "Status:",         d.get("status"),        false);
+        addDialogRow(p, gc, row++, "Date:", d.get("date"), false);
+        addDialogRow(p, gc, row++, "Day:", d.get("day"), false);
+        addDialogRow(p, gc, row++, "Time:", d.get("time"), false);
+        addDialogRow(p, gc, row++, "Status:", d.get("status"), false);
 
         addDialogSection(p, gc, row++, "-----Service Details-----");
-        addDialogRow(p, gc, row++, "Service:",  d.get("service"),  false);
+        addDialogRow(p, gc, row++, "Service:", d.get("service"), false);
         addDialogRow(p, gc, row++, "Duration:", d.get("duration"), false);
-        addDialogRow(p, gc, row++, "Price:",    d.get("price"),    false);
+        addDialogRow(p, gc, row++, "Price:", d.get("price"), false);
 
         addDialogSection(p, gc, row++, "-----Customer Info-----");
-        addDialogRow(p, gc, row++, "Customer ID:", d.get("customerId"),    false);
-        addDialogRow(p, gc, row++, "Name:",        d.get("customerName"),  false);
-        addDialogRow(p, gc, row++, "Phone:",       d.get("customerPhone"), false);
-        addDialogRow(p, gc, row++, "Email:",       d.get("customerEmail"), false);
+        addDialogRow(p, gc, row++, "Customer ID:", d.get("customerId"), false);
+        addDialogRow(p, gc, row++, "Name:", d.get("customerName"), false);
+        addDialogRow(p, gc, row++, "Phone:", d.get("customerPhone"), false);
+        addDialogRow(p, gc, row++, "Email:", d.get("customerEmail"), false);
 
         javax.swing.JScrollPane scroll = new javax.swing.JScrollPane(p);
         scroll.setPreferredSize(new java.awt.Dimension(440, 360));
@@ -288,39 +288,34 @@ public class tchnTasks extends javax.swing.JFrame {
     
     
     private void addDialogSection(javax.swing.JPanel p, java.awt.GridBagConstraints gc, int row, String title) {
-        gc.gridy    = row;
-        gc.gridx    = 0;
+        gc.gridy = row;
+        gc.gridx = 0;
         gc.gridwidth = 2;
-        gc.weightx  = 1;
-        gc.insets   = new java.awt.Insets(10, 8, 2, 8);
+        gc.weightx = 1;
+        gc.insets = new java.awt.Insets(10, 8, 2, 8);
         javax.swing.JLabel lbl = new javax.swing.JLabel(title);
         lbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
-        lbl.setForeground(new java.awt.Color(30, 58, 110));
+        lbl.setForeground(new java.awt.Color(0, 0, 0));
         p.add(lbl, gc);
         gc.gridwidth = 1;
-        gc.insets    = new java.awt.Insets(3, 8, 3, 8);
+        gc.insets = new java.awt.Insets(3, 8, 3, 8);
     }
 
-    private void addDialogRow(javax.swing.JPanel p,
-                               java.awt.GridBagConstraints gc,
-                               int row, String key, String value,
-                               boolean highlight) {
-        gc.gridy   = row;
-        gc.gridx   = 0;
+    private void addDialogRow(javax.swing.JPanel p, java.awt.GridBagConstraints gc, int row, String key, String value, boolean highlight) {
+        gc.gridy = row;
+        gc.gridx = 0;
         gc.weightx = 0;
         javax.swing.JLabel keyLbl = new javax.swing.JLabel(key);
         keyLbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
         keyLbl.setForeground(new java.awt.Color(30, 50, 130));
         p.add(keyLbl, gc);
 
-        gc.gridx   = 1;
+        gc.gridx = 1;
         gc.weightx = 1;
         javax.swing.JLabel valLbl = new javax.swing.JLabel(value);
         valLbl.setFont(new java.awt.Font("Segoe UI",
                 highlight ? java.awt.Font.BOLD : java.awt.Font.PLAIN, 12));
-        valLbl.setForeground(highlight
-                ? new java.awt.Color(30, 58, 110)
-                : java.awt.Color.DARK_GRAY);
+        valLbl.setForeground(highlight ? new java.awt.Color(30, 58, 110) : java.awt.Color.DARK_GRAY);
         p.add(valLbl, gc);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -16,9 +16,7 @@ public class LoginService {
                 if (line.startsWith("#") || line.isBlank()) continue;
                 // userId, username, password, role, roleRefId
                 String[] p = line.split(",", 5);
-                if (p.length == 5
-                        && p[1].trim().equals(username)
-                        && p[2].trim().equals(password)) {
+                if (p.length == 5 && p[1].trim().equals(username) && p[2].trim().equals(password)) {
                     return new String[]{ p[3].trim(), p[4].trim() };
                 }
             }

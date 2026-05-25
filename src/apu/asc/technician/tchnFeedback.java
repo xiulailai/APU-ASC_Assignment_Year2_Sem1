@@ -166,16 +166,14 @@ public class tchnFeedback extends javax.swing.JFrame {
             lblFeedbackMsg.setText("No eligible appointment selected.");
             return;
         }
- 
-        // First token before spaces is the appointmentId
+        
         String apptId = eligibleApptIds.get(selectedIndex);
-        String text   = taFeedback.getText().trim();
+        String text = taFeedback.getText().trim();
  
         try {
             String result = svc.provideFeedback(apptId, text);
             boolean ok = result.startsWith("SUCCESS");
-            lblFeedbackMsg.setForeground(ok
-                    ? new java.awt.Color(0, 128, 96) : java.awt.Color.RED);
+            lblFeedbackMsg.setForeground(ok ? new java.awt.Color(0, 128, 96) : java.awt.Color.RED);
             lblFeedbackMsg.setText(result.replace("SUCCESS: ", "").replace("ERROR: ", ""));
             if (ok) {
                 taFeedback.setText("");
@@ -209,7 +207,6 @@ public class tchnFeedback extends javax.swing.JFrame {
         listModel.clear();
         List<Feedback> past = svc.getMyFeedbacks();
 
- 
         if (past.isEmpty()) {
             listModel.addElement("No feedback submitted yet.");
         } else {
