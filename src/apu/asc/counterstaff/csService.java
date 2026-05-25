@@ -1,6 +1,7 @@
 package apu.asc.counterstaff;
 
 import apu.asc.staff.Appointment;
+import apu.asc.staff.BaseFileHelper;
 import apu.asc.staff.CounterStaff;
 import apu.asc.staff.Customer;
 import apu.asc.staff.Payment;
@@ -13,7 +14,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class csService {
+public class csService extends BaseFileHelper {
 
     private static final String FILE_COUNTERSTAFF = "Data/counterstaff.txt";
     private static final String FILE_CUSTOMERS = "Data/customers.txt";
@@ -24,83 +25,27 @@ public class csService {
     private static final String FILE_PAYMENTS = "Data/payments.txt";
 
     //File I/O activities
-    // Reads all lines from a file. Returns empty list on error
-    private List<String> readLines(String filePath) {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("#") || line.isBlank()) {
-                    continue;
-                }
-                lines.add(line);
-            }
-        } catch (Exception e) {
-            System.err.println("csService.readLines error [" + filePath + "]: " + e.getMessage());
-        }
-        return lines;
-    }
-
-    // Appends a single line to the end of a file.
-    private void appendLine(String filePath, String line) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
-            bw.write(line);
-            bw.newLine();
-        } catch (Exception e) {
-            System.err.println("csService.appendLine error [" + filePath + "]: " + e.getMessage());
-        }
-    }
     
     private void saveAllCounterStaff(List<CounterStaff> list) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_COUNTERSTAFF))) {
-            bw.write("# counterStaffId,name,gender,age,phone,email,address,nationality"); 
-            bw.newLine();
-            for (CounterStaff cs : list) { 
-                bw.write(cs.toFileString()); 
-                bw.newLine(); 
-            }
-        } catch (Exception e) {
-            System.err.println("csService.saveAllCounterStaff error: " + e.getMessage());
-        }
+        List<String> lines = new ArrayList<>();
+        for (CounterStaff cs : list) lines.add(cs.toFileString());
+        writeLines(FILE_COUNTERSTAFF, "# counterStaffId,name,gender,age,phone,email,address,nationality", lines);
     }
     
     private void saveAllCustomers(List<Customer> list) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_CUSTOMERS))) {
-            bw.write("# customerId,name,gender,age,phone,email,address,nationality"); 
-            bw.newLine();
-            for (Customer c : list) { 
-                bw.write(c.toFileString()); 
-                bw.newLine(); 
-            }
-        } catch (Exception e) {
-            System.err.println("csService.saveAllCustomers error: " + e.getMessage());
-        }
+        List<String> lines = new ArrayList<>();
+        for (Customer c : list) lines.add(c.toFileString());
+        writeLines(FILE_CUSTOMERS, "# customerId,name,gender,age,phone,email,address,nationality", lines);
     }
     
     private void saveAllAppointments(List<Appointment> list) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_APPOINTMENTS))) {
-            bw.write("# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status"); 
-            bw.newLine();
-            for (Appointment a : list) { 
-                bw.write(a.toFileString()); 
-                bw.newLine(); 
-            }
-        } catch (Exception e) {
-            System.err.println("csService.saveAllAppointments error: " + e.getMessage());
-        }
+        List<String> lines = new ArrayList<>();
+        for (Appointment a : list) lines.add(a.toFileString());
+        writeLines(FILE_APPOINTMENTS, "# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status", lines);
     }
     
     private void saveAllUsers(List<String> list) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_USERS))) {
-            bw.write("# userId,username,password,role,roleRefId"); 
-            bw.newLine();
-            for (String line : list) { 
-                bw.write(line); 
-                bw.newLine(); 
-            }
-        } catch (Exception e) {
-            System.err.println("csService.saveAllUsers error: " + e.getMessage());
-        }
+        writeLines(FILE_USERS, "# userId,username,password,role,roleRefId", list);
     }
 
     //for Dashboard

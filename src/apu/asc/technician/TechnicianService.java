@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.*;
 
-public class TechnicianService {
+public class TechnicianService extends BaseFileHelper {
     private static final String TECHNICIAN_FILE = "Data/technicians.txt";
     private static final String APPOINTMENT_FILE = "Data/appointments.txt";
     private static final String COMMENT_FILE = "Data/comments.txt";
@@ -63,7 +63,7 @@ public class TechnicianService {
                 updated.add(raw);
             }
         }
-        writeLines(TECHNICIAN_FILE, updated);
+        writeLines(TECHNICIAN_FILE, "# technicianId,name,gender,age,phone,email,address,nationality", updated);
  
         // Update password in user.txt
         if (newPassword != null && !newPassword.isBlank()) {
@@ -87,7 +87,7 @@ public class TechnicianService {
                 updated.add(raw);
             }
         }
-        writeLines(USER_FILE, updated);
+        writeLines(USER_FILE, "# userId,username,password,role,roleRefId", updated);
     }
     
     // 3. CHECK ASSIGNED TASKS  (with search + filter)
@@ -177,7 +177,7 @@ public class TechnicianService {
                 updated.add(raw);
             }
         }
-        writeLines(APPOINTMENT_FILE, updated);
+        writeLines(APPOINTMENT_FILE, "# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status", updated);
         return "SUCCESS: Appointment " + appointmentId + " marked as Completed.";
     }
     
@@ -549,33 +549,4 @@ public class TechnicianService {
         }
         return result;
     }
- 
-    //Returns ALL lines including comment header. 
-    private List<String> readRawLines(String filename) {
-        List<String> lines = new ArrayList<>();
-        File file = new File(filename);
-        if (!file.exists()) return lines;
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) lines.add(line);
-        } catch (IOException e) {
-            System.err.println("Error reading " + filename + ": " + e.getMessage());
-        }
-        return lines;
-    }
- 
-    //Overwrites the file with the given lines.
-    private void writeLines(String filename, List<String> lines) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename, false))) {
-            for (String l : lines) pw.println(l);
-        }
-    }
- 
-    //Appends a single line to the file. 
-    private void appendLine(String filename, String line) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename, true))) {
-            pw.println(line);
-        }
-    }
-
 }

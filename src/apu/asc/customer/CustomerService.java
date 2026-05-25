@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
-public class CustomerService {
+public class CustomerService extends BaseFileHelper {
     private static final String FILE_CUSTOMERS    = "Data/customers.txt";
     private static final String FILE_APPOINTMENTS = "Data/appointments.txt";
     private static final String FILE_PAYMENTS     = "Data/payments.txt";
@@ -55,7 +55,7 @@ public class CustomerService {
                 updated.add(raw);
             }
         }
-        writeLines(FILE_CUSTOMERS, updated);
+        writeLines(FILE_CUSTOMERS, "# customerId,name,gender,age,phone,email,address,nationality", updated);
         if (newPassword != null && !newPassword.isBlank()) updatePasswordInFile(newPassword);
     }
 
@@ -72,7 +72,7 @@ public class CustomerService {
                 updated.add(raw);
             }
         }
-        writeLines(FILE_USERS, updated);
+        writeLines(FILE_USERS, "# userId,username,password,role,roleRefId", updated);
     }
 
     public String validateProfile(String name, String phone, String email, String ageStr) {
@@ -273,7 +273,7 @@ public class CustomerService {
     // 8. LOADERS
     public List<Customer> loadAllCustomers() {
         List<Customer> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_CUSTOMERS)) {
+        for (String line : readLines(FILE_CUSTOMERS)) {
             try { list.add(Customer.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -281,7 +281,7 @@ public class CustomerService {
 
     public List<Appointment> loadAllAppointments() {
         List<Appointment> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_APPOINTMENTS)) {
+        for (String line : readLines(FILE_APPOINTMENTS)) {
             try { list.add(Appointment.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -289,7 +289,7 @@ public class CustomerService {
 
     public List<Payment> loadAllPayments() {
         List<Payment> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_PAYMENTS)) {
+        for (String line : readLines(FILE_PAYMENTS)) {
             try { list.add(Payment.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -297,7 +297,7 @@ public class CustomerService {
 
     public List<Feedback> loadAllFeedbacks() {
         List<Feedback> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_FEEDBACKS)) {
+        for (String line : readLines(FILE_FEEDBACKS)) {
             try { list.add(Feedback.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -305,7 +305,7 @@ public class CustomerService {
 
     public List<Comment> loadAllComments() {
         List<Comment> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_COMMENTS)) {
+        for (String line : readLines(FILE_COMMENTS)) {
             try { list.add(Comment.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -313,7 +313,7 @@ public class CustomerService {
 
     public List<Service> loadAllServices() {
         List<Service> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_SERVICES)) {
+        for (String line : readLines(FILE_SERVICES)) {
             try { list.add(Service.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -321,7 +321,7 @@ public class CustomerService {
 
     public List<Technician> loadAllTechnicians() {
         List<Technician> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_TECHNICIANS)) {
+        for (String line : readLines(FILE_TECHNICIANS)) {
             try { list.add(Technician.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -329,7 +329,7 @@ public class CustomerService {
 
     public List<CounterStaff> loadAllCounterStaff() {
         List<CounterStaff> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_COUNTERSTAFF)) {
+        for (String line : readLines(FILE_COUNTERSTAFF)) {
             try { list.add(CounterStaff.fromFileString(line)); } catch (Exception ignored) {}
         }
         return list;
@@ -339,39 +339,5 @@ public class CustomerService {
         Map<String, String> map = new HashMap<>();
         for (Service s : loadAllServices()) map.put(s.getServiceId(), s.getServiceName());
         return map;
-    }
-
-    // 9. FILE I/O
-    private List<String> readDataLines(String filename) {
-        List<String> result = new ArrayList<>();
-        for (String raw : readRawLines(filename)) {
-            if (!raw.startsWith(COMMENT_CHAR) && !raw.isBlank()) result.add(raw);
-        }
-        return result;
-    }
-
-    private List<String> readRawLines(String filename) {
-        List<String> lines = new ArrayList<>();
-        File file = new File(filename);
-        if (!file.exists()) return lines;
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) lines.add(line);
-        } catch (IOException e) {
-            System.err.println("Error reading " + filename + ": " + e.getMessage());
-        }
-        return lines;
-    }
-
-    private void writeLines(String filename, List<String> lines) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename, false))) {
-            for (String l : lines) pw.println(l);
-        }
-    }
-
-    private void appendLine(String filename, String line) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename, true))) {
-            pw.println(line);
-        }
     }
 }

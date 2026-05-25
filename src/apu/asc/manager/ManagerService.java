@@ -1,6 +1,7 @@
 package apu.asc.manager;
 
 import apu.asc.staff.Appointment;
+import apu.asc.staff.BaseFileHelper;
 import apu.asc.staff.Comment;
 import apu.asc.staff.CounterStaff;
 import apu.asc.staff.Customer;
@@ -9,10 +10,6 @@ import apu.asc.staff.Manager;
 import apu.asc.staff.Payment;
 import apu.asc.staff.Service;
 import apu.asc.staff.Technician;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ManagerService {
+public class ManagerService extends BaseFileHelper {
 
     private static final String FILE_MANAGERS     = "Data/managers.txt";
     private static final String FILE_COUNTERSTAFF = "Data/counterstaff.txt";
@@ -46,46 +43,6 @@ public class ManagerService {
     }
 
     public String getManagerId() { return managerId; }
-
-    // ============================================================
-    // FILE I/O HELPERS
-    // ============================================================
-
-    //Reads all lines from a file. Returns empty list on error.
-    private List<String> readLines(String filePath) {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-            }
-        } catch (Exception e) {
-            System.err.println("ManagerService.readLines error [" + filePath + "]: " + e.getMessage());
-        }
-        return lines;
-    }
-
-    //Overwrites a file with the given list of lines.
-    private void writeLines(String filePath, List<String> lines) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-            for (String line : lines) {
-                bw.write(line);
-                bw.newLine();
-            }
-        } catch (Exception e) {
-            System.err.println("ManagerService.writeLines error [" + filePath + "]: " + e.getMessage());
-        }
-    }
-
-    //Appends a single line to the end of a file.
-    private void appendLine(String filePath, String line) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
-            bw.write(line);
-            bw.newLine();
-        } catch (Exception e) {
-            System.err.println("ManagerService.appendLine error [" + filePath + "]: " + e.getMessage());
-        }
-    }
 
     // ============================================================
     // VALIDATION
@@ -208,7 +165,7 @@ public class ManagerService {
             }
         }
         if (!found) return "ERR: Manager record not found.";
-        writeLines(FILE_MANAGERS, updated);
+        writeLines(FILE_MANAGERS, "# managerId,name,gender,age,phone,email,address,nationality", updated);
 
         //Optionally update users.txt for username/password
         if ((newUsername != null && !newUsername.isBlank())
@@ -268,7 +225,7 @@ public class ManagerService {
                 updated.add(line);
             }
         }
-        writeLines(FILE_USERS, updated);
+        writeLines(FILE_USERS, "# userId,username,password,role,roleRefId", updated);
         return null;
     }
 
@@ -351,7 +308,7 @@ public class ManagerService {
             }
         }
         if (!found) return "ERR: Manager record not found.";
-        writeLines(FILE_MANAGERS, updated);
+        writeLines(FILE_MANAGERS, "# managerId,name,gender,age,phone,email,address,nationality", updated);
         return "OK: Manager " + id + " updated successfully!";
     }
 
@@ -370,7 +327,7 @@ public class ManagerService {
             updated.add(m.toFileString());
         }
         if (!found) return "ERR: Manager not found.";
-        writeLines(FILE_MANAGERS, updated);
+        writeLines(FILE_MANAGERS, "# managerId,name,gender,age,phone,email,address,nationality", updated);
         removeUserByRoleRef(id);
         return "OK: Manager " + id + " deleted successfully!";
     }
@@ -454,7 +411,7 @@ public class ManagerService {
             }
         }
         if (!found) return "ERR: Counter Staff record not found.";
-        writeLines(FILE_COUNTERSTAFF, updated);
+        writeLines(FILE_COUNTERSTAFF, "# counterStaffId,name,gender,age,phone,email,address,nationality", updated);
         return "OK: Counter Staff " + id + " updated successfully!";
     }
 
@@ -468,7 +425,7 @@ public class ManagerService {
             updated.add(cs.toFileString());
         }
         if (!found) return "ERR: Counter Staff not found.";
-        writeLines(FILE_COUNTERSTAFF, updated);
+        writeLines(FILE_COUNTERSTAFF, "# counterStaffId,name,gender,age,phone,email,address,nationality", updated);
         removeUserByRoleRef(id);
         return "OK: Counter Staff " + id + " deleted successfully!";
     }
@@ -552,7 +509,7 @@ public class ManagerService {
             }
         }
         if (!found) return "ERR: Technician record not found.";
-        writeLines(FILE_TECHNICIANS, updated);
+        writeLines(FILE_TECHNICIANS, "# technicianId,name,gender,age,phone,email,address,nationality", updated);
         return "OK: Technician " + id + " updated successfully!";
     }
 
@@ -574,7 +531,7 @@ public class ManagerService {
             updated.add(t.toFileString());
         }
         if (!found) return "ERR: Technician not found.";
-        writeLines(FILE_TECHNICIANS, updated);
+        writeLines(FILE_TECHNICIANS, "# technicianId,name,gender,age,phone,email,address,nationality", updated);
         removeUserByRoleRef(id);
         return "OK: Technician " + id + " deleted successfully!";
     }
@@ -623,7 +580,7 @@ public class ManagerService {
             }
         }
         if (!found) return "ERR: Service not found.";
-        writeLines(FILE_SERVICES, updated);
+        writeLines(FILE_SERVICES, "# serviceId,serviceName,durationHours,price", updated);
         return "OK: Price for " + serviceId + " updated to RM " + String.format("%.2f", newPrice) + ".";
     }
 
@@ -1045,7 +1002,7 @@ public class ManagerService {
             if (p.length == 5 && p[4].trim().equals(roleRefId)) continue;
             updated.add(line);
         }
-        writeLines(FILE_USERS, updated);
+        writeLines(FILE_USERS, "# userId,username,password,role,roleRefId", updated);
     }
 
     //Looks up the username for a given roleRefId. Returns "" if no account.
@@ -1112,7 +1069,7 @@ public class ManagerService {
                 updated.add(line);
             }
         }
-        writeLines(FILE_USERS, updated);
+        writeLines(FILE_USERS, "# userId,username,password,role,roleRefId", updated);
         return "OK: Login credentials updated for " + roleRefId + ".";
     }
 

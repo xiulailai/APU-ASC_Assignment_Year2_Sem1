@@ -1,5 +1,5 @@
 # customerId,name,gender,age,phone,email,address,nationality
-C001,Ali Hassan,Male,42,0121112222,alihassan@email.com,No. 6 Jalan Pelangi Kepong,Malaysian
+C001,Ali Hassan,Male,40,0121112222,alihassan@email.com,No. 6 Jalan Pelangi Kepong,Malaysian
 C002,Siti Rahimah,Female,35,0193334444,sitirahimah@email.com,No. 11 Jalan Setia Wangsa Maju,Malaysian
 C003,Tan Boon Huat,Male,50,0164445555,tanboonhuat@email.com,No. 3 Jalan Damai Batu Caves,Malaysian
 C004,Kavitha Rao,Female,39,0175556666,kavitharao@email.com,No. 27 Jalan Harmoni Puchong,Malaysian
