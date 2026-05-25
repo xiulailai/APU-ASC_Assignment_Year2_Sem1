@@ -32,7 +32,7 @@ public class Appointment implements FileStorable {
     public String getAppointmentTime(){ return appointmentTime; }
     public String getStatus(){ return status; }
     
-    //setter (only status n technicianId can be changed or edit in this txt file)
+    //setter (only status n technicianId cant be changed or edit in this txt file)
     public void setStatus(String status) { this.status = status; }
     public void setTechnicianId(String id){ this.technicianId = id; }
 
