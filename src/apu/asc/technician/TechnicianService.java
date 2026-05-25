@@ -8,13 +8,13 @@ import java.util.*;
 import java.util.stream.*;
 
 public class TechnicianService {
-    private static final String FILE_TECHNICIANS = "Data/technicians.txt";
-    private static final String FILE_APPOINTMENTS = "Data/appointments.txt";
-    private static final String FILE_COMMENTS = "Data/comments.txt";
-    private static final String FILE_FEEDBACKS = "Data/feedback.txt";
-    private static final String FILE_SERVICES = "Data/services.txt";
-    private static final String FILE_USERS = "Data/users.txt";
-    private static final String FILE_CUSTOMERS = "Data/customers.txt";
+    private static final String TECHNICIAN_FILE = "Data/technicians.txt";
+    private static final String APPOINTMENT_FILE = "Data/appointments.txt";
+    private static final String COMMENT_FILE = "Data/comments.txt";
+    private static final String FEEDBACK_FILE = "Data/feedback.txt";
+    private static final String SERVICE_FILE = "Data/services.txt";
+    private static final String USER_FILE = "Data/users.txt";
+    private static final String CUSTOMER_FILE = "Data/customers.txt";
 
     private static final String COMMENT_CHAR = "#";
     private final String technicianId;
@@ -36,7 +36,7 @@ public class TechnicianService {
     // 2. EDIT OWN PROFILE
     public void editProfile(String name, String gender, int age, String phone, String email, String address, String nationality, String newPassword) throws IOException {
         // ── Update technicians.txt ──
-        List<String> rawLines = readRawLines(FILE_TECHNICIANS);
+        List<String> rawLines = readRawLines(TECHNICIAN_FILE);
         List<String> updated  = new ArrayList<>();
         
         if (gender != null && !gender.isBlank()) {
@@ -63,7 +63,7 @@ public class TechnicianService {
                 updated.add(raw);
             }
         }
-        writeLines(FILE_TECHNICIANS, updated);
+        writeLines(TECHNICIAN_FILE, updated);
  
         // Update password in user.txt
         if (newPassword != null && !newPassword.isBlank()) {
@@ -71,8 +71,8 @@ public class TechnicianService {
         }
     }
     private void updatePasswordInFile(String newPassword) throws IOException {
-        List<String> rawLines = readRawLines(FILE_USERS);
-        List<String> updated  = new ArrayList<>();
+        List<String> rawLines = readRawLines(USER_FILE);
+        List<String> updated = new ArrayList<>();
         for (String raw : rawLines) {
             if (raw.startsWith(COMMENT_CHAR) || raw.isBlank()) {
                 updated.add(raw);
@@ -87,7 +87,7 @@ public class TechnicianService {
                 updated.add(raw);
             }
         }
-        writeLines(FILE_USERS, updated);
+        writeLines(USER_FILE, updated);
     }
     
     // 3. CHECK ASSIGNED TASKS  (with search + filter)
@@ -145,8 +145,7 @@ public class TechnicianService {
         if (getTaskDetail(appointmentId) == null) return Collections.emptyList();
  
         return loadAllComments().stream()
-                .filter(c -> c.getAppointmentId().equalsIgnoreCase(appointmentId)
-                          && c.getTargetUserId().equals(technicianId))
+                .filter(c -> c.getAppointmentId().equalsIgnoreCase(appointmentId) && c.getTargetUserId().equals(technicianId))
                 .collect(Collectors.toList());
     }
     
@@ -163,7 +162,7 @@ public class TechnicianService {
         if (!task.getStatus().equalsIgnoreCase("Assigned")) {
             return "ERROR: Only tasks with status 'Assigned' can be marked as Completed. " + "Current status: " + task.getStatus();
         }
-        List<String> rawLines = readRawLines(FILE_APPOINTMENTS); //update to file
+        List<String> rawLines = readRawLines(APPOINTMENT_FILE); //update to file
         List<String> updated  = new ArrayList<>();
         for (String raw : rawLines) {
             if (raw.startsWith(COMMENT_CHAR) || raw.isBlank()) {
@@ -178,7 +177,7 @@ public class TechnicianService {
                 updated.add(raw);
             }
         }
-        writeLines(FILE_APPOINTMENTS, updated);
+        writeLines(APPOINTMENT_FILE, updated);
         return "SUCCESS: Appointment " + appointmentId + " marked as Completed.";
     }
     
@@ -199,8 +198,7 @@ public class TechnicianService {
  
         // Check one-feedback-per-task rule
         boolean alreadyGiven = loadAllFeedbacks().stream()
-                .anyMatch(f -> f.getAppointmentId().equals(appointmentId)
-                            && f.getTechnicianId().equals(technicianId));
+                .anyMatch(f -> f.getAppointmentId().equals(appointmentId) && f.getTechnicianId().equals(technicianId));
         if (alreadyGiven) {
             return "ERROR: You have already submitted feedback for appointment " + appointmentId + ".";
         }
@@ -210,7 +208,7 @@ public class TechnicianService {
  
         // convert to feedback.txt
         Feedback fb = new Feedback(newFeedbackId, appointmentId, technicianId, feedbackText);
-        appendLine(FILE_FEEDBACKS, fb.toFileString());
+        appendLine(FEEDBACK_FILE, fb.toFileString());
  
         return "SUCCESS: Feedback submitted successfully (ID: " + newFeedbackId + ").";
     }
@@ -237,7 +235,7 @@ public class TechnicianService {
     
     public List<Customer> loadAllCustomers() {
         List<Customer> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_CUSTOMERS)) {
+        for (String line : readDataLines(CUSTOMER_FILE)) {
             try { list.add(Customer.fromFileString(line)); }
             catch (Exception ignored) {}
         }
@@ -274,7 +272,7 @@ public class TechnicianService {
     //Read all non-comment, non-blank lines as Technician objects.
     public List<Technician> loadAllTechnicians() {
         List<Technician> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_TECHNICIANS)) {
+        for (String line : readDataLines(TECHNICIAN_FILE)) {
             try { list.add(Technician.fromFileString(line)); }
             catch (Exception ignored) {}
         }
@@ -497,7 +495,7 @@ public class TechnicianService {
     //Read all non-comment, non-blank lines as Appointment objects.
     public List<Appointment> loadAllAppointments() {
         List<Appointment> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_APPOINTMENTS)) {
+        for (String line : readDataLines(APPOINTMENT_FILE)) {
             try { list.add(Appointment.fromFileString(line)); }
             catch (Exception ignored) {}
         }
@@ -507,7 +505,7 @@ public class TechnicianService {
     //Read all non-comment, non-blank lines as Comment objects.
     public List<Comment> loadAllComments() {
         List<Comment> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_COMMENTS)) {
+        for (String line : readDataLines(COMMENT_FILE)) {
             try { list.add(Comment.fromFileString(line)); }
             catch (Exception ignored) {}
         }
@@ -517,7 +515,7 @@ public class TechnicianService {
     //Read all non-comment, non-blank lines as Feedback objects. 
     public List<Feedback> loadAllFeedbacks() {
         List<Feedback> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_FEEDBACKS)) {
+        for (String line : readDataLines(FEEDBACK_FILE)) {
             try { list.add(Feedback.fromFileString(line)); }
             catch (Exception ignored) {}
         }
@@ -527,7 +525,7 @@ public class TechnicianService {
     //Read all non-comment, non-blank lines as Service objects.
     public List<Service> loadAllServices() {
         List<Service> list = new ArrayList<>();
-        for (String line : readDataLines(FILE_SERVICES)) {
+        for (String line : readDataLines(SERVICE_FILE)) {
             try { list.add(Service.fromFileString(line)); }
             catch (Exception ignored) {}
         }
