@@ -230,9 +230,9 @@ public class tchnTasks extends javax.swing.JFrame {
                 super.getTableCellRendererComponent(t, v, sel, foc, row, col);
                 String s = v == null ? "" : v.toString();
                 switch (s) {
-                    case "Completed": setForeground(new java.awt.Color(0, 0, 0));   break;
-                    case "Assigned": setForeground(new java.awt.Color(0, 0, 0));  break;
-                    case "Pending": setForeground(new java.awt.Color(0, 0, 0));   break;
+                    case "Completed": setForeground(new java.awt.Color(0, 128, 96));   break;
+                    case "Assigned": setForeground(new java.awt.Color(30, 58, 110));  break;
+                    case "Pending": setForeground(new java.awt.Color(160, 90, 0));   break;
                     default: setForeground(java.awt.Color.DARK_GRAY);
                 }
                 setFont(getFont().deriveFont(java.awt.Font.BOLD));
@@ -295,7 +295,7 @@ public class tchnTasks extends javax.swing.JFrame {
         gc.insets = new java.awt.Insets(10, 8, 2, 8);
         javax.swing.JLabel lbl = new javax.swing.JLabel(title);
         lbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
-        lbl.setForeground(new java.awt.Color(0, 0, 0));
+        lbl.setForeground(new java.awt.Color(0, 0, 110));
         p.add(lbl, gc);
         gc.gridwidth = 1;
         gc.insets = new java.awt.Insets(3, 8, 3, 8);
