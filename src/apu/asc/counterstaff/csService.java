@@ -176,13 +176,22 @@ public class csService extends BaseFileHelper {
     // Manage Appointment
     // Deletes an appointment by ID
     public String deleteAppointment(String appointmentId) {
-        List<Appointment> all = loadAllAppointments();
-        boolean removed = all.removeIf(a -> a.getAppointmentId().equals(appointmentId));
+        //check for completed status
+        Appointment target = findAppointmentById(appointmentId);
+        if (target == null) {
+            return "ERR: Appointment not found.";
+        }
+        if (target.getStatus().equals("Completed")) {
+            return "ERR: Completed appointments cannot be deleted.";
+        }
+        
+        List<Appointment> allAppointments = loadAllAppointments();
+        boolean removed = allAppointments.removeIf(a -> a.getAppointmentId().equals(appointmentId));
         if (!removed) {
             return "ERR: Appointment not found.";
         }
  
-        saveAllAppointments(all);
+        saveAllAppointments(allAppointments);
         return "OK: Appointment " + appointmentId + " deleted successfully!";
     }
  
