@@ -1,5 +1,4 @@
 # appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status
-# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status
 A001,C001,T001,CS001,S001,2026-06-20,10:00,Completed
 A002,C002,T002,CS001,S002,2026-06-21,14:00,Completed
 A003,C003,T003,CS002,S001,2026-06-22,09:00,Completed
@@ -13,3 +12,4 @@ A010,C003,TBD,CS002,S002,2026-05-19,11:00,Pending
 A011,C001,T001,CS001,S001,2026-12-01,10:00,Assigned
 A012,C001,T001,CS001,S001,2026-12-01,10:00,Assigned
 A013,C001,TBD,CS001,S002,2026-12-01,08:00,Pending
+A014,C001,T001,CS001,S001,2026-12-01,10:00,Assigned

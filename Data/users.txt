@@ -14,4 +14,5 @@ U012,tbh88,boon456,customer,C003
 U013,kavi01,kav789,customer,C004
 U014,zul55,zul321,customer,C005
 U015,a006,pass006,customer,C006
-U016,Gay,gay123,manager,M003
+U016,LEE1,lee123,manager,M003
+U017,lim1,lim123,manager,M004
