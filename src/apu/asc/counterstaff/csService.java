@@ -283,15 +283,46 @@ public class csService extends BaseFileHelper {
         if (!date.trim().matches("\\d{4}-\\d{2}-\\d{2}")) {
             return "ERR: Date must be in yyyy-MM-dd format.";
         }
+
+        java.time.LocalDate inputDate;
         try {
-            java.time.LocalDate inputDate = java.time.LocalDate.parse(date.trim());
-            if (inputDate.isBefore(java.time.LocalDate.now())) {
-                return "ERR: Date cannot be in the past.";
-            }
+            inputDate = java.time.LocalDate.parse(date.trim());
         } catch (Exception e) {
             return "ERR: Invalid date entered.";
         }
- 
+
+        // Check not in the past
+        if (inputDate.isBefore(java.time.LocalDate.now())) {
+            return "ERR: Date cannot be in the past.";
+        }
+
+        // Check Monday to Friday only
+        java.time.DayOfWeek day = inputDate.getDayOfWeek();
+        if (day == java.time.DayOfWeek.SATURDAY || day == java.time.DayOfWeek.SUNDAY) {
+            return "ERR: Appointments are only available Monday to Friday.";
+        }
+
+        // Check within today until end of next week (Friday)
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate endOfNextWeek = today.plusWeeks(1)
+                .with(java.time.DayOfWeek.FRIDAY);
+        if (inputDate.isAfter(endOfNextWeek)) {
+            return "ERR: Appointments can only be booked up to end of next week (" + endOfNextWeek + ").";
+        }
+
+        // Check time between 9:00 and 17:00
+        java.time.LocalTime apptTime;
+        try {
+            apptTime = java.time.LocalTime.parse(time.trim());
+        } catch (Exception e) {
+            return "ERR: Invalid time format. Use HH:mm.";
+        }
+        java.time.LocalTime earliest = java.time.LocalTime.of(9, 0);
+        java.time.LocalTime latest = java.time.LocalTime.of(17, 0);
+        if (apptTime.isBefore(earliest) || apptTime.isAfter(latest)) {
+            return "ERR: Appointments must be between 09:00 and 17:00.";
+        }
+
         String newId = generateAppointmentId();
         Appointment appt = new Appointment(newId, customerId, "TBD", counterStaffId, serviceId, date.trim(), time, "Pending");
         appendLine(FILE_APPOINTMENTS, appt.toFileString());
