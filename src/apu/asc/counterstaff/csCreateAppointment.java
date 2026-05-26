@@ -27,13 +27,13 @@ public class csCreateAppointment extends javax.swing.JFrame {
     // Populates cbCustomer, cbService and cbTime from file and fixed time slots
     private void fillComboBoxes() {
         // Customers — display "C001 - Ali Hassan"
-        customerList = service.getAllCustomers();
+        customerList = service.loadAllCustomers();
         for (Customer c : customerList) {
             cbCustomer.addItem(c.getCustomerId() + " - " + c.getName());
         }
  
         // Services — display "Normal Service (1 hr) - RM50.00"
-        serviceList = service.getAllServices();
+        serviceList = service.loadAllServices();
         for (Service s : serviceList) {
             cbService.addItem(s.getServiceName() + " (" + s.getDurationHours() + " hr) - RM" + String.format("%.2f", s.getPrice()));
         }

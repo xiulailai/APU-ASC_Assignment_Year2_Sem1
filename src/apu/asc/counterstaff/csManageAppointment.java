@@ -17,7 +17,7 @@ public class csManageAppointment extends javax.swing.JFrame {
         this.service = new csService();
         initComponents();
         setLocationRelativeTo(null);
-        loadTable(service.getAllAppointments());
+        loadTable(service.loadAllAppointments());
     }
     
     private void loadTable(List<Appointment> appointments) {
@@ -37,7 +37,7 @@ public class csManageAppointment extends javax.swing.JFrame {
     }
     
      public void refreshTable() {
-        loadTable(service.getAllAppointments());
+        loadTable(service.loadAllAppointments());
     }
     
     private String getSelectedAppointmentId() {
@@ -263,7 +263,7 @@ public class csManageAppointment extends javax.swing.JFrame {
         }
  
         // Only allow assigning Pending appointments to be assigned
-        Appointment a = service.getAppointmentById(appointmentId);
+        Appointment a = service.findAppointmentById(appointmentId);
         if (!a.getStatus().equals("Pending")) {
             javax.swing.JOptionPane.showMessageDialog(this,
                     "Only Pending appointments can be assigned a technician.",
@@ -288,7 +288,7 @@ public class csManageAppointment extends javax.swing.JFrame {
             return;
         }
         // do not allow completed service to be deleted
-        Appointment a = service.getAppointmentById(appointmentId);
+        Appointment a = service.findAppointmentById(appointmentId);
         if (a.getStatus().equals("Completed")){
             javax.swing.JOptionPane.showMessageDialog(this,
                 "Completed appointments cannot be deleted.",
@@ -307,7 +307,7 @@ public class csManageAppointment extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         result.substring(4), "Deleted",
                         javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                loadTable(service.getAllAppointments());
+                loadTable(service.loadAllAppointments());
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         result.substring(5), "Error",

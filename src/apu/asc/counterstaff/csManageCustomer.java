@@ -16,7 +16,7 @@ public class csManageCustomer extends javax.swing.JFrame {
         this.service = new csService();
         initComponents();
         setLocationRelativeTo(null);
-        loadTable(service.getAllCustomers());
+        loadTable(service.loadAllCustomers());
     }
     
     private void loadTable(List<Customer> customers) {
@@ -46,7 +46,7 @@ public class csManageCustomer extends javax.swing.JFrame {
     }
     
     public void refreshTable() {
-        loadTable(service.getAllCustomers());
+        loadTable(service.loadAllCustomers());
     }
 
     /**
@@ -293,7 +293,7 @@ public class csManageCustomer extends javax.swing.JFrame {
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
         tfSearch.setText("");
-        loadTable(service.getAllCustomers());
+        loadTable(service.loadAllCustomers());
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -308,7 +308,7 @@ public class csManageCustomer extends javax.swing.JFrame {
         if (customerId == null) return;
  
         //Get the name for confirmation message
-        Customer c = service.getCustomerById(customerId);
+        Customer c = service.findCustomerById(customerId);
         String name = (c != null) ? c.getName() : customerId;
  
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
@@ -322,7 +322,7 @@ public class csManageCustomer extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         result.substring(4), "Deleted",
                         javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                loadTable(service.getAllCustomers());
+                loadTable(service.loadAllCustomers());
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         result.substring(5), "Error",

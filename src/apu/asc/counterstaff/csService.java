@@ -12,7 +12,7 @@ import java.util.List;
 
 public class csService extends BaseFileHelper {
     
-    // 1. Helper
+    // Helper
     private void saveAllCounterStaff(List<CounterStaff> list) {
         List<String> lines = new ArrayList<>();
         for (CounterStaff cs : list) lines.add(cs.toFileString());
@@ -31,18 +31,7 @@ public class csService extends BaseFileHelper {
         writeLines(FILE_APPOINTMENTS, "# appointmentId,customerId,technicianId,counterStaffId,serviceId,appointmentDate,appointmentTime,status", lines);
     }
     
-    // 2. Dashboard
-    // Finds and returns the CounterStaff object matching the given ID. Returns null if not found.
-    public CounterStaff getProfile(String counterStaffId) {
-        return findCounterStaffById(counterStaffId);
-    }
- 
-    // Gets all counter staff — delegates to base loader
-    public List<CounterStaff> getAllCounterStaff() {
-        return loadAllCounterStaff();
-    }
-    
-    // 3. Edit Profile
+    // Edit Profile
     // Validates then overwrites the matching existing record in counterstaff.txt
     public String updateProfile(String counterStaffId, String name, String gender, String ageStr, String phone, String email, String address, String nationality) {
         String err = validatePersonFields(name, ageStr, phone, email, address, nationality);
@@ -74,12 +63,7 @@ public class csService extends BaseFileHelper {
         return "OK: Profile updated successfully!";
     }
     
-    // 4. Manage Customer
-    // Gets all customers from file
-    public List<Customer> getAllCustomers() {
-        return loadAllCustomers();
-    }
- 
+    // Manage Customer
     // Returns customers matching ID, name, or phone (case-insensitive). Returns all if query is blank.
     public List<Customer> searchCustomers(String query) {
         List<Customer> all = loadAllCustomers();
@@ -131,6 +115,19 @@ public class csService extends BaseFileHelper {
         }
         return String.format("C%03d", max + 1);
     }
+    
+    // Creates a default user account (auto-generated username/password) for customers
+    protected String createDefaultUserAccount(String roleRefId, String name) {
+        String userId = generateUserId();
+        String idNum = roleRefId.substring(1);
+        
+        // default username: first 4 letters of name (lowercase) + id number
+        String safeName = name.replaceAll("\\s+", "").toLowerCase();
+        String username = safeName.substring(0, Math.min(4, safeName.length())) + idNum;
+        String password = "pass" + idNum;
+        appendLine(FILE_USERS, String.join(",", userId, username, password, "customer", roleRefId));
+        return "OK";
+    }
  
     // Updates an existing customer record
     public String updateCustomer(String customerId, String name, String gender, String ageStr, String phone, String email, String address, String nationality) {
@@ -175,23 +172,8 @@ public class csService extends BaseFileHelper {
         removeUserByRoleRef(customerId);
         return "OK: Customer " + customerId + " deleted successfully!";
     }
- 
-    // Finds a single customer by ID. Returns null if not found.
-    public Customer getCustomerById(String customerId) {
-        return findCustomerById(customerId);
-    }
     
-    //Manage Appointment
-    // Gets all appointments from file
-    public List<Appointment> getAllAppointments() {
-        return loadAllAppointments();
-    }
- 
-    // Finds a single appointment by ID. Returns null if not found.
-    public Appointment getAppointmentById(String appointmentId) {
-        return findAppointmentById(appointmentId);
-    }
- 
+    // Manage Appointment
     // Deletes an appointment by ID
     public String deleteAppointment(String appointmentId) {
         List<Appointment> all = loadAllAppointments();
@@ -202,16 +184,6 @@ public class csService extends BaseFileHelper {
  
         saveAllAppointments(all);
         return "OK: Appointment " + appointmentId + " deleted successfully!";
-    }
- 
-    // Gets all technicians from file
-    public List<Technician> getAllTechnicians() {
-        return loadAllTechnicians();
-    }
- 
-    // Gets all services from file
-    public List<Service> getAllServices() {
-        return loadAllServices();
     }
  
     // Returns appointments filtered by status. Returns all if status is blank or "All".
@@ -340,8 +312,8 @@ public class csService extends BaseFileHelper {
         return String.format("A%03d", max + 1);
     }
     
-    // 5. Payment
-    // Returns assigned appointments that have no payment record yet
+    // Payment
+    // Returns assigned/completed appointments that have no payment record yet
     public List<Appointment> getUnpaidAppointments() {
         java.util.Set<String> paidIds = new java.util.HashSet<>();
         for (Payment p : loadAllPayments()) {
@@ -350,16 +322,11 @@ public class csService extends BaseFileHelper {
  
         List<Appointment> unpaid = new ArrayList<>();
         for (Appointment a : loadAllAppointments()) {
-            if (a.getStatus().equals("Assigned") && !paidIds.contains(a.getAppointmentId())) {
+            if ((a.getStatus().equals("Assigned") || a.getStatus().equals("Completed")) && !paidIds.contains(a.getAppointmentId())) {
                 unpaid.add(a);
             }
         }
         return unpaid;
-    }
- 
-    // Gets all payments — delegates to base loader
-    public List<Payment> getAllPayments() {
-        return loadAllPayments();
     }
  
     // Collects payment for an appointment

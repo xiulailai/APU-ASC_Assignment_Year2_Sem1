@@ -1,4 +1,4 @@
 # counterStaffId,name,gender,age,phone,email,address,nationality
-CS001,Amy Lee,Female,29,0134567890,amylee@email.com,No. 33 Jalan Kenanga Shah Alam,Malaysian
+CS001,Amy Lee,Male,30,0134567890,amylee@email.com,No. 33 Jalan Kenanga Shah Alam,Malaysian
 CS002,David Lim,Male,34,0167891234,davidlim@email.com,No. 7 Jalan Merdeka Subang Jaya,Malaysian
 CS003,Priya Nair,Female,27,0112223344,priyanair@email.com,No. 18 Jalan Anggerik Klang,Malaysian

@@ -40,7 +40,7 @@ public class csPayments extends javax.swing.JFrame {
     private void loadHistoryTable() {
         DefaultTableModel model = (DefaultTableModel) tblHistory.getModel();
         model.setRowCount(0);
-        for (Payment p : service.getAllPayments()) {
+        for (Payment p : service.loadAllPayments()) {
             model.addRow(new Object[]{
                 p.getPaymentId(),
                 p.getReceiptNo(),
@@ -263,7 +263,7 @@ public class csPayments extends javax.swing.JFrame {
         String date = tblUnpaid.getValueAt(row, 4).toString();
         String amountStr = tblUnpaid.getValueAt(row, 5).toString();
         double amount = Double.parseDouble(amountStr);
-        String customerId = service.getAppointmentById(appointmentId).getCustomerId();
+        String customerId = service.findAppointmentById(appointmentId).getCustomerId();
  
         // Confirmation dialog showing full details
         String msg = String.format("""

@@ -18,7 +18,7 @@ public class csEditProfile extends javax.swing.JFrame {
     }
     
     private void loadProfile() {
-        CounterStaff cs = service.getProfile(counterStaffId);
+        CounterStaff cs = service.findCounterStaffById(counterStaffId);
         if (cs != null) {
             tfName.setText(cs.getName());
             cbGender.setSelectedItem(cs.getGender());

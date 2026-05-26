@@ -20,7 +20,7 @@ public class csEditCustomer extends javax.swing.JFrame {
     }
     
     private void loadProfile() {
-        Customer c = service.getCustomerById(customerId);
+        Customer c = service.findCustomerById(customerId);
         if (c != null) {
             tfName.setText(c.getName());
             cbGender.setSelectedItem(c.getGender());

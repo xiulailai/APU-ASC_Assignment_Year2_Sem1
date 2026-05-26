@@ -27,7 +27,7 @@ public class csAssignAppointment extends javax.swing.JFrame {
     
     // Fills the read-only detail labels with the appointment's data
     private void loadAppointmentDetails() {
-        Appointment a = service.getAppointmentById(appointmentId);
+        Appointment a = service.findAppointmentById(appointmentId);
         if (a != null) {
             lblApptIdVal.setText(a.getAppointmentId());
             lblCustomerVal.setText(service.lookupCustomerName(a.getCustomerId()));
@@ -39,7 +39,7 @@ public class csAssignAppointment extends javax.swing.JFrame {
  
     // fills cbTechnician with only available technicians for this slot
     private void populateTechnicians() {
-        Appointment a = service.getAppointmentById(appointmentId);
+        Appointment a = service.findAppointmentById(appointmentId);
         availableTechnicians = service.getAvailableTechnicians(a);
  
         cbTechnician.removeAllItems();

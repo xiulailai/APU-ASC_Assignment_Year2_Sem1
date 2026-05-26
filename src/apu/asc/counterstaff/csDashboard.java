@@ -16,7 +16,7 @@ public class csDashboard extends javax.swing.JFrame {
     }
      
     private void loadWelcomeMessage() {
-        CounterStaff cs = service.getProfile(counterStaffId);
+        CounterStaff cs = service.findCounterStaffById(counterStaffId);
         if (cs != null) {
             lblWelcome.setText("Welcome, " + cs.getName() + " (" + counterStaffId + ")");
         } else {

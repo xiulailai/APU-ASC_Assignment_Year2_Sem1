@@ -327,17 +327,16 @@ public class TestAllClasses{
             System.out.println("[tchnFeedback] closed: " + !feedback.isVisible());
         });
         
-        // Counter Staff 
         // Counter Staff Role
         System.out.println(" apu.asc.counterstaff — csService");
         csService csSvc = new csService();
         
         // Profile
-        System.out.println("[getProfile] CS001: " + csSvc.getProfile("CS001").getName());
-        System.out.println("[getProfile] CS999 (not found) → null: " + (csSvc.getProfile("CS999") == null));
-        System.out.println("[getAllCounterStaff]: " + csSvc.getAllCounterStaff().size() + " staff member(s)");
+        System.out.println("[findCounterStaffById] CS001: " + csSvc.findCounterStaffById("CS001").getName());
+        System.out.println("[findCounterStaffById] CS999 (not found) > null: " + (csSvc.findCounterStaffById("CS999") == null));
+        System.out.println("[loadAllCounterStaff]: " + csSvc.loadAllCounterStaff().size() + " staff member(s)");
         
-        // updateProfile 
+        // updateProfile
         System.out.println("[updateProfile] valid: " + csSvc.updateProfile("CS001", "Amy Lee Updated", "Female", "30", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
         System.out.println("[updateProfile] blank name: " + csSvc.updateProfile("CS001", "", "Female", "30", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
         System.out.println("[updateProfile] age out of range (150): " + csSvc.updateProfile("CS001", "Amy Lee", "Female", "150", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
@@ -346,12 +345,12 @@ public class TestAllClasses{
         System.out.println("[updateProfile] invalid email: " + csSvc.updateProfile("CS001", "Amy Lee", "Female", "29", "0134567890", "amyleeNOATsign", "No. 33 Jalan Kenanga Shah Alam", "Malaysian"));
         // restore CS001 after modifying
         csSvc.updateProfile("CS001", "Amy Lee", "Female", "29", "0134567890", "amylee@email.com", "No. 33 Jalan Kenanga Shah Alam", "Malaysian");
-        System.out.println("[updateProfile] restored CS001: " + csSvc.getProfile("CS001").getName());
+        System.out.println("[updateProfile] restored CS001: " + csSvc.findCounterStaffById("CS001").getName());
         
-        // manageCustomer
-        System.out.println("[getAllCustomers]: " + csSvc.getAllCustomers().size() + " customer(s)");
-        System.out.println("[getCustomerById] C001: " + csSvc.getCustomerById("C001").getName());
-        System.out.println("[getCustomerById] C999 (not found) → null: " + (csSvc.getCustomerById("C999") == null));
+        // Manage Customer
+        System.out.println("[loadAllCustomers]: " + csSvc.loadAllCustomers().size() + " customer(s)");
+        System.out.println("[findCustomerById] C001: " + csSvc.findCustomerById("C001").getName());
+        System.out.println("[findCustomerById] C999 (not found) > null: " + (csSvc.findCustomerById("C999") == null));
         
         // searchCustomers
         System.out.println("[searchCustomers] 'Ali' (by name): " + csSvc.searchCustomers("Ali").size() + " result(s)");
@@ -359,6 +358,7 @@ public class TestAllClasses{
         System.out.println("[searchCustomers] 'C003' (by ID): " + csSvc.searchCustomers("C003").size() + " result(s)");
         System.out.println("[searchCustomers] '' (blank → all): " + csSvc.searchCustomers("").size() + " result(s)");
         System.out.println("[searchCustomers] 'NOMATCH': " + csSvc.searchCustomers("NOMATCH").size() + " result(s)");
+
         
         // addCustomer
         System.out.println("[addCustomer] valid: " + csSvc.addCustomer("Test User", "Male", "25", "0111234567", "testuser@email.com", "No. 1 Jalan Test", "Malaysian"));
@@ -375,14 +375,14 @@ public class TestAllClasses{
         csSvc.updateCustomer("C002", "Siti Rahimah", "Female", "35", "0193334444", "sitirahimah@email.com", "No. 11 Jalan Setia Wangsa Maju", "Malaysian");
         
         // deleteCustomer — delete the test customer added above
-        String lastCustId = csSvc.getAllCustomers().get(csSvc.getAllCustomers().size() - 1).getCustomerId();
+        String lastCustId = csSvc.loadAllCustomers().get(csSvc.loadAllCustomers().size() - 1).getCustomerId();
         System.out.println("[deleteCustomer] test customer (" + lastCustId + "): " + csSvc.deleteCustomer(lastCustId));
         System.out.println("[deleteCustomer] not found (C999): " + csSvc.deleteCustomer("C999"));
         
-        // ManageAppointments 
-        System.out.println("[getAllAppointments]: " + csSvc.getAllAppointments().size() + " appointment(s)");
-        System.out.println("[getAppointmentById] A001: " + csSvc.getAppointmentById("A001").getAppointmentId());
-        System.out.println("[getAppointmentById] A999 (not found) → null: " + (csSvc.getAppointmentById("A999") == null));
+        // Manage Appointments
+        System.out.println("[loadAllAppointments]: " + csSvc.loadAllAppointments().size() + " appointment(s)");
+        System.out.println("[findAppointmentById] A001: " + csSvc.findAppointmentById("A001").getAppointmentId());
+        System.out.println("[findAppointmentById] A999 (not found) > null: " + (csSvc.findAppointmentById("A999") == null));
         
         // filterAppointmentByStatus
         System.out.println("[filterAppointmentsByStatus] 'Pending': " + csSvc.filterAppointmentsByStatus("Pending").size() + " appointment(s)");
@@ -397,7 +397,7 @@ public class TestAllClasses{
         System.out.println("[createAppointment] blank customerId: " + csSvc.createAppointment("CS001", "", "S001", "2026-12-01", "10:00"));
  
         // getAvailableTechnicians
-        Appointment a005 = csSvc.getAppointmentById("A005");
+        Appointment a005 = csSvc.findAppointmentById("A005");
         System.out.println("[getAvailableTechnicians] A005 (" + a005.getAppointmentDate() + " " + a005.getAppointmentTime() + "): " + csSvc.getAvailableTechnicians(a005).size() + " available");
  
         // assignAppointment
@@ -405,7 +405,7 @@ public class TestAllClasses{
         System.out.println("[assignAppointment] not found (A999): " + csSvc.assignAppointment("A999", "T001"));
  
         // deleteAppointment — delete the appointment created above
-        String lastApptId = csSvc.getAllAppointments().get(csSvc.getAllAppointments().size() - 1).getAppointmentId();
+        String lastApptId = csSvc.loadAllAppointments().get(csSvc.loadAllAppointments().size() - 1).getAppointmentId();
         System.out.println("[deleteAppointment] created appt (" + lastApptId + "): " + csSvc.deleteAppointment(lastApptId));
         System.out.println("[deleteAppointment] not found (A999): " + csSvc.deleteAppointment("A999"));
         
@@ -421,15 +421,15 @@ public class TestAllClasses{
         System.out.println("[lookupServicePrice] S002: RM " + csSvc.lookupServicePrice("S002"));
         System.out.println("[lookupServicePrice] S999 (not found → 0.0): RM " + csSvc.lookupServicePrice("S999"));
         
-        // Payments 
-        System.out.println("[getAllPayments]: " + csSvc.getAllPayments().size() + " payment(s)");
+        // Payments
+        System.out.println("[loadAllPayments]: " + csSvc.loadAllPayments().size() + " payment(s)");
         System.out.println("[getUnpaidAppointments]: " + csSvc.getUnpaidAppointments().size() + " unpaid");
  
         // collectPayment — create a test appointment, assign it, then collect payment
         csSvc.createAppointment("CS001", "C001", "S001", "2026-12-01", "10:00");
-        String payTestApptId = csSvc.getAllAppointments().get(csSvc.getAllAppointments().size() - 1).getAppointmentId();
+        String payTestApptId = csSvc.loadAllAppointments().get(csSvc.loadAllAppointments().size() - 1).getAppointmentId();
         csSvc.assignAppointment(payTestApptId, "T001");
-        Appointment payTestAppt = csSvc.getAppointmentById(payTestApptId);
+        Appointment payTestAppt = csSvc.findAppointmentById(payTestApptId);
         System.out.println("[collectPayment] " + payTestApptId + ": " + csSvc.collectPayment(payTestApptId, payTestAppt.getCustomerId(), csSvc.lookupServicePrice(payTestAppt.getServiceId())));
 
         // Counter Staff Role GUI

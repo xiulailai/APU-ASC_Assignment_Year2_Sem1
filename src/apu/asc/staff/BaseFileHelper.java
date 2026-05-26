@@ -36,8 +36,9 @@ public class BaseFileHelper {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (!line.startsWith("#") && !line.isBlank())
+                if (!line.startsWith("#") && !line.isBlank()) {
                     lines.add(line);
+                }
             }
         } catch (IOException e) {
             System.err.println("readLines error [" + filePath + "]: " + e.getMessage());
@@ -85,7 +86,7 @@ public class BaseFileHelper {
     }
     
     //Shared entity loaders
-    protected List<Customer> loadAllCustomers() {
+    public List<Customer> loadAllCustomers() {
         List<Customer> list = new ArrayList<>();
         for (String line : readLines(FILE_CUSTOMERS)) {
             try { 
@@ -95,7 +96,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<Technician> loadAllTechnicians() {
+    public List<Technician> loadAllTechnicians() {
         List<Technician> list = new ArrayList<>();
         for (String line : readLines(FILE_TECHNICIANS)) {
             try { 
@@ -105,7 +106,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<CounterStaff> loadAllCounterStaff() {
+    public List<CounterStaff> loadAllCounterStaff() {
         List<CounterStaff> list = new ArrayList<>();
         for (String line : readLines(FILE_COUNTERSTAFF)) {
             try { 
@@ -115,7 +116,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<Manager> loadAllManagers() {
+    public List<Manager> loadAllManagers() {
         List<Manager> list = new ArrayList<>();
         for (String line : readLines(FILE_MANAGERS)) {
             try { 
@@ -125,7 +126,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<Service> loadAllServices() {
+    public List<Service> loadAllServices() {
         List<Service> list = new ArrayList<>();
         for (String line : readLines(FILE_SERVICES)) {
             try { 
@@ -135,7 +136,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<Appointment> loadAllAppointments() {
+    public List<Appointment> loadAllAppointments() {
         List<Appointment> list = new ArrayList<>();
         for (String line : readLines(FILE_APPOINTMENTS)) {
             try { 
@@ -145,7 +146,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<Payment> loadAllPayments() {
+    public List<Payment> loadAllPayments() {
         List<Payment> list = new ArrayList<>();
         for (String line : readLines(FILE_PAYMENTS)) {
             try { 
@@ -155,7 +156,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<Feedback> loadAllFeedbacks() {
+    public List<Feedback> loadAllFeedbacks() {
         List<Feedback> list = new ArrayList<>();
         for (String line : readLines(FILE_FEEDBACKS)) {
             try { 
@@ -165,7 +166,7 @@ public class BaseFileHelper {
         return list;
     }
     
-    protected List<Comment> loadAllComments() {
+    public List<Comment> loadAllComments() {
         List<Comment> list = new ArrayList<>();
         for (String line : readLines(FILE_COMMENTS)) {
             try { 
@@ -176,7 +177,7 @@ public class BaseFileHelper {
     }
     
     //Helper method
-    protected Customer findCustomerById(String customerId) {
+    public Customer findCustomerById(String customerId) {
         for (Customer c : loadAllCustomers()) {
             if (c.getCustomerId().equals(customerId)) {
                 return c;
@@ -185,7 +186,7 @@ public class BaseFileHelper {
         return null;
     }
     
-    protected Technician findTechnicianById(String technicianId) {
+    public Technician findTechnicianById(String technicianId) {
         for (Technician t : loadAllTechnicians()) {
             if (t.getTechnicianId().equalsIgnoreCase(technicianId)) {
                 return t;
@@ -194,7 +195,7 @@ public class BaseFileHelper {
         return null;
     }
     
-    protected CounterStaff findCounterStaffById(String counterStaffId) {
+    public CounterStaff findCounterStaffById(String counterStaffId) {
         for (CounterStaff cs : loadAllCounterStaff()) {
             if (cs.getCounterStaffId().equalsIgnoreCase(counterStaffId)) {
                 return cs;
@@ -203,7 +204,7 @@ public class BaseFileHelper {
         return null;
     }
     
-    protected Appointment findAppointmentById(String appointmentId) {
+    public Appointment findAppointmentById(String appointmentId) {
         for (Appointment a : loadAllAppointments()) {
             if (a.getAppointmentId().equals(appointmentId)) {
                 return a;
@@ -287,19 +288,6 @@ public class BaseFileHelper {
     protected void createUserAccount(String roleRefId, String username, String password, String role) {
         String userId = generateUserId();
         appendLine(FILE_USERS, String.join(",", userId, username, password, role, roleRefId));
-    }
- 
-    // Creates a default user account (auto-generated username/password) for customers added by counter staff
-    protected String createDefaultUserAccount(String roleRefId, String name) {
-        String userId = generateUserId();
-        String idNum = roleRefId.substring(1);
-        
-        // default username: first 4 letters of name (lowercase) + id number
-        String safeName = name.replaceAll("\\s+", "").toLowerCase();
-        String username = safeName.substring(0, Math.min(4, safeName.length())) + idNum;
-        String password = "pass" + idNum;
-        appendLine(FILE_USERS, String.join(",", userId, username, password, "customer", roleRefId));
-        return "OK";
     }
  
     // Removes the users.txt row whose roleRefId column matches the given ID
