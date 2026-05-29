@@ -6,6 +6,7 @@ import apu.asc.main.LoginFrame;
 import apu.asc.main.LoginService;
 import apu.asc.technician.*;
 import apu.asc.counterstaff.*;
+import apu.asc.customer.*;
 import apu.asc.manager.*;
 
 
@@ -539,11 +540,112 @@ public class TestAllClasses{
 
         // Customer Role
         // apu.asc.customer  —  Service Logic
-        
+        System.out.println(" apu.asc.customer — CustomerService");
+
+        CustomerService custSvc = new CustomerService("C001");
+
+        // Profile
+        System.out.println("[getCustomerId]: " + custSvc.getCustomerId());
+        System.out.println("[getProfile]: " + custSvc.getProfile().getName());
+        System.out.println("[getTechnicianById] T001: " + (custSvc.getTechnicianById("T001") == null ? "null" : custSvc.getTechnicianById("T001").getName()));
+        System.out.println("[getTechnicianById] T999: " + custSvc.getTechnicianById("T999"));
+
+        // Validation
+        System.out.println("[validateProfile] valid: " + custSvc.validateProfile("Ali Hassan", "0121112222", "alihassan@email.com", "42"));
+        System.out.println("[validateProfile] blank name: " + custSvc.validateProfile("", "0121112222", "alihassan@email.com", "42"));
+        System.out.println("[validateProfile] blank age: " + custSvc.validateProfile("Ali Hassan", "0121112222", "alihassan@email.com", ""));
+        System.out.println("[validateProfile] bad age: " + custSvc.validateProfile("Ali Hassan", "0121112222", "alihassan@email.com", "abc"));
+        System.out.println("[validateProfile] bad phone: " + custSvc.validateProfile("Ali Hassan", "123", "alihassan@email.com", "42"));
+        System.out.println("[validateProfile] bad email: " + custSvc.validateProfile("Ali Hassan", "0121112222", "wrongemail", "42"));
+
+        // Appointments, services, and payments
+        System.out.println("[getMyAppointments]: " + custSvc.getMyAppointments().size() + " appointment(s) for C001");
+        System.out.println("[getMyPayments]: " + custSvc.getMyPayments().size() + " payment(s) for C001");
+        System.out.println("[getPaymentForAppointment] A001: " + (custSvc.getPaymentForAppointment("A001") == null ? "null" : custSvc.getPaymentForAppointment("A001").getPaymentId()));
+        System.out.println("[getPaymentForAppointment] A999: " + custSvc.getPaymentForAppointment("A999"));
+        System.out.println("[getServiceInfo] S001: " + (custSvc.getServiceInfo("S001") == null ? "null" : custSvc.getServiceInfo("S001").getServiceName()));
+        System.out.println("[getServiceInfo] S999: " + custSvc.getServiceInfo("S999"));
+
+        // History rows used by GUI tables
+        System.out.println("[getServiceHistoryRows]: " + custSvc.getServiceHistoryRows().size() + " row(s)");
+        System.out.println("[getPaymentHistoryRows]: " + custSvc.getPaymentHistoryRows().size() + " row(s)");
+        System.out.println("[getHistoryRows]: " + custSvc.getHistoryRows().size() + " row(s)");
+
+        // Feedback
+        System.out.println("[getFeedbacksForAppointment] A001: " + custSvc.getFeedbacksForAppointment("A001").size() + " feedback(s)");
+        System.out.println("[getFeedbacksForAppointment] A999: " + custSvc.getFeedbacksForAppointment("A999").size() + " feedback(s)");
+        System.out.println("[getAppointmentLabels]: " + custSvc.getAppointmentLabels().size() + " label(s)");
+
+        // Comments
+        System.out.println("[getCommentsForAppointment] A001: " + custSvc.getCommentsForAppointment("A001").size() + " comment(s)");
+        System.out.println("[getCommentsForAppointment] A999: " + custSvc.getCommentsForAppointment("A999").size() + " comment(s)");
+        System.out.println("[getCommentTargets] A001: " + custSvc.getCommentTargets("A001").size() + " target(s)");
+        System.out.println("[getCommentTargets] A999: " + custSvc.getCommentTargets("A999").size() + " target(s)");
+        System.out.println("[hasCommented] A001/T001: " + custSvc.hasCommented("A001", "T001"));
+        System.out.println("[hasCommented] A999/T999: " + custSvc.hasCommented("A999", "T999"));
+
+        // addComment guard checks only, so no file write happens
+        System.out.println("[addComment] invalid appointment: " + custSvc.addComment("A999", "T001", "Test comment"));
+        System.out.println("[addComment] invalid target: " + custSvc.addComment("A001", "M001", "Test comment"));
+        System.out.println("[addComment] empty text: " + custSvc.addComment("A001", "T001", ""));
 
         // Customer Role GUI
         // apu.asc.customer  —  GUI Frames
-        
+        System.out.println(" apu.asc.customer — GUI Frames");
+
+        // custDashboard
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            custDashboard dashboard = new custDashboard("C001");
+            dashboard.setVisible(true);
+            System.out.println("[custDashboard] opened: " + dashboard.isVisible());
+            System.out.println("[custDashboard] title: " + dashboard.getTitle());
+            dashboard.dispose();
+            System.out.println("[custDashboard] closed: " + !dashboard.isVisible());
+        });
+
+        // custProfile
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            custDashboard dashboard = new custDashboard("C001");
+            custProfile profile = new custProfile("C001", dashboard);
+            profile.setVisible(true);
+            System.out.println("[custProfile] opened: " + profile.isVisible());
+            System.out.println("[custProfile] title: " + profile.getTitle());
+            profile.dispose();
+            dashboard.dispose();
+            System.out.println("[custProfile] closed: " + !profile.isVisible());
+        });
+
+        // custHistory
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            custHistory history = new custHistory("C001");
+            history.setVisible(true);
+            System.out.println("[custHistory] opened: " + history.isVisible());
+            System.out.println("[custHistory] title: " + history.getTitle());
+            history.dispose();
+            System.out.println("[custHistory] closed: " + !history.isVisible());
+        });
+
+        // custFeedback
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            custFeedback feedbackView = new custFeedback("C001");
+            feedbackView.setVisible(true);
+            System.out.println("[custFeedback] opened: " + feedbackView.isVisible());
+            System.out.println("[custFeedback] title: " + feedbackView.getTitle());
+            feedbackView.dispose();
+            System.out.println("[custFeedback] closed: " + !feedbackView.isVisible());
+        });
+
+        // custComments
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            custComments commentsView = new custComments("C001");
+            commentsView.setVisible(true);
+            System.out.println("[custComments] opened: " + commentsView.isVisible());
+            System.out.println("[custComments] title: " + commentsView.getTitle());
+            commentsView.dispose();
+            System.out.println("[custComments] closed: " + !commentsView.isVisible());
+        });
+
+        System.out.println(" Customer Tests Done");
         
         // Manager Role
         // apu.asc.manager  —  Service Logic
